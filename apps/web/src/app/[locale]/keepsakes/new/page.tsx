@@ -3,22 +3,27 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { createKeepsake } from '@/lib/api/keepsakes';
 import { ApiError } from '@/lib/api/client';
 import type { KeepsakeType } from '@/types';
 
-const typeOptions: { type: KeepsakeType; icon: string; label: string; description: string }[] = [
-  { type: 'text', icon: '📝', label: 'Text', description: 'A simple note or message' },
-  { type: 'letter', icon: '✉️', label: 'Letter', description: 'A heartfelt letter' },
-  { type: 'photo', icon: '📷', label: 'Photo', description: 'A precious memory' },
-  { type: 'video', icon: '🎬', label: 'Video', description: 'A video message' },
-  { type: 'wish', icon: '⭐', label: 'Wish', description: 'A final wish or hope' },
-  { type: 'scheduled_action', icon: '📅', label: 'Action', description: 'A scheduled task' },
-];
+const keepsakeTypes: KeepsakeType[] = ['text', 'letter', 'photo', 'video', 'wish', 'scheduled_action'];
+
+const typeIcons: Record<KeepsakeType, string> = {
+  text: '📝',
+  letter: '✉️',
+  photo: '📷',
+  video: '🎬',
+  wish: '⭐',
+  scheduled_action: '📅',
+};
 
 export default function NewKeepsakePage() {
   const router = useRouter();
+  const t = useTranslations('keepsakes');
+  const tCommon = useTranslations('common');
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<KeepsakeType | null>(null);
   const [title, setTitle] = useState('');
@@ -47,19 +52,16 @@ export default function NewKeepsakePage() {
       router.push('/keepsakes');
     } catch (err) {
       if (err instanceof ApiError) {
-        const message = (err.data as { message?: string })?.message || 'Failed to create keepsake';
-        setError(message);
+        setError(tCommon('error'));
       } else {
-        setError('An unexpected error occurred');
+        setError(tCommon('error'));
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const typeLabel = selectedType
-    ? typeOptions.find((t) => t.type === selectedType)?.label
-    : '';
+  const typeLabel = selectedType ? t(`types.${selectedType}`) : '';
 
   return (
     <AppShell requireAuth>
@@ -69,7 +71,7 @@ export default function NewKeepsakePage() {
             href="/keepsakes"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
           >
-            ← Back to Keepsakes
+            ← {tCommon('back')}
           </Link>
         </div>
 
@@ -77,23 +79,23 @@ export default function NewKeepsakePage() {
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-2">
               <h1 className="font-display text-display-sm text-foreground">
-                Create a Keepsake
+                {t('new')}
               </h1>
               <p className="text-muted-foreground">
-                Choose what you&apos;d like to preserve.
+                {t('form.chooseType')}
               </p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {typeOptions.map((option) => (
+              {keepsakeTypes.map((type) => (
                 <button
-                  key={option.type}
-                  onClick={() => handleTypeSelect(option.type)}
+                  key={type}
+                  onClick={() => handleTypeSelect(type)}
                   className="bg-card rounded-2xl border border-border/50 shadow-soft p-6 text-center transition-all duration-200 ease-out hover:shadow-soft-md hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20"
                 >
-                  <span className="text-3xl block mb-2">{option.icon}</span>
-                  <span className="font-medium text-foreground block">{option.label}</span>
-                  <span className="text-xs text-muted-foreground">{option.description}</span>
+                  <span className="text-3xl block mb-2">{typeIcons[type]}</span>
+                  <span className="font-medium text-foreground block">{t(`types.${type}`)}</span>
+                  <span className="text-xs text-muted-foreground">{t(`typeDescriptions.${type}`)}</span>
                 </button>
               ))}
             </div>
@@ -107,14 +109,14 @@ export default function NewKeepsakePage() {
                 onClick={() => setStep(1)}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out"
               >
-                ← Change type
+                ← {tCommon('back')}
               </button>
-              <span className="text-sm text-muted-foreground">Step 1 of 1</span>
+              <span className="text-sm text-muted-foreground">{t('form.step', { current: 1, total: 1 })}</span>
             </div>
 
             <div className="text-center space-y-2">
               <h1 className="font-display text-display-sm text-foreground">
-                Write Your {typeLabel}
+                {typeLabel}
               </h1>
             </div>
 
@@ -128,7 +130,7 @@ export default function NewKeepsakePage() {
 
                 <div className="space-y-2">
                   <label htmlFor="title" className="block text-sm font-medium text-foreground">
-                    Title
+                    {t('form.titleLabel')}
                   </label>
                   <input
                     id="title"
@@ -137,13 +139,13 @@ export default function NewKeepsakePage() {
                     onChange={(e) => setTitle(e.target.value)}
                     required
                     className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-                    placeholder={`Give your ${typeLabel?.toLowerCase()} a title`}
+                    placeholder={t('form.titlePlaceholder')}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label htmlFor="content" className="block text-sm font-medium text-foreground">
-                    Content
+                    {t('form.contentLabel')}
                   </label>
                   <textarea
                     id="content"
@@ -152,7 +154,7 @@ export default function NewKeepsakePage() {
                     required
                     rows={10}
                     className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out resize-none"
-                    placeholder="Write your message here..."
+                    placeholder={t('form.contentPlaceholder')}
                   />
                 </div>
 
@@ -162,14 +164,14 @@ export default function NewKeepsakePage() {
                     onClick={() => router.push('/keepsakes')}
                     className="border border-border/60 text-foreground rounded-xl px-6 py-3 font-medium transition-colors duration-200 ease-out hover:bg-muted/50"
                   >
-                    Cancel
+                    {tCommon('cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading || !title || !content}
                     className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? 'Creating...' : 'Create Keepsake'}
+                    {isLoading ? t('form.creating') : t('form.create')}
                   </button>
                 </div>
               </form>

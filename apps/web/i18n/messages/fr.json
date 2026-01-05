@@ -1,0 +1,223 @@
+{
+  "common": {
+    "appName": "Beyond",
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "continue": "Continuer",
+    "confirm": "Confirmer",
+    "error": "Une erreur est survenue"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "keepsakes": "Souvenirs",
+    "beneficiaries": "Bénéficiaires",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "login": "Connexion",
+    "register": "Inscription"
+  },
+  "landing": {
+    "hero": {
+      "title": "Votre héritage, protégé.",
+      "subtitle": "Préservé pour ceux qui comptent.",
+      "ctaAuth": "Accéder au tableau de bord",
+      "ctaGuest": "Créer votre coffre"
+    },
+    "trust": {
+      "secure": {
+        "title": "Sécurisé",
+        "description": "Chiffrement de bout en bout. Nous ne pouvons pas accéder à vos contenus."
+      },
+      "private": {
+        "title": "Privé",
+        "description": "Vos données restent les vôtres. Conforme RGPD par conception."
+      },
+      "trusted": {
+        "title": "De confiance",
+        "description": "Transmis uniquement lorsque vos conditions sont remplies."
+      }
+    },
+    "howItWorks": {
+      "intro": "Vos mots, vos souvenirs, vos volontés — transmis le moment venu.",
+      "step1": {
+        "title": "Créez votre coffre",
+        "description": "Inscrivez-vous et votre coffre sécurisé est créé instantanément."
+      },
+      "step2": {
+        "title": "Préservez ce qui compte",
+        "description": "Ajoutez lettres, messages, photos et volontés pour vos proches."
+      },
+      "step3": {
+        "title": "Définissez vos conditions",
+        "description": "Choisissez quand et à qui vos souvenirs seront révélés."
+      }
+    },
+    "features": {
+      "title": "Ce que vous pouvez préserver",
+      "letters": {
+        "title": "Lettres et messages",
+        "description": "Écrivez des lettres sincères à transmettre au bon moment."
+      },
+      "photos": {
+        "title": "Photos et vidéos",
+        "description": "Partagez des souvenirs précieux et des moments qui comptent."
+      },
+      "wishes": {
+        "title": "Volontés et instructions",
+        "description": "Documentez vos souhaits et instructions importantes."
+      }
+    },
+    "cta": {
+      "title": "Commencez à préserver ce qui compte",
+      "description": "Créez votre coffre aujourd'hui. Votre héritage mérite d'être protégé."
+    },
+    "footer": {
+      "tagline": "Une plateforme d'héritage numérique sécurisée"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous pour accéder à votre coffre",
+      "email": "Email",
+      "emailPlaceholder": "vous@exemple.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Entrez votre mot de passe",
+      "submit": "Se connecter",
+      "submitting": "Connexion...",
+      "noAccount": "Pas encore de compte ?",
+      "register": "Créer un compte"
+    },
+    "register": {
+      "title": "Créer votre coffre",
+      "subtitle": "Commencez à préserver ce qui compte",
+      "email": "Email",
+      "emailPlaceholder": "vous@exemple.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Choisissez un mot de passe sécurisé",
+      "submit": "Créer mon coffre",
+      "submitting": "Création...",
+      "hasAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "trust": "Vos données sont chiffrées. Nous ne pouvons pas accéder à vos contenus."
+    },
+    "passwordStrength": {
+      "weak": "Faible",
+      "fair": "Correct",
+      "good": "Bon",
+      "strong": "Fort"
+    },
+    "errors": {
+      "invalidCredentials": "Email ou mot de passe incorrect",
+      "emailExists": "Cette adresse email est déjà utilisée",
+      "unexpected": "Une erreur inattendue est survenue"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue dans votre coffre",
+    "stats": {
+      "vault": {
+        "title": "État du coffre",
+        "active": "Actif",
+        "inactive": "Inactif"
+      },
+      "keepsakes": {
+        "title": "Souvenirs",
+        "count": "{count, plural, =0 {Aucun} =1 {1 élément} other {# éléments}}"
+      },
+      "beneficiaries": {
+        "title": "Bénéficiaires",
+        "count": "{count, plural, =0 {Aucun} =1 {1 désigné} other {# désignés}}"
+      }
+    },
+    "recent": {
+      "title": "Souvenirs récents",
+      "viewAll": "Voir tous",
+      "updatedAt": "Modifié {date}"
+    },
+    "empty": {
+      "title": "Votre coffre est vide",
+      "description": "Commencez à préserver ce qui compte pour vos proches.",
+      "cta": "Créer votre premier souvenir"
+    }
+  },
+  "keepsakes": {
+    "title": "Vos souvenirs",
+    "count": "{count, plural, =0 {Aucun élément} =1 {1 élément préservé} other {# éléments préservés}}",
+    "new": "Nouveau souvenir",
+    "filter": {
+      "all": "Tous",
+      "text": "Textes",
+      "letter": "Lettres",
+      "photo": "Photos",
+      "video": "Vidéos",
+      "wish": "Volontés",
+      "scheduled_action": "Actions"
+    },
+    "empty": {
+      "title": "Aucun souvenir pour l'instant",
+      "description": "Commencez à préserver ce qui compte pour vos proches.",
+      "cta": "Créer votre premier souvenir"
+    },
+    "types": {
+      "text": "Texte",
+      "letter": "Lettre",
+      "photo": "Photo",
+      "video": "Vidéo",
+      "wish": "Volonté",
+      "scheduled_action": "Action"
+    },
+    "typeDescriptions": {
+      "text": "Un message ou une note simple",
+      "letter": "Une lettre personnelle pour un proche",
+      "photo": "Une image à préserver",
+      "video": "Une vidéo à transmettre",
+      "wish": "Vos volontés et souhaits",
+      "scheduled_action": "Une action à exécuter"
+    },
+    "form": {
+      "step": "Étape {current} sur {total}",
+      "chooseType": "Quel type de souvenir souhaitez-vous créer ?",
+      "titleLabel": "Titre",
+      "titlePlaceholder": "Donnez un nom à ce souvenir",
+      "contentLabel": "Contenu",
+      "contentPlaceholder": "Écrivez votre message ici...",
+      "create": "Créer le souvenir",
+      "creating": "Création..."
+    },
+    "edit": {
+      "title": "Modifier {type}",
+      "createdAt": "Créé le {date}",
+      "updatedAt": "Dernière modification le {date}",
+      "save": "Enregistrer",
+      "saving": "Enregistrement..."
+    },
+    "delete": {
+      "button": "Supprimer ce souvenir",
+      "title": "Supprimer ce souvenir ?",
+      "description": "Cette action est irréversible. Le souvenir \"{title}\" sera définitivement supprimé.",
+      "confirm": "Supprimer",
+      "deleting": "Suppression..."
+    },
+    "notFound": {
+      "title": "Souvenir introuvable",
+      "back": "Retour aux souvenirs"
+    },
+    "card": {
+      "updatedAt": "Modifié {date}"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": {
+      "title": "Langue",
+      "fr": "Français",
+      "en": "English"
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "common": {
+    "appName": "Beyond",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "continue": "Continue",
+    "confirm": "Confirm",
+    "error": "An error occurred"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "keepsakes": "Keepsakes",
+    "beneficiaries": "Beneficiaries",
+    "settings": "Settings",
+    "logout": "Log out",
+    "login": "Sign in",
+    "register": "Sign up"
+  },
+  "landing": {
+    "hero": {
+      "title": "Your legacy, protected.",
+      "subtitle": "Preserved for those who matter.",
+      "ctaAuth": "Go to Dashboard",
+      "ctaGuest": "Create Your Vault"
+    },
+    "trust": {
+      "secure": {
+        "title": "Secure",
+        "description": "End-to-end encryption. We cannot access your content."
+      },
+      "private": {
+        "title": "Private",
+        "description": "Your data stays yours. GDPR compliant by design."
+      },
+      "trusted": {
+        "title": "Trusted",
+        "description": "Delivered only when your conditions are met."
+      }
+    },
+    "howItWorks": {
+      "intro": "Your words, your memories, your wishes — delivered when the time comes.",
+      "step1": {
+        "title": "Create your vault",
+        "description": "Sign up and your secure vault is created instantly."
+      },
+      "step2": {
+        "title": "Preserve what matters",
+        "description": "Add letters, messages, photos, and wishes for loved ones."
+      },
+      "step3": {
+        "title": "Set your conditions",
+        "description": "Choose when and to whom your keepsakes are revealed."
+      }
+    },
+    "features": {
+      "title": "What you can preserve",
+      "letters": {
+        "title": "Letters & Messages",
+        "description": "Write heartfelt letters to be delivered at the right moment."
+      },
+      "photos": {
+        "title": "Photos & Videos",
+        "description": "Share precious memories and moments that matter most."
+      },
+      "wishes": {
+        "title": "Wishes & Instructions",
+        "description": "Document your wishes and important instructions."
+      }
+    },
+    "cta": {
+      "title": "Start preserving what matters",
+      "description": "Create your vault today. Your legacy deserves to be protected."
+    },
+    "footer": {
+      "tagline": "A secure digital legacy platform"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to access your vault",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "register": "Create one"
+    },
+    "register": {
+      "title": "Create Your Vault",
+      "subtitle": "Start preserving what matters",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Choose a secure password",
+      "submit": "Create My Vault",
+      "submitting": "Creating...",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in",
+      "trust": "Your data is encrypted. We cannot access your content."
+    },
+    "passwordStrength": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "emailExists": "This email address is already in use",
+      "unexpected": "An unexpected error occurred"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to your vault",
+    "stats": {
+      "vault": {
+        "title": "Vault Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "keepsakes": {
+        "title": "Keepsakes",
+        "count": "{count, plural, =0 {None} =1 {1 item} other {# items}}"
+      },
+      "beneficiaries": {
+        "title": "Beneficiaries",
+        "count": "{count, plural, =0 {None} =1 {1 designated} other {# designated}}"
+      }
+    },
+    "recent": {
+      "title": "Recent Keepsakes",
+      "viewAll": "View all",
+      "updatedAt": "Updated {date}"
+    },
+    "empty": {
+      "title": "Your vault is empty",
+      "description": "Start preserving what matters for your loved ones.",
+      "cta": "Create your first keepsake"
+    }
+  },
+  "keepsakes": {
+    "title": "Your Keepsakes",
+    "count": "{count, plural, =0 {No items} =1 {1 item preserved} other {# items preserved}}",
+    "new": "New Keepsake",
+    "filter": {
+      "all": "All",
+      "text": "Texts",
+      "letter": "Letters",
+      "photo": "Photos",
+      "video": "Videos",
+      "wish": "Wishes",
+      "scheduled_action": "Actions"
+    },
+    "empty": {
+      "title": "No keepsakes yet",
+      "description": "Start preserving what matters for your loved ones.",
+      "cta": "Create your first keepsake"
+    },
+    "types": {
+      "text": "Text",
+      "letter": "Letter",
+      "photo": "Photo",
+      "video": "Video",
+      "wish": "Wish",
+      "scheduled_action": "Action"
+    },
+    "typeDescriptions": {
+      "text": "A simple message or note",
+      "letter": "A personal letter for someone special",
+      "photo": "An image to preserve",
+      "video": "A video to pass on",
+      "wish": "Your wishes and desires",
+      "scheduled_action": "An action to execute"
+    },
+    "form": {
+      "step": "Step {current} of {total}",
+      "chooseType": "What type of keepsake would you like to create?",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Give this keepsake a name",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Write your message here...",
+      "create": "Create Keepsake",
+      "creating": "Creating..."
+    },
+    "edit": {
+      "title": "Edit {type}",
+      "createdAt": "Created on {date}",
+      "updatedAt": "Last updated on {date}",
+      "save": "Save Changes",
+      "saving": "Saving..."
+    },
+    "delete": {
+      "button": "Delete keepsake",
+      "title": "Delete this keepsake?",
+      "description": "This action cannot be undone. The keepsake \"{title}\" will be permanently deleted.",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
+    },
+    "notFound": {
+      "title": "Keepsake not found",
+      "back": "Back to Keepsakes"
+    },
+    "card": {
+      "updatedAt": "Updated {date}"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": {
+      "title": "Language",
+      "fr": "Français",
+      "en": "English"
+    }
+  }
+}

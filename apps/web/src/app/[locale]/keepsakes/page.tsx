@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { getKeepsakes } from '@/lib/api/keepsakes';
 import type { KeepsakeSummary, KeepsakeType } from '@/types';
@@ -15,16 +16,10 @@ const typeIcons: Record<KeepsakeType, string> = {
   scheduled_action: '📅',
 };
 
-const typeLabels: Record<KeepsakeType, string> = {
-  text: 'Text',
-  letter: 'Letter',
-  photo: 'Photo',
-  video: 'Video',
-  wish: 'Wish',
-  scheduled_action: 'Action',
-};
+const keepsakeTypes: KeepsakeType[] = ['text', 'letter', 'photo', 'video', 'wish', 'scheduled_action'];
 
 export default function KeepsakesPage() {
+  const t = useTranslations('keepsakes');
   const [keepsakes, setKeepsakes] = useState<KeepsakeSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterType, setFilterType] = useState<KeepsakeType | 'all'>('all');
@@ -49,13 +44,6 @@ export default function KeepsakesPage() {
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays}d ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
     return date.toLocaleDateString();
   };
 
@@ -64,35 +52,34 @@ export default function KeepsakesPage() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-display text-display-sm text-foreground">Your Keepsakes</h1>
+            <h1 className="font-display text-display-sm text-foreground">{t('title')}</h1>
             <p className="text-muted-foreground mt-1">
-              {keepsakes.length} {keepsakes.length === 1 ? 'item' : 'items'} preserved
+              {t('count', { count: keepsakes.length })}
             </p>
           </div>
           <Link
             href="/keepsakes/new"
             className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-5 py-2.5 text-sm font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
           >
-            + New Keepsake
+            + {t('new')}
           </Link>
         </div>
 
         <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-4 mb-8">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm text-muted-foreground mr-2">Filter:</span>
             <FilterButton
               active={filterType === 'all'}
               onClick={() => setFilterType('all')}
             >
-              All
+              {t('filter.all')}
             </FilterButton>
-            {(Object.keys(typeLabels) as KeepsakeType[]).map((type) => (
+            {keepsakeTypes.map((type) => (
               <FilterButton
                 key={type}
                 active={filterType === type}
                 onClick={() => setFilterType(type)}
               >
-                {typeIcons[type]} {typeLabels[type]}
+                {typeIcons[type]} {t(`types.${type}`)}
               </FilterButton>
             ))}
           </div>
@@ -128,12 +115,12 @@ export default function KeepsakesPage() {
                     <div>
                       <h3 className="font-medium text-foreground">{keepsake.title}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {typeLabels[keepsake.type]} · Updated {formatDate(keepsake.updatedAt)}
+                        {t(`types.${keepsake.type}`)} · {t('card.updatedAt', { date: formatDate(keepsake.updatedAt) })}
                       </p>
                     </div>
                   </div>
                   <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                    Edit →
+                    →
                   </span>
                 </div>
               </Link>
@@ -169,6 +156,8 @@ function FilterButton({
 }
 
 function EmptyState({ hasKeepsakes }: { hasKeepsakes: boolean }) {
+  const t = useTranslations('keepsakes.empty');
+
   return (
     <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
       <div className="max-w-sm mx-auto space-y-4">
@@ -178,19 +167,17 @@ function EmptyState({ hasKeepsakes }: { hasKeepsakes: boolean }) {
           </svg>
         </div>
         <h3 className="font-display text-xl text-foreground">
-          {hasKeepsakes ? 'No keepsakes match your filter' : 'Create your first keepsake'}
+          {t('title')}
         </h3>
         <p className="text-muted-foreground">
-          {hasKeepsakes
-            ? 'Try selecting a different filter to see your keepsakes.'
-            : 'Preserve a message, memory, or wish for your loved ones.'}
+          {t('description')}
         </p>
         {!hasKeepsakes && (
           <Link
             href="/keepsakes/new"
             className="inline-block bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
           >
-            Create Keepsake
+            {t('cta')}
           </Link>
         )}
       </div>

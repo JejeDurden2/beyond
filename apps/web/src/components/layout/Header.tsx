@@ -2,13 +2,17 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
+import { LanguageSwitcher } from '@/components/features/settings';
 
 export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
   const pathname = usePathname();
+  const t = useTranslations('nav');
+  const tLanding = useTranslations('landing.hero');
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => pathname === path || pathname.endsWith(path);
 
   return (
     <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
@@ -28,23 +32,26 @@ export function Header() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Dashboard
+                {t('dashboard')}
               </Link>
               <Link
                 href="/keepsakes"
                 className={`text-sm font-medium transition-colors duration-200 ease-out ${
-                  pathname.startsWith('/keepsakes')
+                  pathname.includes('/keepsakes')
                     ? 'text-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Keepsakes
+                {t('keepsakes')}
               </Link>
             </nav>
           )}
         </div>
 
         <div className="flex items-center gap-4">
+          <div className="hidden md:block">
+            <LanguageSwitcher />
+          </div>
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground hidden sm:block">
@@ -54,7 +61,7 @@ export function Header() {
                 onClick={logout}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out"
               >
-                Sign out
+                {t('logout')}
               </button>
             </div>
           ) : (
@@ -63,13 +70,13 @@ export function Header() {
                 href="/login"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out"
               >
-                Sign in
+                {t('login')}
               </Link>
               <Link
                 href="/register"
                 className="bg-foreground text-background hover:bg-foreground/90 rounded-lg px-4 py-2 text-sm font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
               >
-                Get started
+                {tLanding('ctaGuest')}
               </Link>
             </div>
           )}

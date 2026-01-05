@@ -1,11 +1,15 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 interface PasswordStrengthProps {
   password: string;
 }
 
-function getStrength(password: string): { score: number; label: string; color: string } {
-  if (!password) return { score: 0, label: '', color: 'bg-muted' };
+type StrengthLevel = 'weak' | 'fair' | 'good' | 'strong';
+
+function getStrength(password: string): { score: number; level: StrengthLevel | null; color: string } {
+  if (!password) return { score: 0, level: null, color: 'bg-muted' };
 
   let score = 0;
 
@@ -23,7 +27,7 @@ function getStrength(password: string): { score: number; label: string; color: s
   // Normalize to 0-4 scale
   const normalizedScore = Math.min(Math.floor(score / 2), 4);
 
-  const labels = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong'];
+  const levels: (StrengthLevel | null)[] = [null, 'weak', 'fair', 'good', 'strong'];
   const colors = [
     'bg-red-400',
     'bg-orange-400',
@@ -34,13 +38,14 @@ function getStrength(password: string): { score: number; label: string; color: s
 
   return {
     score: normalizedScore,
-    label: labels[normalizedScore],
+    level: levels[normalizedScore],
     color: colors[normalizedScore],
   };
 }
 
 export function PasswordStrength({ password }: PasswordStrengthProps) {
-  const { score, label, color } = getStrength(password);
+  const t = useTranslations('auth.passwordStrength');
+  const { score, level, color } = getStrength(password);
 
   if (!password) return null;
 
@@ -56,7 +61,7 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
           />
         ))}
       </div>
-      <p className="text-xs text-muted-foreground">{label}</p>
+      {level && <p className="text-xs text-muted-foreground">{t(level)}</p>}
     </div>
   );
 }

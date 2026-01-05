@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Inter, Fraunces } from 'next/font/google';
-import { AuthProvider } from '@/hooks/use-auth';
 import './globals.css';
 
 const inter = Inter({
@@ -25,9 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html>
       <body className={`${inter.variable} ${fraunces.variable} font-sans antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        {children}
       </body>
     </html>
   );

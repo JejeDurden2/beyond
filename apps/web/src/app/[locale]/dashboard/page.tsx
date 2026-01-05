@@ -2,13 +2,16 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { useAuth } from '@/hooks/use-auth';
 import { getKeepsakes } from '@/lib/api/keepsakes';
-import type { KeepsakeSummary } from '@/types';
+import type { KeepsakeSummary, KeepsakeType } from '@/types';
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const t = useTranslations('dashboard');
+  const tKeepsakes = useTranslations('keepsakes');
   const [keepsakes, setKeepsakes] = useState<KeepsakeSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,51 +29,44 @@ export default function DashboardPage() {
     loadData();
   }, []);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
-
   return (
     <AppShell requireAuth>
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="space-y-2 mb-12">
           <h1 className="font-display text-display-sm text-foreground">
-            {getGreeting()}{user?.email ? `, ${user.email.split('@')[0]}` : ''}.
+            {t('title')}{user?.email ? `, ${user.email.split('@')[0]}` : ''}.
           </h1>
           <p className="text-lg text-muted-foreground">
-            Your vault is secure.
+            {t('welcome')}
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           <StatCard
-            title="Vault Status"
-            value="Active"
-            subtitle="Your vault is protected"
+            title={t('stats.vault.title')}
+            value={t('stats.vault.active')}
+            subtitle={t('welcome')}
             icon={
               <div className="w-3 h-3 rounded-full bg-green-500" />
             }
           />
           <StatCard
-            title="Keepsakes"
+            title={t('stats.keepsakes.title')}
             value={isLoading ? '...' : keepsakes.length.toString()}
-            subtitle={keepsakes.length === 1 ? 'item preserved' : 'items preserved'}
+            subtitle={t('stats.keepsakes.count', { count: keepsakes.length })}
             linkTo="/keepsakes"
-            linkLabel="View all"
+            linkLabel={t('recent.viewAll')}
           />
         </div>
 
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl text-foreground">Recent Keepsakes</h2>
+            <h2 className="font-display text-xl text-foreground">{t('recent.title')}</h2>
             <Link
               href="/keepsakes/new"
               className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-5 py-2.5 text-sm font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
             >
-              + New Keepsake
+              + {tKeepsakes('new')}
             </Link>
           </div>
 
@@ -138,6 +134,8 @@ function StatCard({
 }
 
 function EmptyState() {
+  const t = useTranslations('dashboard.empty');
+
   return (
     <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
       <div className="max-w-sm mx-auto space-y-4">
@@ -146,15 +144,15 @@ function EmptyState() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
         </div>
-        <h3 className="font-display text-xl text-foreground">Create your first keepsake</h3>
+        <h3 className="font-display text-xl text-foreground">{t('title')}</h3>
         <p className="text-muted-foreground">
-          Preserve a message, memory, or wish for your loved ones.
+          {t('description')}
         </p>
         <Link
           href="/keepsakes/new"
           className="inline-block bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
         >
-          Create Keepsake
+          {t('cta')}
         </Link>
       </div>
     </div>
@@ -170,25 +168,11 @@ const typeIcons: Record<string, string> = {
   scheduled_action: '📅',
 };
 
-const typeLabels: Record<string, string> = {
-  text: 'Text',
-  letter: 'Letter',
-  photo: 'Photo',
-  video: 'Video',
-  wish: 'Wish',
-  scheduled_action: 'Scheduled Action',
-};
-
 function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
+  const t = useTranslations('keepsakes');
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
     return date.toLocaleDateString();
   };
 
@@ -203,7 +187,7 @@ function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
           <div>
             <h3 className="font-medium text-foreground">{keepsake.title}</h3>
             <p className="text-sm text-muted-foreground">
-              {typeLabels[keepsake.type] || keepsake.type} · Updated {formatDate(keepsake.updatedAt)}
+              {t(`types.${keepsake.type as KeepsakeType}`)} · {t('card.updatedAt', { date: formatDate(keepsake.updatedAt) })}
             </p>
           </div>
         </div>
