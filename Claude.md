@@ -9,6 +9,14 @@
 
 ---
 
+## Skills (Detailed Documentation)
+
+Extended documentation is available in `.claude/skills/`:
+
+- **[design-system.md](.claude/skills/design-system.md)** - Complete design system with colors, typography, components
+
+---
+
 ## Monorepo Structure
 
 ```
@@ -21,13 +29,15 @@
 │   ├── config/              # ESLint, TSConfig, Tailwind
 │   ├── types/               # Shared TypeScript types
 │   └── utils/               # Shared utilities
+├── .claude/
+│   └── skills/              # Detailed Claude guidelines
 ├── turbo.json
 └── package.json
 ```
 
 ---
 
-## Backend - Architecture Hexagonale
+## Backend - Hexagonal Architecture
 
 ```
 apps/api/src/
@@ -52,12 +62,12 @@ apps/api/src/
 └── main.ts
 ```
 
-### Principes DDD
+### DDD Principles
 
-- **Entities:** Identité unique, cycle de vie, comparaison par ID
-- **Value Objects:** Immutables, comparaison par valeur, auto-validation
-- **Aggregates:** Frontière de consistance, accès via root uniquement
-- **Repository pattern:** Interface dans domain/, implémentation dans infrastructure/
+- **Entities:** Unique identity, lifecycle, comparison by ID
+- **Value Objects:** Immutable, comparison by value, self-validating
+- **Aggregates:** Consistency boundary, access via root only
+- **Repository pattern:** Interface in domain/, implementation in infrastructure/
 
 ### NestJS + Hexagonal
 
@@ -91,66 +101,49 @@ providers: [
 apps/web/src/
 ├── app/                    # Routes (App Router)
 ├── components/
-│   ├── ui/                 # shadcn (importés depuis packages/ui)
-│   └── features/           # Components métier
+│   ├── ui/                 # shadcn (imported from packages/ui)
+│   └── features/           # Business components
 ├── hooks/
 ├── lib/
 │   ├── api/                # API client (fetch/axios)
 │   └── utils/
-├── stores/                 # Zustand si nécessaire
+├── stores/                 # Zustand if needed
 └── types/
 ```
 
-### Conventions React
+### React Conventions
 
-- **Components:** PascalCase, un component par fichier
-- **Hooks:** Préfixe `use`, logique réutilisable uniquement
-- **Server Components par défaut**, `"use client"` uniquement si nécessaire
-- **Colocation:** Tests et styles au plus proche du component
+- **Components:** PascalCase, one component per file
+- **Hooks:** `use` prefix, reusable logic only
+- **Server Components by default**, `"use client"` only when necessary
+- **Colocation:** Tests and styles close to component
 
-### shadcn/ui + Design sobre
+### Design System (Summary)
 
-```typescript
-// tailwind.config.ts - Palette sobre et solennelle
-const config = {
-  theme: {
-    extend: {
-      colors: {
-        background: "hsl(0 0% 100%)",      // Blanc pur
-        foreground: "hsl(222 47% 11%)",    // Slate-900
-        muted: "hsl(210 40% 96%)",
-        accent: "hsl(215 20% 65%)",        // Bleu-gris sobre
-        border: "hsl(214 32% 91%)",
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-      },
-    },
-  },
-};
-```
+See `.claude/skills/design-system.md` for complete documentation.
 
-- Espacement généreux, peu d'effets visuels
-- Typographie claire, hiérarchie marquée
-- Animations subtiles (`duration-200`, `ease-out`)
-- Pas de couleurs saturées, privilégier les neutres
+**Key points:**
+- Premium, private-banking aesthetic
+- Fraunces (serif) for headings, Inter for body
+- Warm off-white background, deep charcoal text, muted gold accent
+- Soft shadows (`shadow-soft`, `shadow-soft-md`)
+- All transitions: `duration-200 ease-out`
 
 ---
 
 ## Tests
 
-### Stratégie
+### Strategy
 
-| Type | Outil | Cible | Couverture |
-|------|-------|-------|------------|
+| Type | Tool | Target | Coverage |
+|------|------|--------|----------|
 | Unit | Vitest | Domain, Utils | 80%+ |
 | Integration | Vitest + Supertest | Use cases, API | 70%+ |
-| E2E | Playwright | User flows critiques | Smoke tests |
+| E2E | Playwright | Critical user flows | Smoke tests |
 
-### Backend - Tests unitaires domain
+### Backend - Domain Unit Tests
 
 ```typescript
-// user.entity.spec.ts
 describe('User', () => {
   it('should create valid user', () => {
     const user = User.create({ email: Email.create('test@example.com') });
@@ -164,10 +157,9 @@ describe('User', () => {
 });
 ```
 
-### Frontend - Tests components
+### Frontend - Component Tests
 
 ```typescript
-// feature.test.tsx
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -175,118 +167,133 @@ describe('LoginForm', () => {
   it('should submit valid credentials', async () => {
     const onSubmit = vi.fn();
     render(<LoginForm onSubmit={onSubmit} />);
-    
+
     await userEvent.type(screen.getByLabelText(/email/i), 'test@test.com');
     await userEvent.type(screen.getByLabelText(/password/i), 'password123');
     await userEvent.click(screen.getByRole('button', { name: /login/i }));
-    
+
     expect(onSubmit).toHaveBeenCalledWith({ email: 'test@test.com', password: 'password123' });
   });
 });
 ```
 
-### E2E - Playwright
+### Scripts
 
-```typescript
-// auth.e2e.ts
-test('user can login and access dashboard', async ({ page }) => {
-  await page.goto('/login');
-  await page.fill('[name="email"]', 'user@test.com');
-  await page.fill('[name="password"]', 'password');
-  await page.click('button[type="submit"]');
-  
-  await expect(page).toHaveURL('/dashboard');
-  await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
-});
-```
-
-### Scripts Turborepo
-
-```json
-{
-  "scripts": {
-    "test": "turbo run test",
-    "test:e2e": "turbo run test:e2e",
-    "test:coverage": "turbo run test -- --coverage"
-  }
-}
+```bash
+pnpm test          # Run all tests
+pnpm test:e2e      # Run E2E tests
+pnpm test:coverage # Run with coverage
 ```
 
 ---
 
 ## Privacy by Design
 
-### Principes RGPD intégrés
+### GDPR Principles
 
-1. **Minimisation des données:** Ne collecter que le nécessaire
-2. **Pseudonymisation:** IDs opaques (UUID v4), pas d'emails dans les logs
-3. **Chiffrement:** At-rest (PostgreSQL TDE), in-transit (TLS 1.3)
-4. **Retention:** Politique de suppression automatique
-5. **Consentement:** Explicite, granulaire, révocable
+1. **Data minimization:** Collect only what's necessary
+2. **Pseudonymization:** Opaque IDs (UUID v4), no emails in logs
+3. **Encryption:** At-rest (PostgreSQL TDE), in-transit (TLS 1.3)
+4. **Retention:** Automatic deletion policy
+5. **Consent:** Explicit, granular, revocable
 
-### Implémentation backend
-
-```typescript
-// shared/decorators/personal-data.decorator.ts
-export const PersonalData = (category: 'identity' | 'contact' | 'sensitive') => 
-  SetMetadata('personalData', category);
-
-// domain/entities/user.entity.ts
-export class User extends AggregateRoot {
-  @PersonalData('identity')
-  private readonly email: Email;
-  
-  @PersonalData('contact')
-  private readonly phone?: Phone;
-}
-
-// infrastructure/interceptors/audit-log.interceptor.ts
-// Log les accès aux données personnelles sans les exposer
-```
-
-### Prisma - Soft delete & anonymisation
+### Prisma - Soft Delete & Anonymization
 
 ```prisma
 model User {
-  id          String    @id @default(uuid())
-  email       String    @unique
-  deletedAt   DateTime?
+  id           String    @id @default(uuid())
+  email        String    @unique
+  deletedAt    DateTime?
   anonymizedAt DateTime?
-  
+
   @@index([deletedAt])
 }
 ```
 
-```typescript
-// Anonymisation au lieu de suppression
-async anonymize(userId: string): Promise<void> {
-  await this.prisma.user.update({
-    where: { id: userId },
-    data: {
-      email: `anonymized-${userId}@deleted.local`,
-      phone: null,
-      anonymizedAt: new Date(),
-    },
-  });
-}
+---
+
+## Database
+
+### Development (Docker)
+
+```bash
+docker compose up -d    # Start PostgreSQL on port 5433
+pnpm db:generate        # Generate Prisma client
+pnpm db:push            # Push schema to database
+pnpm db:studio          # Open Prisma Studio
 ```
 
-### Frontend - Consentement
+### Production (Neon)
 
-```typescript
-// hooks/use-consent.ts
-export function useConsent() {
-  const [consent, setConsent] = useState<ConsentState | null>(null);
+- Serverless PostgreSQL with autoscaling
+- Connection pooling via PgBouncer
+- Branching for preview environments
 
-  const grantConsent = (purposes: ConsentPurpose[]) => {
-    const state = { purposes, grantedAt: new Date().toISOString() };
-    // Stockage local + sync API
-  };
+---
 
-  const revokeConsent = (purpose: ConsentPurpose) => { /* ... */ };
-  
-  return { consent, grantConsent, revokeConsent };
-}
+## Git & Conventional Commits
+
+### Commit Format
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Types
+
+| Type | Description |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation only |
+| `style` | Formatting, no code change |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `perf` | Performance improvement |
+| `test` | Adding or updating tests |
+| `build` | Build system or dependencies |
+| `ci` | CI configuration |
+| `chore` | Other changes (tooling, etc.) |
+
+### Scopes
+
+| Scope | Description |
+|-------|-------------|
+| `api` | Backend NestJS app |
+| `web` | Frontend Next.js app |
+| `ui` | Shared UI package |
+| `auth` | Authentication module |
+| `vault` | Vault module |
+| `keepsake` | Keepsake module |
+| `beneficiary` | Beneficiary module |
+| `db` | Database/Prisma changes |
+| `config` | Configuration changes |
+| `deps` | Dependencies |
+
+### Examples
+
+```bash
+feat(keepsake): add encrypted content support
+fix(api): handle duplicate email registration error
+refactor(auth): rename legacy-item to keepsake
+style(web): update landing page with premium design
+test(vault): add encryption salt validation tests
+docs: add setup instructions
+build(deps): upgrade prisma to 6.19
+ci: add e2e tests to pipeline
+```
+
+### Breaking Changes
+
+Add `!` after type/scope and explain in footer:
+
+```
+feat(api)!: change keepsake API response format
+
+BREAKING CHANGE: The keepsakes endpoint now returns `keepsakes` instead of `items`
 ```
 
 ---
@@ -336,38 +343,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm db:generate
       - run: pnpm build
-
-  e2e:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps
-      - run: pnpm test:e2e
-```
-
----
-
-## Database
-
-### Development (Docker)
-```bash
-docker compose up -d           # Start PostgreSQL on port 5433
-pnpm db:generate              # Generate Prisma client
-pnpm db:push                  # Push schema to database
-pnpm db:studio                # Open Prisma Studio
-```
-
-### Production (Neon)
-- Serverless PostgreSQL with autoscaling
-- Connection pooling via PgBouncer
-- Branching for preview environments
-
-```env
-# Production DATABASE_URL format
-DATABASE_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/beyond?sslmode=require"
 ```
 
 ---
@@ -375,12 +350,14 @@ DATABASE_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/beyond?sslmode=
 ## Linting & Formatting
 
 ### ESLint
+
 - Shared configs in `packages/config/eslint/`
 - `base.js` - TypeScript base rules
 - `react.js` - React + JSX accessibility
 - `nestjs.js` - NestJS backend rules
 
 ### Prettier
+
 ```json
 {
   "semi": true,
@@ -392,6 +369,7 @@ DATABASE_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/beyond?sslmode=
 ```
 
 ### Scripts
+
 ```bash
 pnpm lint          # Run ESLint on all packages
 pnpm format        # Format all files with Prettier
@@ -400,26 +378,18 @@ pnpm format:check  # Check formatting (CI)
 
 ---
 
-## Conventions de code
+## Code Conventions
 
 ### TypeScript
 
-- `strict: true` obligatoire
-- Éviter `any`, préférer `unknown` + type guards
-- Result pattern pour les erreurs métier (neverthrow)
-
-### Commits
-
-```
-feat(domain): add user registration use case
-fix(api): handle duplicate email error
-test(web): add login form tests
-```
+- `strict: true` required
+- Avoid `any`, prefer `unknown` + type guards
+- Result pattern for business errors (neverthrow)
 
 ### PR Checklist
 
-- [ ] Tests unitaires ajoutés/mis à jour
-- [ ] Tests E2E si flow utilisateur impacté
-- [ ] Pas de données personnelles dans les logs
-- [ ] Types stricts, pas de `any`
-- [ ] Documentation mise à jour si API publique
+- [ ] Unit tests added/updated
+- [ ] E2E tests if user flow impacted
+- [ ] No personal data in logs
+- [ ] Strict types, no `any`
+- [ ] Documentation updated if public API
