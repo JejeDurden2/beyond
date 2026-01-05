@@ -1,4 +1,5 @@
 import { Injectable, Inject, ConflictException, BadRequestException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { User } from '../../domain/entities/user.entity';
 import { Email } from '../../domain/value-objects/email.value-object';
 import { UserRepository, USER_REPOSITORY } from '../../domain/repositories/user.repository';
@@ -10,9 +11,12 @@ export interface RegisterCommandInput {
 }
 
 export interface RegisterCommandOutput {
-  id: string;
-  email: string;
-  emailVerificationToken: string;
+  accessToken: string;
+  user: {
+    id: string;
+    email: string;
+    emailVerified: boolean;
+  };
 }
 
 @Injectable()
@@ -21,6 +25,7 @@ export class RegisterCommand {
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
     private readonly createVaultHandler: CreateVaultHandler,
+    private readonly jwtService: JwtService,
   ) {}
 
   async execute(input: RegisterCommandInput): Promise<RegisterCommandOutput> {
@@ -52,10 +57,21 @@ export class RegisterCommand {
     // Log verification email (MVP - would send email in production)
     console.log(`[EMAIL] Verification link for ${user.email.value}: /auth/verify/${user.emailVerificationToken}`);
 
-    return {
-      id: user.id,
+    // Generate JWT token
+    const payload = {
+      sub: user.id,
       email: user.email.value,
-      emailVerificationToken: user.emailVerificationToken!,
+      emailVerified: user.emailVerified,
+    };
+    const accessToken = this.jwtService.sign(payload);
+
+    return {
+      accessToken,
+      user: {
+        id: user.id,
+        email: user.email.value,
+        emailVerified: user.emailVerified,
+      },
     };
   }
 }

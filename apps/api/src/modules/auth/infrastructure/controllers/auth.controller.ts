@@ -21,11 +21,7 @@ export class AuthController {
   @Public()
   @Post('register')
   async register(@Body() dto: RegisterDto) {
-    const result = await this.registerCommand.execute(dto);
-    return {
-      id: result.id,
-      email: result.email,
-    };
+    return this.registerCommand.execute(dto);
   }
 
   @Public()
