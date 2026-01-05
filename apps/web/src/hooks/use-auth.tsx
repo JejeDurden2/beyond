@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import type { User } from '@/types';
 import * as authApi from '@/lib/api/auth';
 import { clearToken } from '@/lib/api/client';
