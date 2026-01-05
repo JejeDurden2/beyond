@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String    @id @default(uuid())
+  email                  String    @unique
+  passwordHash           String
+  totpSecret             String?
+  emailVerified          Boolean   @default(false)
+  emailVerificationToken String?   @unique
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  deletedAt              DateTime?
+
+  vault           Vault?
+  trustedContacts TrustedContact[]
+
+  @@index([deletedAt])
+  @@index([emailVerificationToken])
+}
+
+model Vault {
+  id             String      @id @default(uuid())
+  userId         String      @unique
+  user           User        @relation(fields: [userId], references: [id])
+  status         VaultStatus @default(active)
+  encryptionSalt String
+  unsealedAt     DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  keepsakes         Keepsake[]
+  beneficiaries     Beneficiary[]
+  deathDeclarations DeathDeclaration[]
+}
+
+enum VaultStatus {
+  active
+  pending_verification
+  unsealed
+}
+
+model Keepsake {
+  id               String       @id @default(uuid())
+  vaultId          String
+  vault            Vault        @relation(fields: [vaultId], references: [id])
+  type             KeepsakeType
+  title            String
+  encryptedContent String
+  contentIV        String
+  revealDelay      Int?
+  revealDate       DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  assignments KeepsakeAssignment[]
+
+  @@index([vaultId])
+}
+
+enum KeepsakeType {
+  text
+  letter
+  photo
+  video
+  wish
+  scheduled_action
+}
+
+model Beneficiary {
+  id           String    @id @default(uuid())
+  vaultId      String
+  vault        Vault     @relation(fields: [vaultId], references: [id])
+  name         String
+  email        String
+  relationship String?
+  accessToken  String?   @unique
+  accessedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  assignments KeepsakeAssignment[]
+
+  @@unique([vaultId, email])
+  @@index([vaultId])
+}
+
+model KeepsakeAssignment {
+  id            String      @id @default(uuid())
+  keepsakeId    String
+  keepsake      Keepsake    @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  beneficiaryId String
+  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+
+  @@unique([keepsakeId, beneficiaryId])
+}
+
+model TrustedContact {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  name             String
+  email            String
+  verificationCode String   @unique
+  createdAt        DateTime @default(now())
+
+  declarations DeathDeclaration[]
+
+  @@unique([userId, email])
+  @@index([userId])
+}
+
+model DeathDeclaration {
+  id               String         @id @default(uuid())
+  vaultId          String
+  vault            Vault          @relation(fields: [vaultId], references: [id])
+  trustedContactId String
+  trustedContact   TrustedContact @relation(fields: [trustedContactId], references: [id])
+  declaredAt       DateTime       @default(now())
+
+  @@unique([vaultId, trustedContactId])
+  @@index([vaultId])
+}

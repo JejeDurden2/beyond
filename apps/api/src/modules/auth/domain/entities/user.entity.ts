@@ -1,0 +1,114 @@
+import { AggregateRoot } from '@/shared/domain';
+import { Result, ok, err } from 'neverthrow';
+import { Email } from '../value-objects/email.value-object';
+import { Password } from '../value-objects/password.value-object';
+import { randomBytes } from 'crypto';
+
+export interface UserProps {
+  id?: string;
+  email: Email;
+  password: Password;
+  emailVerified: boolean;
+  emailVerificationToken?: string | null;
+  totpSecret?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date | null;
+}
+
+export interface CreateUserInput {
+  email: string;
+  password: string;
+}
+
+export class User extends AggregateRoot<UserProps> {
+  private constructor(props: UserProps) {
+    super(props);
+  }
+
+  static async create(input: CreateUserInput): Promise<Result<User, string>> {
+    const emailResult = Email.create(input.email);
+    if (emailResult.isErr()) {
+      return err(emailResult.error);
+    }
+
+    const passwordResult = await Password.create(input.password);
+    if (passwordResult.isErr()) {
+      return err(passwordResult.error);
+    }
+
+    const emailVerificationToken = randomBytes(32).toString('hex');
+
+    return ok(
+      new User({
+        email: emailResult.value,
+        password: passwordResult.value,
+        emailVerified: false,
+        emailVerificationToken,
+      }),
+    );
+  }
+
+  static reconstitute(props: UserProps): User {
+    return new User(props);
+  }
+
+  get email(): Email {
+    return this.props.email;
+  }
+
+  get password(): Password {
+    return this.props.password;
+  }
+
+  get emailVerified(): boolean {
+    return this.props.emailVerified;
+  }
+
+  get emailVerificationToken(): string | null {
+    return this.props.emailVerificationToken ?? null;
+  }
+
+  get totpSecret(): string | null {
+    return this.props.totpSecret ?? null;
+  }
+
+  get deletedAt(): Date | null {
+    return this.props.deletedAt ?? null;
+  }
+
+  async verifyPassword(plainPassword: string): Promise<boolean> {
+    return this.props.password.compare(plainPassword);
+  }
+
+  verifyEmail(token: string): Result<void, string> {
+    if (this.props.emailVerified) {
+      return err('Email is already verified');
+    }
+
+    if (this.props.emailVerificationToken !== token) {
+      return err('Invalid verification token');
+    }
+
+    this.props.emailVerified = true;
+    this.props.emailVerificationToken = null;
+    this._updatedAt = new Date();
+
+    return ok(undefined);
+  }
+
+  setTotpSecret(secret: string): void {
+    this.props.totpSecret = secret;
+    this._updatedAt = new Date();
+  }
+
+  removeTotpSecret(): void {
+    this.props.totpSecret = null;
+    this._updatedAt = new Date();
+  }
+
+  softDelete(): void {
+    this.props.deletedAt = new Date();
+    this._updatedAt = new Date();
+  }
+}
