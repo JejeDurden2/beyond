@@ -25,9 +25,7 @@ describe('Vault Entity', () => {
       expect(result2.isOk()).toBe(true);
 
       if (result1.isOk() && result2.isOk()) {
-        expect(result1.value.encryptionSalt.value).not.toBe(
-          result2.value.encryptionSalt.value,
-        );
+        expect(result1.value.encryptionSalt.value).not.toBe(result2.value.encryptionSalt.value);
       }
     });
 
@@ -98,9 +96,7 @@ describe('Vault Entity', () => {
         unsealedAt: null,
       });
 
-      expect(() => vault.startVerification()).toThrow(
-        'Vault must be active to start verification',
-      );
+      expect(() => vault.startVerification()).toThrow('Vault must be active to start verification');
     });
   });
 
@@ -127,9 +123,7 @@ describe('Vault Entity', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(() => result.value.unseal()).toThrow(
-          'Vault must be pending verification to unseal',
-        );
+        expect(() => result.value.unseal()).toThrow('Vault must be pending verification to unseal');
       }
     });
   });

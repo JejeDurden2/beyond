@@ -1,7 +1,4 @@
-import {
-  Keepsake as PrismaKeepsake,
-  KeepsakeType as PrismaKeepsakeType,
-} from '@prisma/client';
+import { Keepsake as PrismaKeepsake, KeepsakeType as PrismaKeepsakeType } from '@prisma/client';
 import { Keepsake, KeepsakeType } from '../../domain/entities/keepsake.entity';
 import { EncryptedContent } from '../../domain/value-objects/encrypted-content.value-object';
 
@@ -25,10 +22,7 @@ export class KeepsakeMapper {
   };
 
   static toDomain(raw: PrismaKeepsake): Keepsake {
-    const encryptedContent = EncryptedContent.fromPersistence(
-      raw.encryptedContent,
-      raw.contentIV,
-    );
+    const encryptedContent = EncryptedContent.fromPersistence(raw.encryptedContent, raw.contentIV);
 
     return Keepsake.reconstitute({
       id: raw.id,

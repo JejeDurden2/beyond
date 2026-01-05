@@ -99,6 +99,7 @@
       "emailPlaceholder": "vous@exemple.com",
       "password": "Mot de passe",
       "passwordPlaceholder": "Choisissez un mot de passe sécurisé",
+      "confirmPassword": "Confirmer le mot de passe",
       "submit": "Créer mon coffre",
       "submitting": "Création...",
       "hasAccount": "Déjà un compte ?",
@@ -114,7 +115,9 @@
     "errors": {
       "invalidCredentials": "Email ou mot de passe incorrect",
       "emailExists": "Cette adresse email est déjà utilisée",
-      "unexpected": "Une erreur inattendue est survenue"
+      "unexpected": "Une erreur inattendue est survenue",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "weakPassword": "Le mot de passe doit contenir au moins 8 caractères"
     }
   },
   "dashboard": {

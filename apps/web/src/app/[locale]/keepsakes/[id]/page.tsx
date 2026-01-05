@@ -114,10 +114,7 @@ export default function KeepsakeDetailPage() {
           <h1 className="font-display text-display-sm text-foreground mb-4">
             {t('notFound.title')}
           </h1>
-          <Link
-            href="/keepsakes"
-            className="text-accent hover:text-accent/80 transition-colors"
-          >
+          <Link href="/keepsakes" className="text-accent hover:text-accent/80 transition-colors">
             ← {t('notFound.back')}
           </Link>
         </div>
@@ -143,7 +140,8 @@ export default function KeepsakeDetailPage() {
               {t('edit.title', { type: t(`types.${keepsake.type as KeepsakeType}`) })}
             </h1>
             <p className="text-sm text-muted-foreground">
-              {t('edit.createdAt', { date: formatDate(keepsake.createdAt) })} · {t('edit.updatedAt', { date: formatDate(keepsake.updatedAt) })}
+              {t('edit.createdAt', { date: formatDate(keepsake.createdAt) })} ·{' '}
+              {t('edit.updatedAt', { date: formatDate(keepsake.updatedAt) })}
             </p>
           </div>
 
@@ -206,9 +204,7 @@ export default function KeepsakeDetailPage() {
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-foreground/20 backdrop-blur-sm flex items-center justify-center p-6 z-50">
             <div className="bg-card rounded-2xl border border-border/50 shadow-soft-lg p-8 max-w-md w-full animate-slide-up">
-              <h2 className="font-display text-xl text-foreground mb-2">
-                {t('delete.title')}
-              </h2>
+              <h2 className="font-display text-xl text-foreground mb-2">{t('delete.title')}</h2>
               <p className="text-muted-foreground mb-6">
                 {t('delete.description', { title: keepsake.title })}
               </p>

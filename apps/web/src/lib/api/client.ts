@@ -30,10 +30,7 @@ export function clearToken(): void {
   localStorage.removeItem('accessToken');
 }
 
-export async function apiClient<T>(
-  endpoint: string,
-  options: RequestOptions = {},
-): Promise<T> {
+export async function apiClient<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { skipAuth = false, headers: customHeaders, ...rest } = options;
 
   const headers: HeadersInit = {

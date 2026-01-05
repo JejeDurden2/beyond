@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import type { User } from '@/types';
 import * as authApi from '@/lib/api/auth';
@@ -49,17 +42,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [refreshUser]);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const response = await authApi.login({ email, password });
-    setUser(response.user);
-    router.push('/dashboard');
-  }, [router]);
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const response = await authApi.login({ email, password });
+      setUser(response.user);
+      router.push('/dashboard');
+    },
+    [router],
+  );
 
-  const register = useCallback(async (email: string, password: string) => {
-    const response = await authApi.register({ email, password });
-    setUser(response.user);
-    router.push('/dashboard');
-  }, [router]);
+  const register = useCallback(
+    async (email: string, password: string) => {
+      const response = await authApi.register({ email, password });
+      setUser(response.user);
+      router.push('/dashboard');
+    },
+    [router],
+  );
 
   const logout = useCallback(() => {
     authApi.logout();

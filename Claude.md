@@ -86,9 +86,7 @@ export class PrismaUserRepository implements UserRepository {
 }
 
 // Module binding
-providers: [
-  { provide: 'UserRepository', useClass: PrismaUserRepository }
-]
+providers: [{ provide: 'UserRepository', useClass: PrismaUserRepository }];
 ```
 
 ---
@@ -123,6 +121,7 @@ apps/web/src/
 See `.claude/skills/design-system.md` for complete documentation.
 
 **Key points:**
+
 - Premium, private-banking aesthetic
 - Fraunces (serif) for headings, Inter for body
 - Warm off-white background, deep charcoal text, muted gold accent
@@ -135,11 +134,11 @@ See `.claude/skills/design-system.md` for complete documentation.
 
 ### Strategy
 
-| Type | Tool | Target | Coverage |
-|------|------|--------|----------|
-| Unit | Vitest | Domain, Utils | 80%+ |
-| Integration | Vitest + Supertest | Use cases, API | 70%+ |
-| E2E | Playwright | Critical user flows | Smoke tests |
+| Type        | Tool               | Target              | Coverage    |
+| ----------- | ------------------ | ------------------- | ----------- |
+| Unit        | Vitest             | Domain, Utils       | 80%+        |
+| Integration | Vitest + Supertest | Use cases, API      | 70%+        |
+| E2E         | Playwright         | Critical user flows | Smoke tests |
 
 ### Backend - Domain Unit Tests
 
@@ -245,33 +244,33 @@ pnpm db:studio          # Open Prisma Studio
 
 ### Types
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, no code change |
+| Type       | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| `feat`     | New feature                                             |
+| `fix`      | Bug fix                                                 |
+| `docs`     | Documentation only                                      |
+| `style`    | Formatting, no code change                              |
 | `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `perf` | Performance improvement |
-| `test` | Adding or updating tests |
-| `build` | Build system or dependencies |
-| `ci` | CI configuration |
-| `chore` | Other changes (tooling, etc.) |
+| `perf`     | Performance improvement                                 |
+| `test`     | Adding or updating tests                                |
+| `build`    | Build system or dependencies                            |
+| `ci`       | CI configuration                                        |
+| `chore`    | Other changes (tooling, etc.)                           |
 
 ### Scopes
 
-| Scope | Description |
-|-------|-------------|
-| `api` | Backend NestJS app |
-| `web` | Frontend Next.js app |
-| `ui` | Shared UI package |
-| `auth` | Authentication module |
-| `vault` | Vault module |
-| `keepsake` | Keepsake module |
-| `beneficiary` | Beneficiary module |
-| `db` | Database/Prisma changes |
-| `config` | Configuration changes |
-| `deps` | Dependencies |
+| Scope         | Description             |
+| ------------- | ----------------------- |
+| `api`         | Backend NestJS app      |
+| `web`         | Frontend Next.js app    |
+| `ui`          | Shared UI package       |
+| `auth`        | Authentication module   |
+| `vault`       | Vault module            |
+| `keepsake`    | Keepsake module         |
+| `beneficiary` | Beneficiary module      |
+| `db`          | Database/Prisma changes |
+| `config`      | Configuration changes   |
+| `deps`        | Dependencies            |
 
 ### Examples
 

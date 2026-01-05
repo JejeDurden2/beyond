@@ -99,6 +99,7 @@
       "emailPlaceholder": "you@example.com",
       "password": "Password",
       "passwordPlaceholder": "Choose a secure password",
+      "confirmPassword": "Confirm password",
       "submit": "Create My Vault",
       "submitting": "Creating...",
       "hasAccount": "Already have an account?",
@@ -114,7 +115,9 @@
     "errors": {
       "invalidCredentials": "Invalid email or password",
       "emailExists": "This email address is already in use",
-      "unexpected": "An unexpected error occurred"
+      "unexpected": "An unexpected error occurred",
+      "passwordMismatch": "Passwords do not match",
+      "weakPassword": "Password must be at least 8 characters"
     }
   },
   "dashboard": {

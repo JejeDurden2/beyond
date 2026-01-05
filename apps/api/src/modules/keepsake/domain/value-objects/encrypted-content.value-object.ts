@@ -16,10 +16,7 @@ export class EncryptedContent extends ValueObject<EncryptedContentProps> {
     super(props);
   }
 
-  static encrypt(
-    plaintext: string,
-    encryptionKey: Buffer,
-  ): Result<EncryptedContent, string> {
+  static encrypt(plaintext: string, encryptionKey: Buffer): Result<EncryptedContent, string> {
     if (!plaintext) {
       return err('Content cannot be empty');
     }
@@ -33,10 +30,7 @@ export class EncryptedContent extends ValueObject<EncryptedContentProps> {
       authTagLength: this.AUTH_TAG_LENGTH,
     });
 
-    const encrypted = Buffer.concat([
-      cipher.update(plaintext, 'utf8'),
-      cipher.final(),
-    ]);
+    const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
 
     const authTag = cipher.getAuthTag();
     const encryptedWithTag = Buffer.concat([encrypted, authTag]);

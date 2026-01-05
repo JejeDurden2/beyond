@@ -67,10 +67,7 @@ export class KeepsakeController {
   ) {}
 
   @Post()
-  async create(
-    @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: CreateKeepsakeDto,
-  ) {
+  async create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateKeepsakeDto) {
     return this.createKeepsakeCommand.execute({
       userId: user.id,
       type: dto.type,
@@ -87,10 +84,7 @@ export class KeepsakeController {
   }
 
   @Get(':id')
-  async findOne(
-    @CurrentUser() user: AuthenticatedUser,
-    @Param('id') id: string,
-  ) {
+  async findOne(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     return this.getKeepsakeQuery.execute({
       userId: user.id,
       keepsakeId: id,
@@ -115,10 +109,7 @@ export class KeepsakeController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(
-    @CurrentUser() user: AuthenticatedUser,
-    @Param('id') id: string,
-  ) {
+  async delete(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     await this.deleteKeepsakeCommand.execute({
       userId: user.id,
       keepsakeId: id,

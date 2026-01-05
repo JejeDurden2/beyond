@@ -9,7 +9,14 @@ import { createKeepsake } from '@/lib/api/keepsakes';
 import { ApiError } from '@/lib/api/client';
 import type { KeepsakeType } from '@/types';
 
-const keepsakeTypes: KeepsakeType[] = ['text', 'letter', 'photo', 'video', 'wish', 'scheduled_action'];
+const keepsakeTypes: KeepsakeType[] = [
+  'text',
+  'letter',
+  'photo',
+  'video',
+  'wish',
+  'scheduled_action',
+];
 
 const typeIcons: Record<KeepsakeType, string> = {
   text: '📝',
@@ -78,12 +85,8 @@ export default function NewKeepsakePage() {
         {step === 1 && (
           <div className="space-y-8 animate-fade-in">
             <div className="text-center space-y-2">
-              <h1 className="font-display text-display-sm text-foreground">
-                {t('new')}
-              </h1>
-              <p className="text-muted-foreground">
-                {t('form.chooseType')}
-              </p>
+              <h1 className="font-display text-display-sm text-foreground">{t('new')}</h1>
+              <p className="text-muted-foreground">{t('form.chooseType')}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -95,7 +98,9 @@ export default function NewKeepsakePage() {
                 >
                   <span className="text-3xl block mb-2">{typeIcons[type]}</span>
                   <span className="font-medium text-foreground block">{t(`types.${type}`)}</span>
-                  <span className="text-xs text-muted-foreground">{t(`typeDescriptions.${type}`)}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {t(`typeDescriptions.${type}`)}
+                  </span>
                 </button>
               ))}
             </div>
@@ -111,13 +116,13 @@ export default function NewKeepsakePage() {
               >
                 ← {tCommon('back')}
               </button>
-              <span className="text-sm text-muted-foreground">{t('form.step', { current: 1, total: 1 })}</span>
+              <span className="text-sm text-muted-foreground">
+                {t('form.step', { current: 1, total: 1 })}
+              </span>
             </div>
 
             <div className="text-center space-y-2">
-              <h1 className="font-display text-display-sm text-foreground">
-                {typeLabel}
-              </h1>
+              <h1 className="font-display text-display-sm text-foreground">{typeLabel}</h1>
             </div>
 
             <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">

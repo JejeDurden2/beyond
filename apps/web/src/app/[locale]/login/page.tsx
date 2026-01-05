@@ -39,12 +39,8 @@ export default function LoginPage() {
           <Link href="/" className="font-display text-2xl text-foreground inline-block">
             Beyond
           </Link>
-          <h1 className="font-display text-display-sm text-foreground">
-            {t('login.title')}
-          </h1>
-          <p className="text-muted-foreground">
-            {t('login.subtitle')}
-          </p>
+          <h1 className="font-display text-display-sm text-foreground">{t('login.title')}</h1>
+          <p className="text-muted-foreground">{t('login.subtitle')}</p>
         </div>
 
         <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
@@ -99,7 +95,10 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           {t('login.noAccount')}{' '}
-          <Link href="/register" className="text-foreground hover:text-accent transition-colors duration-200 ease-out font-medium">
+          <Link
+            href="/register"
+            className="text-foreground hover:text-accent transition-colors duration-200 ease-out font-medium"
+          >
             {t('login.register')}
           </Link>
         </p>

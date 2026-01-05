@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  Inject,
-  BadRequestException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
 import {
   KeepsakeRepository,

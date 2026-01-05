@@ -8,7 +8,11 @@ interface PasswordStrengthProps {
 
 type StrengthLevel = 'weak' | 'fair' | 'good' | 'strong';
 
-function getStrength(password: string): { score: number; level: StrengthLevel | null; color: string } {
+function getStrength(password: string): {
+  score: number;
+  level: StrengthLevel | null;
+  color: string;
+} {
   if (!password) return { score: 0, level: null, color: 'bg-muted' };
 
   let score = 0;
@@ -28,13 +32,7 @@ function getStrength(password: string): { score: number; level: StrengthLevel | 
   const normalizedScore = Math.min(Math.floor(score / 2), 4);
 
   const levels: (StrengthLevel | null)[] = [null, 'weak', 'fair', 'good', 'strong'];
-  const colors = [
-    'bg-red-400',
-    'bg-orange-400',
-    'bg-yellow-400',
-    'bg-lime-400',
-    'bg-green-500',
-  ];
+  const colors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-lime-400', 'bg-green-500'];
 
   return {
     score: normalizedScore,

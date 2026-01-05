@@ -19,11 +19,11 @@
 
 ```css
 :root {
-  --background: 40 20% 99%;        /* Warm off-white */
-  --foreground: 220 20% 14%;       /* Deep charcoal */
+  --background: 40 20% 99%; /* Warm off-white */
+  --foreground: 220 20% 14%; /* Deep charcoal */
   --muted: 40 15% 96%;
   --muted-foreground: 220 10% 40%;
-  --accent: 35 30% 50%;            /* Muted gold */
+  --accent: 35 30% 50%; /* Muted gold */
   --accent-foreground: 40 20% 99%;
   --border: 40 15% 90%;
   --ring: 35 30% 50%;
@@ -148,9 +148,7 @@ All interactive elements use `transition-all duration-200 ease-out`.
 
 ```tsx
 <section className="py-24 px-6">
-  <div className="max-w-4xl mx-auto space-y-16">
-    {/* content */}
-  </div>
+  <div className="max-w-4xl mx-auto space-y-16">{/* content */}</div>
 </section>
 ```
 

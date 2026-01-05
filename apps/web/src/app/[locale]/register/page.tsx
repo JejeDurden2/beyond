@@ -56,12 +56,8 @@ export default function RegisterPage() {
           <Link href="/" className="font-display text-2xl text-foreground inline-block">
             Beyond
           </Link>
-          <h1 className="font-display text-display-sm text-foreground">
-            {t('register.title')}
-          </h1>
-          <p className="text-muted-foreground">
-            {t('register.subtitle')}
-          </p>
+          <h1 className="font-display text-display-sm text-foreground">{t('register.title')}</h1>
+          <p className="text-muted-foreground">{t('register.subtitle')}</p>
         </div>
 
         <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
@@ -107,7 +103,10 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-foreground"
+              >
                 {t('register.confirmPassword')}
               </label>
               <input
@@ -135,7 +134,10 @@ export default function RegisterPage() {
         <div className="text-center space-y-4">
           <p className="text-sm text-muted-foreground">
             {t('register.hasAccount')}{' '}
-            <Link href="/login" className="text-foreground hover:text-accent transition-colors duration-200 ease-out font-medium">
+            <Link
+              href="/login"
+              className="text-foreground hover:text-accent transition-colors duration-200 ease-out font-medium"
+            >
               {t('register.login')}
             </Link>
           </p>
@@ -143,7 +145,12 @@ export default function RegisterPage() {
           <div className="border-t border-border/50 pt-4">
             <p className="text-xs text-muted-foreground flex items-center justify-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
               {t('register.trust')}
             </p>

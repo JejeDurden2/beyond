@@ -34,11 +34,10 @@ export default function DashboardPage() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="space-y-2 mb-12">
           <h1 className="font-display text-display-sm text-foreground">
-            {t('title')}{user?.email ? `, ${user.email.split('@')[0]}` : ''}.
+            {t('title')}
+            {user?.email ? `, ${user.email.split('@')[0]}` : ''}.
           </h1>
-          <p className="text-lg text-muted-foreground">
-            {t('welcome')}
-          </p>
+          <p className="text-lg text-muted-foreground">{t('welcome')}</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-12">
@@ -46,9 +45,7 @@ export default function DashboardPage() {
             title={t('stats.vault.title')}
             value={t('stats.vault.active')}
             subtitle={t('welcome')}
-            icon={
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-            }
+            icon={<div className="w-3 h-3 rounded-full bg-green-500" />}
           />
           <StatCard
             title={t('stats.keepsakes.title')}
@@ -73,7 +70,10 @@ export default function DashboardPage() {
           {isLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-card rounded-2xl border border-border/50 p-6 animate-pulse">
+                <div
+                  key={i}
+                  className="bg-card rounded-2xl border border-border/50 p-6 animate-pulse"
+                >
                   <div className="h-5 w-48 bg-muted rounded" />
                   <div className="h-4 w-32 bg-muted rounded mt-2" />
                 </div>
@@ -140,14 +140,22 @@ function EmptyState() {
     <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
       <div className="max-w-sm mx-auto space-y-4">
         <div className="w-16 h-16 mx-auto bg-muted rounded-2xl flex items-center justify-center">
-          <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <svg
+            className="w-8 h-8 text-muted-foreground"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
           </svg>
         </div>
         <h3 className="font-display text-xl text-foreground">{t('title')}</h3>
-        <p className="text-muted-foreground">
-          {t('description')}
-        </p>
+        <p className="text-muted-foreground">{t('description')}</p>
         <Link
           href="/keepsakes/new"
           className="inline-block bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
@@ -187,7 +195,8 @@ function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
           <div>
             <h3 className="font-medium text-foreground">{keepsake.title}</h3>
             <p className="text-sm text-muted-foreground">
-              {t(`types.${keepsake.type as KeepsakeType}`)} · {t('card.updatedAt', { date: formatDate(keepsake.updatedAt) })}
+              {t(`types.${keepsake.type as KeepsakeType}`)} ·{' '}
+              {t('card.updatedAt', { date: formatDate(keepsake.updatedAt) })}
             </p>
           </div>
         </div>

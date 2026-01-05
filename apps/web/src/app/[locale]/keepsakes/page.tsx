@@ -16,7 +16,14 @@ const typeIcons: Record<KeepsakeType, string> = {
   scheduled_action: '📅',
 };
 
-const keepsakeTypes: KeepsakeType[] = ['text', 'letter', 'photo', 'video', 'wish', 'scheduled_action'];
+const keepsakeTypes: KeepsakeType[] = [
+  'text',
+  'letter',
+  'photo',
+  'video',
+  'wish',
+  'scheduled_action',
+];
 
 export default function KeepsakesPage() {
   const t = useTranslations('keepsakes');
@@ -38,9 +45,8 @@ export default function KeepsakesPage() {
     loadData();
   }, []);
 
-  const filteredKeepsakes = filterType === 'all'
-    ? keepsakes
-    : keepsakes.filter((k) => k.type === filterType);
+  const filteredKeepsakes =
+    filterType === 'all' ? keepsakes : keepsakes.filter((k) => k.type === filterType);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -53,9 +59,7 @@ export default function KeepsakesPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="font-display text-display-sm text-foreground">{t('title')}</h1>
-            <p className="text-muted-foreground mt-1">
-              {t('count', { count: keepsakes.length })}
-            </p>
+            <p className="text-muted-foreground mt-1">{t('count', { count: keepsakes.length })}</p>
           </div>
           <Link
             href="/keepsakes/new"
@@ -67,10 +71,7 @@ export default function KeepsakesPage() {
 
         <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-4 mb-8">
           <div className="flex items-center gap-2 flex-wrap">
-            <FilterButton
-              active={filterType === 'all'}
-              onClick={() => setFilterType('all')}
-            >
+            <FilterButton active={filterType === 'all'} onClick={() => setFilterType('all')}>
               {t('filter.all')}
             </FilterButton>
             {keepsakeTypes.map((type) => (
@@ -88,7 +89,10 @@ export default function KeepsakesPage() {
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="bg-card rounded-2xl border border-border/50 p-6 animate-pulse">
+              <div
+                key={i}
+                className="bg-card rounded-2xl border border-border/50 p-6 animate-pulse"
+              >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 bg-muted rounded-xl" />
                   <div className="flex-1">
@@ -115,7 +119,8 @@ export default function KeepsakesPage() {
                     <div>
                       <h3 className="font-medium text-foreground">{keepsake.title}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {t(`types.${keepsake.type}`)} · {t('card.updatedAt', { date: formatDate(keepsake.updatedAt) })}
+                        {t(`types.${keepsake.type}`)} ·{' '}
+                        {t('card.updatedAt', { date: formatDate(keepsake.updatedAt) })}
                       </p>
                     </div>
                   </div>
@@ -162,16 +167,22 @@ function EmptyState({ hasKeepsakes }: { hasKeepsakes: boolean }) {
     <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
       <div className="max-w-sm mx-auto space-y-4">
         <div className="w-16 h-16 mx-auto bg-muted rounded-2xl flex items-center justify-center">
-          <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <svg
+            className="w-8 h-8 text-muted-foreground"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
           </svg>
         </div>
-        <h3 className="font-display text-xl text-foreground">
-          {t('title')}
-        </h3>
-        <p className="text-muted-foreground">
-          {t('description')}
-        </p>
+        <h3 className="font-display text-xl text-foreground">{t('title')}</h3>
+        <p className="text-muted-foreground">{t('description')}</p>
         {!hasKeepsakes && (
           <Link
             href="/keepsakes/new"
