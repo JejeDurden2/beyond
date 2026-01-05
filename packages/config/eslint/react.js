@@ -1,7 +1,9 @@
+const path = require('path');
+
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
   extends: [
-    './base.js',
+    path.join(__dirname, 'base.js'),
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',

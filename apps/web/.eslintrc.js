@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['@beyond/config/eslint/react', 'next/core-web-vitals'],
+  extends: [require.resolve('@beyond/config/eslint/react'), 'next/core-web-vitals'],
   parserOptions: {
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,

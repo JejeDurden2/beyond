@@ -1,8 +1,20 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { Inter, Fraunces } from 'next/font/google';
 import { locales, type Locale } from '../../../i18n.config';
 import { AuthProvider } from '@/hooks/use-auth';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['400', '500', '600'],
+});
 
 interface Props {
   children: React.ReactNode;
@@ -19,8 +31,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      <AuthProvider>{children}</AuthProvider>
-    </NextIntlClientProvider>
+    <html lang={locale}>
+      <body className={`${inter.variable} ${fraunces.variable} font-sans antialiased`}>
+        <NextIntlClientProvider messages={messages}>
+          <AuthProvider>{children}</AuthProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

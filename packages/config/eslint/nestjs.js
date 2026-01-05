@@ -1,6 +1,8 @@
+const path = require('path');
+
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
-  extends: ['./base.js'],
+  extends: [path.join(__dirname, 'base.js')],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
