@@ -44,3 +44,8 @@ export const API_ENDPOINTS = {
     delete: (id: string) => `/keepsakes/${id}`,
   },
 } as const;
+
+export function formatDate(dateStr: string, locale?: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString(locale);
+}

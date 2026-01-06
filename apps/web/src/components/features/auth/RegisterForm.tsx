@@ -6,6 +6,9 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
 import { ApiError } from '@/lib/api/client';
 import { PasswordStrength } from '@/components/features/auth';
+import { ErrorAlert } from '@/components/ui';
+
+const MIN_PASSWORD_LENGTH = 12;
 
 export function RegisterForm() {
   const { register } = useAuth();
@@ -25,7 +28,7 @@ export function RegisterForm() {
       return;
     }
 
-    if (password.length < 8) {
+    if (password.length < MIN_PASSWORD_LENGTH) {
       setError(t('errors.weakPassword'));
       return;
     }
@@ -62,11 +65,7 @@ export function RegisterForm() {
 
         <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
-                {error}
-              </div>
-            )}
+            {error && <ErrorAlert message={error} />}
 
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium text-foreground">
@@ -94,7 +93,7 @@ export function RegisterForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={8}
+                minLength={MIN_PASSWORD_LENGTH}
                 autoComplete="new-password"
                 className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
                 placeholder={t('register.passwordPlaceholder')}

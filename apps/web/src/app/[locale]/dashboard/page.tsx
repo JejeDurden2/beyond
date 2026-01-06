@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { useAuth } from '@/hooks/use-auth';
 import { getKeepsakes } from '@/lib/api/keepsakes';
+import { KEEPSAKE_TYPE_ICONS, formatDate } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeType } from '@/types';
 
 export default function DashboardPage() {
@@ -20,8 +21,8 @@ export default function DashboardPage() {
       try {
         const data = await getKeepsakes();
         setKeepsakes(data.keepsakes);
-      } catch (error) {
-        console.error('Failed to load keepsakes:', error);
+      } catch {
+        // Silent fail - empty state will be shown
       } finally {
         setIsLoading(false);
       }
@@ -167,22 +168,8 @@ function EmptyState() {
   );
 }
 
-const typeIcons: Record<string, string> = {
-  text: '📝',
-  letter: '✉️',
-  photo: '📷',
-  video: '🎬',
-  wish: '⭐',
-  scheduled_action: '📅',
-};
-
 function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
   const t = useTranslations('keepsakes');
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString();
-  };
 
   return (
     <Link
@@ -191,7 +178,7 @@ function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <span className="text-2xl">{typeIcons[keepsake.type] || '📄'}</span>
+          <span className="text-2xl">{KEEPSAKE_TYPE_ICONS[keepsake.type] || '📄'}</span>
           <div>
             <h3 className="font-medium text-foreground">{keepsake.title}</h3>
             <p className="text-sm text-muted-foreground">

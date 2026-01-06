@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
 import { ApiError } from '@/lib/api/client';
+import { ErrorAlert } from '@/components/ui';
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -45,11 +46,7 @@ export function LoginForm() {
 
         <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
-                {error}
-              </div>
-            )}
+            {error && <ErrorAlert message={error} />}
 
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium text-foreground">

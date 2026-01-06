@@ -75,28 +75,31 @@ export class Vault extends AggregateRoot<VaultProps> {
     return this.props.status === VaultStatus.UNSEALED;
   }
 
-  startVerification(): void {
+  startVerification(): Result<void, string> {
     if (this.props.status !== VaultStatus.ACTIVE) {
-      throw new Error('Vault must be active to start verification');
+      return err('Vault must be active to start verification');
     }
     this.props.status = VaultStatus.PENDING_VERIFICATION;
     this._updatedAt = new Date();
+    return ok(undefined);
   }
 
-  unseal(): void {
+  unseal(): Result<void, string> {
     if (this.props.status !== VaultStatus.PENDING_VERIFICATION) {
-      throw new Error('Vault must be pending verification to unseal');
+      return err('Vault must be pending verification to unseal');
     }
     this.props.status = VaultStatus.UNSEALED;
     this.props.unsealedAt = new Date();
     this._updatedAt = new Date();
+    return ok(undefined);
   }
 
-  cancelVerification(): void {
+  cancelVerification(): Result<void, string> {
     if (this.props.status !== VaultStatus.PENDING_VERIFICATION) {
-      throw new Error('Vault must be pending verification to cancel');
+      return err('Vault must be pending verification to cancel');
     }
     this.props.status = VaultStatus.ACTIVE;
     this._updatedAt = new Date();
+    return ok(undefined);
   }
 }

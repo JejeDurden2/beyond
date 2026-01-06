@@ -16,6 +16,7 @@ export class UserMapper {
       password,
       emailVerified: raw.emailVerified,
       emailVerificationToken: raw.emailVerificationToken,
+      emailVerificationTokenExpiry: raw.emailVerificationTokenExpiry,
       totpSecret: raw.totpSecret,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
@@ -30,6 +31,7 @@ export class UserMapper {
       passwordHash: user.password.hashedValue,
       emailVerified: user.emailVerified,
       emailVerificationToken: user.emailVerificationToken,
+      emailVerificationTokenExpiry: user.emailVerificationTokenExpiry,
       totpSecret: user.totpSecret,
       deletedAt: user.deletedAt,
     };

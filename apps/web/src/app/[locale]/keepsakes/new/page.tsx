@@ -4,27 +4,10 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
+import { ErrorAlert } from '@/components/ui';
 import { createKeepsake } from '@/lib/api/keepsakes';
-import { ApiError } from '@/lib/api/client';
+import { KEEPSAKE_TYPE_ICONS, KEEPSAKE_TYPES } from '@/lib/constants';
 import type { KeepsakeType } from '@/types';
-
-const keepsakeTypes: KeepsakeType[] = [
-  'text',
-  'letter',
-  'photo',
-  'video',
-  'wish',
-  'scheduled_action',
-];
-
-const typeIcons: Record<KeepsakeType, string> = {
-  text: '📝',
-  letter: '✉️',
-  photo: '📷',
-  video: '🎬',
-  wish: '⭐',
-  scheduled_action: '📅',
-};
 
 export default function NewKeepsakePage() {
   const router = useRouter();
@@ -56,12 +39,8 @@ export default function NewKeepsakePage() {
         content,
       });
       router.push('/keepsakes');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        setError(tCommon('error'));
-      } else {
-        setError(tCommon('error'));
-      }
+    } catch {
+      setError(tCommon('error'));
     } finally {
       setIsLoading(false);
     }
@@ -89,13 +68,13 @@ export default function NewKeepsakePage() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {keepsakeTypes.map((type) => (
+              {KEEPSAKE_TYPES.map((type) => (
                 <button
                   key={type}
                   onClick={() => handleTypeSelect(type)}
                   className="bg-card rounded-2xl border border-border/50 shadow-soft p-6 text-center transition-all duration-200 ease-out hover:shadow-soft-md hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20"
                 >
-                  <span className="text-3xl block mb-2">{typeIcons[type]}</span>
+                  <span className="text-3xl block mb-2">{KEEPSAKE_TYPE_ICONS[type]}</span>
                   <span className="font-medium text-foreground block">{t(`types.${type}`)}</span>
                   <span className="text-xs text-muted-foreground">
                     {t(`typeDescriptions.${type}`)}
@@ -126,11 +105,7 @@ export default function NewKeepsakePage() {
 
             <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {error && (
-                  <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
-                    {error}
-                  </div>
-                )}
+                {error && <ErrorAlert message={error} />}
 
                 <div className="space-y-2">
                   <label htmlFor="title" className="block text-sm font-medium text-foreground">

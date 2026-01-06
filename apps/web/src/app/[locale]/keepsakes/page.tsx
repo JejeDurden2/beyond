@@ -5,25 +5,8 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { getKeepsakes } from '@/lib/api/keepsakes';
+import { KEEPSAKE_TYPE_ICONS, KEEPSAKE_TYPES, formatDate } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeType } from '@/types';
-
-const typeIcons: Record<KeepsakeType, string> = {
-  text: '📝',
-  letter: '✉️',
-  photo: '📷',
-  video: '🎬',
-  wish: '⭐',
-  scheduled_action: '📅',
-};
-
-const keepsakeTypes: KeepsakeType[] = [
-  'text',
-  'letter',
-  'photo',
-  'video',
-  'wish',
-  'scheduled_action',
-];
 
 export default function KeepsakesPage() {
   const t = useTranslations('keepsakes');
@@ -36,8 +19,8 @@ export default function KeepsakesPage() {
       try {
         const data = await getKeepsakes();
         setKeepsakes(data.keepsakes);
-      } catch (error) {
-        console.error('Failed to load keepsakes:', error);
+      } catch {
+        // Silent fail - empty state will be shown
       } finally {
         setIsLoading(false);
       }
@@ -47,11 +30,6 @@ export default function KeepsakesPage() {
 
   const filteredKeepsakes =
     filterType === 'all' ? keepsakes : keepsakes.filter((k) => k.type === filterType);
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString();
-  };
 
   return (
     <AppShell requireAuth>
@@ -74,13 +52,13 @@ export default function KeepsakesPage() {
             <FilterButton active={filterType === 'all'} onClick={() => setFilterType('all')}>
               {t('filter.all')}
             </FilterButton>
-            {keepsakeTypes.map((type) => (
+            {KEEPSAKE_TYPES.map((type) => (
               <FilterButton
                 key={type}
                 active={filterType === type}
                 onClick={() => setFilterType(type)}
               >
-                {typeIcons[type]} {t(`types.${type}`)}
+                {KEEPSAKE_TYPE_ICONS[type]} {t(`types.${type}`)}
               </FilterButton>
             ))}
           </div>
@@ -115,7 +93,7 @@ export default function KeepsakesPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <span className="text-2xl">{typeIcons[keepsake.type]}</span>
+                    <span className="text-2xl">{KEEPSAKE_TYPE_ICONS[keepsake.type]}</span>
                     <div>
                       <h3 className="font-medium text-foreground">{keepsake.title}</h3>
                       <p className="text-sm text-muted-foreground">

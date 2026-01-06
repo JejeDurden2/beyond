@@ -10,6 +10,7 @@ export interface UserProps {
   password: Password;
   emailVerified: boolean;
   emailVerificationToken?: string | null;
+  emailVerificationTokenExpiry?: Date | null;
   totpSecret?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
@@ -26,6 +27,8 @@ export class User extends AggregateRoot<UserProps> {
     super(props);
   }
 
+  private static readonly TOKEN_EXPIRY_HOURS = 24;
+
   static async create(input: CreateUserInput): Promise<Result<User, string>> {
     const emailResult = Email.create(input.email);
     if (emailResult.isErr()) {
@@ -38,6 +41,9 @@ export class User extends AggregateRoot<UserProps> {
     }
 
     const emailVerificationToken = randomBytes(32).toString('hex');
+    const emailVerificationTokenExpiry = new Date(
+      Date.now() + this.TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
+    );
 
     return ok(
       new User({
@@ -45,6 +51,7 @@ export class User extends AggregateRoot<UserProps> {
         password: passwordResult.value,
         emailVerified: false,
         emailVerificationToken,
+        emailVerificationTokenExpiry,
       }),
     );
   }
@@ -69,6 +76,10 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.emailVerificationToken ?? null;
   }
 
+  get emailVerificationTokenExpiry(): Date | null {
+    return this.props.emailVerificationTokenExpiry ?? null;
+  }
+
   get totpSecret(): string | null {
     return this.props.totpSecret ?? null;
   }
@@ -90,8 +101,16 @@ export class User extends AggregateRoot<UserProps> {
       return err('Invalid verification token');
     }
 
+    if (
+      this.props.emailVerificationTokenExpiry &&
+      new Date() > this.props.emailVerificationTokenExpiry
+    ) {
+      return err('Verification token has expired');
+    }
+
     this.props.emailVerified = true;
     this.props.emailVerificationToken = null;
+    this.props.emailVerificationTokenExpiry = null;
     this._updatedAt = new Date();
 
     return ok(undefined);

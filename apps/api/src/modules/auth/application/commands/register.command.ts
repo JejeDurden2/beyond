@@ -56,10 +56,9 @@ export class RegisterCommand {
     // Auto-create vault for the user
     await this.createVaultHandler.execute({ userId: user.id });
 
-    // Log verification email (MVP - would send email in production)
-    this.logger.log(
-      `Verification link for ${user.email.value}: /auth/verify/${user.emailVerificationToken}`,
-    );
+    // Log that verification email would be sent (MVP - would send email in production)
+    // Security: Never log the actual token
+    this.logger.log(`Email verification pending for user ${user.id}`);
 
     // Generate JWT token
     const payload = {

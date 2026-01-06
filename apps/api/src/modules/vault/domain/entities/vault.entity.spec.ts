@@ -86,7 +86,7 @@ describe('Vault Entity', () => {
       }
     });
 
-    it('should throw if not active', () => {
+    it('should return error if not active', () => {
       const encryptionSalt = EncryptionSalt.generate();
       const vault = Vault.reconstitute({
         id: 'vault-123',
@@ -96,7 +96,11 @@ describe('Vault Entity', () => {
         unsealedAt: null,
       });
 
-      expect(() => vault.startVerification()).toThrow('Vault must be active to start verification');
+      const result = vault.startVerification();
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        expect(result.error).toBe('Vault must be active to start verification');
+      }
     });
   });
 
@@ -118,12 +122,16 @@ describe('Vault Entity', () => {
       expect(vault.unsealedAt).toBeInstanceOf(Date);
     });
 
-    it('should throw if not pending verification', () => {
+    it('should return error if not pending verification', () => {
       const result = Vault.create({ userId: 'user-123' });
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(() => result.value.unseal()).toThrow('Vault must be pending verification to unseal');
+        const unsealResult = result.value.unseal();
+        expect(unsealResult.isErr()).toBe(true);
+        if (unsealResult.isErr()) {
+          expect(unsealResult.error).toBe('Vault must be pending verification to unseal');
+        }
       }
     });
   });
@@ -139,20 +147,23 @@ describe('Vault Entity', () => {
         unsealedAt: null,
       });
 
-      vault.cancelVerification();
+      const result = vault.cancelVerification();
+      expect(result.isOk()).toBe(true);
 
       expect(vault.status).toBe(VaultStatus.ACTIVE);
       expect(vault.isActive()).toBe(true);
     });
 
-    it('should throw if not pending verification', () => {
+    it('should return error if not pending verification', () => {
       const result = Vault.create({ userId: 'user-123' });
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(() => result.value.cancelVerification()).toThrow(
-          'Vault must be pending verification to cancel',
-        );
+        const cancelResult = result.value.cancelVerification();
+        expect(cancelResult.isErr()).toBe(true);
+        if (cancelResult.isErr()) {
+          expect(cancelResult.error).toBe('Vault must be pending verification to cancel');
+        }
       }
     });
   });

@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id                     String    @id @default(uuid())
-  email                  String    @unique
-  passwordHash           String
-  totpSecret             String?
-  emailVerified          Boolean   @default(false)
-  emailVerificationToken String?   @unique
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
-  deletedAt              DateTime?
+  id                           String    @id @default(uuid())
+  email                        String    @unique
+  passwordHash                 String
+  totpSecret                   String?
+  emailVerified                Boolean   @default(false)
+  emailVerificationToken       String?   @unique
+  emailVerificationTokenExpiry DateTime?
+  createdAt                    DateTime  @default(now())
+  updatedAt                    DateTime  @updatedAt
+  deletedAt                    DateTime?
 
   vault           Vault?
   trustedContacts TrustedContact[]
