@@ -4,7 +4,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useState, useEffect, use } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
-import { ErrorAlert } from '@/components/ui';
+import { ErrorAlert, ArrowLeft } from '@/components/ui';
 import {
   useBeneficiary,
   useUpdateBeneficiary,
@@ -105,9 +105,9 @@ export default function EditBeneficiaryPage({ params }: PageParams) {
           <h1 className="font-display text-display-sm text-foreground">{t('notFound.title')}</h1>
           <Link
             href="/beneficiaries"
-            className="text-sm text-muted-foreground hover:text-foreground mt-4 inline-block"
+            className="text-sm text-muted-foreground hover:text-foreground mt-4 inline-flex items-center gap-1"
           >
-            ← {t('notFound.back')}
+            <ArrowLeft className="w-4 h-4" /> {t('notFound.back')}
           </Link>
         </div>
       </AppShell>
@@ -122,7 +122,7 @@ export default function EditBeneficiaryPage({ params }: PageParams) {
             href="/beneficiaries"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
           >
-            ← {tCommon('back')}
+            <ArrowLeft className="w-4 h-4" /> {tCommon('back')}
           </Link>
         </div>
 

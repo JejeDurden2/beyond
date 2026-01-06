@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { AppShell } from '@/components/layout';
+import { ArrowLeft } from '@/components/ui';
 import { MediaUploader } from '@/components/features/media';
 import { AssignmentSection } from '@/components/features/assignments';
 import {
@@ -205,8 +206,11 @@ export default function KeepsakeDetailPage() {
           <h1 className="font-display text-display-sm text-foreground mb-4">
             {t('notFound.title')}
           </h1>
-          <Link href="/keepsakes" className="text-accent hover:text-accent/80 transition-colors">
-            ← {t('notFound.back')}
+          <Link
+            href="/keepsakes"
+            className="text-accent hover:text-accent/80 transition-colors inline-flex items-center gap-1"
+          >
+            <ArrowLeft className="w-4 h-4" /> {t('notFound.back')}
           </Link>
         </div>
       </AppShell>
@@ -221,7 +225,7 @@ export default function KeepsakeDetailPage() {
             href="/keepsakes"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
           >
-            ← {tCommon('back')}
+            <ArrowLeft className="w-4 h-4" /> {tCommon('back')}
           </Link>
         </div>
 

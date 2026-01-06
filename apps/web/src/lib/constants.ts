@@ -1,14 +1,6 @@
 import type { KeepsakeType } from '@/types';
 
-export const KEEPSAKE_TYPE_ICONS: Record<KeepsakeType, string> = {
-  text: '📝',
-  letter: '✉️',
-  photo: '📷',
-  video: '🎬',
-  wish: '⭐',
-  scheduled_action: '📅',
-};
-
+// Use KeepsakeTypeIcon component from '@/components/ui' for icons
 export const KEEPSAKE_TYPES: KeepsakeType[] = [
   'text',
   'letter',

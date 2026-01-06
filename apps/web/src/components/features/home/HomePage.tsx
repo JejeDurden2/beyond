@@ -4,7 +4,8 @@ import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
 import { Header } from '@/components/layout';
-import { Logo } from '@/components/ui';
+import { Logo, Lock, Globe, ShieldCheck } from '@/components/ui';
+import { Mail, Camera, Star } from 'lucide-react';
 
 export function HomePage() {
   const { isAuthenticated } = useAuth();
@@ -49,44 +50,17 @@ export function HomePage() {
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-3 gap-8">
               <TrustIndicator
-                icon={
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                }
+                icon={<Lock className="w-6 h-6" strokeWidth={1.5} />}
                 title={t('trust.secure.title')}
                 description={t('trust.secure.description')}
               />
               <TrustIndicator
-                icon={
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                }
+                icon={<Globe className="w-6 h-6" strokeWidth={1.5} />}
                 title={t('trust.private.title')}
                 description={t('trust.private.description')}
               />
               <TrustIndicator
-                icon={
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                }
+                icon={<ShieldCheck className="w-6 h-6" strokeWidth={1.5} />}
                 title={t('trust.trusted.title')}
                 description={t('trust.trusted.description')}
               />
@@ -126,17 +100,17 @@ export function HomePage() {
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard
-                icon="✉️"
+                icon={<Mail className="w-8 h-8" />}
                 title={t('features.letters.title')}
                 description={t('features.letters.description')}
               />
               <FeatureCard
-                icon="📷"
+                icon={<Camera className="w-8 h-8" />}
                 title={t('features.photos.title')}
                 description={t('features.photos.description')}
               />
               <FeatureCard
-                icon="⭐"
+                icon={<Star className="w-8 h-8" />}
                 title={t('features.wishes.title')}
                 description={t('features.wishes.description')}
               />
@@ -217,13 +191,13 @@ function FeatureCard({
   title,
   description,
 }: {
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
 }) {
   return (
     <div className="bg-warm-gray rounded-2xl border border-border/50 shadow-soft p-8 transition-shadow duration-200 ease-out hover:shadow-soft-md">
-      <span className="text-3xl block mb-4">{icon}</span>
+      <div className="text-navy-light mb-4">{icon}</div>
       <h3 className="font-serif-brand text-xl text-navy-deep mb-3">{title}</h3>
       <p className="text-slate leading-relaxed">{description}</p>
     </div>

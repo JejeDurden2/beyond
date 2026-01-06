@@ -4,9 +4,9 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useState, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
-import { ErrorAlert } from '@/components/ui';
+import { ErrorAlert, KeepsakeTypeIcon, ArrowLeft, MediaTypeIcon } from '@/components/ui';
 import { createKeepsake, uploadMedia } from '@/lib/api/keepsakes';
-import { KEEPSAKE_TYPE_ICONS, KEEPSAKE_TYPES } from '@/lib/constants';
+import { KEEPSAKE_TYPES } from '@/lib/constants';
 import { getAllowedMimeTypes } from '@/types';
 import type { KeepsakeType, TriggerCondition } from '@/types';
 
@@ -151,7 +151,7 @@ export default function NewKeepsakePage() {
               href="/keepsakes"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
             >
-              ← {tCommon('back')}
+              <ArrowLeft className="w-4 h-4" /> {tCommon('back')}
             </Link>
           </div>
         )}
@@ -170,7 +170,10 @@ export default function NewKeepsakePage() {
                   onClick={() => handleTypeSelect(type)}
                   className="bg-card rounded-2xl border border-border/50 shadow-soft p-6 text-center transition-all duration-200 ease-out hover:shadow-soft-md hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20"
                 >
-                  <span className="text-3xl block mb-2">{KEEPSAKE_TYPE_ICONS[type]}</span>
+                  <KeepsakeTypeIcon
+                    type={type}
+                    className="w-8 h-8 mx-auto mb-2 text-muted-foreground"
+                  />
                   <span className="font-medium text-foreground block">{t(`types.${type}`)}</span>
                   <span className="text-xs text-muted-foreground">
                     {t(`typeDescriptions.${type}`)}
@@ -186,9 +189,9 @@ export default function NewKeepsakePage() {
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setStep(1)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
               >
-                ← {tCommon('back')}
+                <ArrowLeft className="w-4 h-4" /> {tCommon('back')}
               </button>
             </div>
 
@@ -286,13 +289,16 @@ export default function NewKeepsakePage() {
                               ×
                             </button>
                             <div className="flex items-center gap-3">
-                              <div className="text-2xl">
-                                {sf.file.type.startsWith('image/')
-                                  ? '🖼️'
-                                  : sf.file.type.startsWith('video/')
-                                    ? '🎬'
-                                    : '📄'}
-                              </div>
+                              <MediaTypeIcon
+                                mediaType={
+                                  sf.file.type.startsWith('image/')
+                                    ? 'image'
+                                    : sf.file.type.startsWith('video/')
+                                      ? 'video'
+                                      : 'document'
+                                }
+                                className="w-6 h-6 text-muted-foreground"
+                              />
                               <div className="min-w-0 flex-1">
                                 <div className="text-sm font-medium truncate" title={sf.file.name}>
                                   {sf.file.name}

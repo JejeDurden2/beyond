@@ -3,20 +3,10 @@
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
+import { RelationshipIcon, ChevronRight } from '@/components/ui';
+import { UserPlus } from 'lucide-react';
 import { useBeneficiaries } from '@/hooks/use-beneficiaries';
-import type { Beneficiary, Relationship } from '@/types';
-
-const RELATIONSHIP_ICONS: Record<Relationship, string> = {
-  SPOUSE: '💑',
-  CHILD: '👶',
-  PARENT: '👨‍👩‍👧',
-  SIBLING: '👫',
-  GRANDCHILD: '👶',
-  GRANDPARENT: '👴',
-  FRIEND: '🤝',
-  COLLEAGUE: '💼',
-  OTHER: '👤',
-};
+import type { Beneficiary } from '@/types';
 
 export default function BeneficiariesPage() {
   const t = useTranslations('beneficiaries');
@@ -80,8 +70,11 @@ function BeneficiaryCard({ beneficiary }: { beneficiary: Beneficiary }) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-xl">
-            {RELATIONSHIP_ICONS[beneficiary.relationship]}
+          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+            <RelationshipIcon
+              relationship={beneficiary.relationship}
+              className="w-6 h-6 text-muted-foreground"
+            />
           </div>
           <div>
             <h3 className="font-medium text-foreground">{beneficiary.fullName}</h3>
@@ -93,9 +86,7 @@ function BeneficiaryCard({ beneficiary }: { beneficiary: Beneficiary }) {
             </p>
           </div>
         </div>
-        <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-          →
-        </span>
+        <ChevronRight className="w-5 h-5 text-muted-foreground" />
       </div>
     </Link>
   );
@@ -108,19 +99,7 @@ function EmptyState() {
     <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
       <div className="max-w-sm mx-auto space-y-4">
         <div className="w-16 h-16 mx-auto bg-muted rounded-2xl flex items-center justify-center">
-          <svg
-            className="w-8 h-8 text-muted-foreground"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-            />
-          </svg>
+          <UserPlus className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />
         </div>
         <h3 className="font-display text-xl text-foreground">{t('title')}</h3>
         <p className="text-muted-foreground">{t('description')}</p>

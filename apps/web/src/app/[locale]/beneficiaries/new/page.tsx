@@ -4,7 +4,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
-import { ErrorAlert } from '@/components/ui';
+import { ErrorAlert, ArrowLeft } from '@/components/ui';
 import { useCreateBeneficiary } from '@/hooks/use-beneficiaries';
 import { RELATIONSHIPS, type Relationship } from '@/types';
 
@@ -55,7 +55,7 @@ export default function NewBeneficiaryPage() {
             href="/beneficiaries"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
           >
-            ← {tCommon('back')}
+            <ArrowLeft className="w-4 h-4" /> {tCommon('back')}
           </Link>
         </div>
 

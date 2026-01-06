@@ -4,9 +4,10 @@ import { Link } from '@/i18n/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
+import { KeepsakeTypeIcon, ChevronRight, Plus } from '@/components/ui';
 import { useAuth } from '@/hooks/use-auth';
 import { getKeepsakes } from '@/lib/api/keepsakes';
-import { KEEPSAKE_TYPE_ICONS, formatDate } from '@/lib/constants';
+import { formatDate } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeType } from '@/types';
 
 export default function DashboardPage() {
@@ -127,7 +128,7 @@ function StatCard({
           href={linkTo}
           className="inline-block mt-4 text-sm font-medium text-foreground hover:text-accent transition-colors duration-200 ease-out"
         >
-          {linkLabel} →
+          {linkLabel} <ChevronRight className="w-4 h-4 inline" />
         </Link>
       )}
     </div>
@@ -141,19 +142,7 @@ function EmptyState() {
     <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
       <div className="max-w-sm mx-auto space-y-4">
         <div className="w-16 h-16 mx-auto bg-muted rounded-2xl flex items-center justify-center">
-          <svg
-            className="w-8 h-8 text-muted-foreground"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
+          <Plus className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />
         </div>
         <h3 className="font-display text-xl text-foreground">{t('title')}</h3>
         <p className="text-muted-foreground">{t('description')}</p>
@@ -178,7 +167,7 @@ function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <span className="text-2xl">{KEEPSAKE_TYPE_ICONS[keepsake.type] || '📄'}</span>
+          <KeepsakeTypeIcon type={keepsake.type} className="w-6 h-6 text-muted-foreground" />
           <div>
             <h3 className="font-medium text-foreground">{keepsake.title}</h3>
             <p className="text-sm text-muted-foreground">
@@ -187,7 +176,7 @@ function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
             </p>
           </div>
         </div>
-        <span className="text-muted-foreground">→</span>
+        <ChevronRight className="w-5 h-5 text-muted-foreground" />
       </div>
     </Link>
   );

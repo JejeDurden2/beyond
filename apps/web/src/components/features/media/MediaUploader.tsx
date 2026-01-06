@@ -2,7 +2,8 @@
 
 import { useCallback, useRef } from 'react';
 import Image from 'next/image';
-import type { KeepsakeMedia, MediaType } from '@/types';
+import { MediaTypeIcon } from '@/components/ui';
+import type { KeepsakeMedia } from '@/types';
 import { getAllowedMimeTypes } from '@/types';
 
 interface MediaUploaderProps {
@@ -128,17 +129,6 @@ function MediaItem({ media, onRemove }: MediaItemProps) {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  const getTypeIcon = (type: MediaType): string => {
-    switch (type) {
-      case 'image':
-        return '🖼️';
-      case 'video':
-        return '🎬';
-      case 'document':
-        return '📄';
-    }
-  };
-
   return (
     <div className="relative group border border-border rounded-lg p-3 bg-background">
       <button
@@ -150,7 +140,7 @@ function MediaItem({ media, onRemove }: MediaItemProps) {
       </button>
 
       <div className="flex items-center gap-3">
-        <div className="text-2xl">{getTypeIcon(media.type)}</div>
+        <MediaTypeIcon mediaType={media.type} className="w-6 h-6 text-muted-foreground" />
         <div className="min-w-0 flex-1">
           <div className="text-sm font-medium truncate" title={media.filename}>
             {media.filename}
