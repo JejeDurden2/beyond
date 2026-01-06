@@ -145,14 +145,16 @@ export default function NewKeepsakePage() {
   return (
     <AppShell requireAuth>
       <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <Link
-            href="/keepsakes"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
-          >
-            ← {tCommon('back')}
-          </Link>
-        </div>
+        {step === 1 && (
+          <div className="mb-8">
+            <Link
+              href="/keepsakes"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
+            >
+              ← {tCommon('back')}
+            </Link>
+          </div>
+        )}
 
         {step === 1 && (
           <div className="space-y-8 animate-fade-in">

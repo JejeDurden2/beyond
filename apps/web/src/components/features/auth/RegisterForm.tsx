@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
 import { ApiError } from '@/lib/api/client';
 import { PasswordStrength } from '@/components/features/auth';
-import { ErrorAlert } from '@/components/ui';
+import { ErrorAlert, Logo } from '@/components/ui';
 
 const MIN_PASSWORD_LENGTH = 12;
 
@@ -56,8 +56,8 @@ export function RegisterForm() {
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-24">
       <div className="w-full max-w-md space-y-8 animate-fade-in">
         <div className="text-center space-y-2">
-          <Link href="/" className="font-display text-2xl text-foreground inline-block">
-            Beyond
+          <Link href="/" className="inline-block">
+            <Logo variant="full" className="h-10 mx-auto" />
           </Link>
           <h1 className="font-display text-display-sm text-foreground">{t('register.title')}</h1>
           <p className="text-muted-foreground">{t('register.subtitle')}</p>
