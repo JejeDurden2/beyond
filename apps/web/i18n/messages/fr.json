@@ -280,5 +280,77 @@
       "fr": "Français",
       "en": "English"
     }
+  },
+  "beneficiaries": {
+    "title": "Bénéficiaires",
+    "subtitle": "Les personnes qui recevront vos souvenirs",
+    "add": "Ajouter un bénéficiaire",
+    "edit": "Modifier",
+    "new": "Nouveau bénéficiaire",
+    "editTitle": "Modifier le bénéficiaire",
+    "empty": {
+      "title": "Aucun bénéficiaire",
+      "description": "Ajoutez les personnes qui recevront vos souvenirs.",
+      "cta": "Ajouter votre premier bénéficiaire"
+    },
+    "form": {
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Jean",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Dupont",
+      "email": "Adresse email",
+      "emailPlaceholder": "jean@exemple.com",
+      "relationship": "Lien",
+      "note": "Note personnelle",
+      "notePlaceholder": "Un rappel pour vous (non visible par le bénéficiaire)",
+      "create": "Ajouter le bénéficiaire",
+      "creating": "Ajout...",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "optional": "optionnel"
+    },
+    "relationships": {
+      "SPOUSE": "Conjoint(e)",
+      "CHILD": "Enfant",
+      "PARENT": "Parent",
+      "SIBLING": "Frère/Sœur",
+      "GRANDCHILD": "Petit-enfant",
+      "GRANDPARENT": "Grand-parent",
+      "FRIEND": "Ami(e)",
+      "COLLEAGUE": "Collègue",
+      "OTHER": "Autre"
+    },
+    "assignmentCount": "{count, plural, =0 {Aucun souvenir} =1 {1 souvenir assigné} other {# souvenirs assignés}}",
+    "delete": {
+      "button": "Supprimer ce bénéficiaire",
+      "title": "Supprimer ce bénéficiaire ?",
+      "description": "Cette personne ne recevra plus aucun de vos souvenirs. Cette action est irréversible.",
+      "confirm": "Supprimer",
+      "deleting": "Suppression..."
+    },
+    "notFound": {
+      "title": "Bénéficiaire introuvable",
+      "back": "Retour aux bénéficiaires"
+    },
+    "errors": {
+      "emailExists": "Un bénéficiaire avec cette adresse email existe déjà"
+    }
+  },
+  "assignments": {
+    "title": "Destinataires",
+    "add": "Ajouter",
+    "whoReceives": "Qui recevra ce souvenir ?",
+    "noBeneficiaries": "Pas encore de bénéficiaires ?",
+    "addBeneficiary": "Ajouter un bénéficiaire",
+    "personalMessage": "Message personnel",
+    "personalMessagePlaceholder": "Un mot spécifique pour cette personne...",
+    "noMessage": "Pas de message personnel",
+    "editMessage": "Modifier le message",
+    "removeAssignment": "Retirer",
+    "saveMessage": "Enregistrer",
+    "empty": {
+      "title": "Aucun destinataire",
+      "description": "Ajoutez des bénéficiaires pour qu'ils reçoivent ce souvenir."
+    }
   }
 }

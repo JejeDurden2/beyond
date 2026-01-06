@@ -244,7 +244,9 @@ export default function NewKeepsakePage() {
 
                       {isLoading && uploadProgress > 0 ? (
                         <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground">{t('media.uploading')}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {t('media.uploading')}
+                          </div>
                           <div className="w-full bg-muted rounded-full h-2">
                             <div
                               className="bg-foreground h-2 rounded-full transition-all duration-300"
@@ -290,10 +292,7 @@ export default function NewKeepsakePage() {
                                     : '📄'}
                               </div>
                               <div className="min-w-0 flex-1">
-                                <div
-                                  className="text-sm font-medium truncate"
-                                  title={sf.file.name}
-                                >
+                                <div className="text-sm font-medium truncate" title={sf.file.name}>
                                   {sf.file.name}
                                 </div>
                                 <div className="text-xs text-muted-foreground">

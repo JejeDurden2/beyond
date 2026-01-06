@@ -116,15 +116,18 @@ enum MediaType {
 }
 
 model Beneficiary {
-  id           String    @id @default(uuid())
+  id           String       @id @default(uuid())
   vaultId      String
-  vault        Vault     @relation(fields: [vaultId], references: [id])
-  name         String
+  vault        Vault        @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+  firstName    String
+  lastName     String
   email        String
-  relationship String?
-  accessToken  String?   @unique
+  relationship Relationship
+  note         String?
+  accessToken  String?      @unique
   accessedAt   DateTime?
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   assignments KeepsakeAssignment[]
 
@@ -132,12 +135,26 @@ model Beneficiary {
   @@index([vaultId])
 }
 
+enum Relationship {
+  SPOUSE
+  CHILD
+  PARENT
+  SIBLING
+  GRANDCHILD
+  GRANDPARENT
+  FRIEND
+  COLLEAGUE
+  OTHER
+}
+
 model KeepsakeAssignment {
-  id            String      @id @default(uuid())
-  keepsakeId    String
-  keepsake      Keepsake    @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
-  beneficiaryId String
-  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  id              String      @id @default(uuid())
+  keepsakeId      String
+  keepsake        Keepsake    @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  beneficiaryId   String
+  beneficiary     Beneficiary @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  personalMessage String?
+  createdAt       DateTime    @default(now())
 
   @@unique([keepsakeId, beneficiaryId])
 }

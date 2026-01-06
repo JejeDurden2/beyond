@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { VaultModule } from './modules/vault/vault.module';
 import { KeepsakeModule } from './modules/keepsake/keepsake.module';
 import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
+import { KeepsakeAssignmentModule } from './modules/keepsake-assignment/keepsake-assignment.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
     VaultModule,
     KeepsakeModule,
     BeneficiaryModule,
+    KeepsakeAssignmentModule,
   ],
 })
 export class AppModule {}

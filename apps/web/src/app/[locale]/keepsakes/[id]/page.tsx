@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { MediaUploader } from '@/components/features/media';
+import { AssignmentSection } from '@/components/features/assignments';
 import {
   getKeepsake,
   updateKeepsake,
@@ -383,6 +384,9 @@ export default function KeepsakeDetailPage() {
               </div>
             </form>
           </div>
+
+          {/* Assignment Section */}
+          <AssignmentSection keepsakeId={id} />
         </div>
 
         {showDeleteConfirm && (

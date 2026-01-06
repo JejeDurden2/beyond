@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { Inter, Fraunces } from 'next/font/google';
 import { locales, type Locale } from '../../../i18n.config';
 import { AuthProvider } from '@/hooks/use-auth';
+import { QueryProvider } from '@/providers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,7 +35,9 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale}>
       <body className={`${inter.variable} ${fraunces.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <AuthProvider>{children}</AuthProvider>
+          <QueryProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

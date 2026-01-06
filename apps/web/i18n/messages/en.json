@@ -280,5 +280,77 @@
       "fr": "Français",
       "en": "English"
     }
+  },
+  "beneficiaries": {
+    "title": "Beneficiaries",
+    "subtitle": "The people who will receive your keepsakes",
+    "add": "Add a beneficiary",
+    "edit": "Edit",
+    "new": "New beneficiary",
+    "editTitle": "Edit beneficiary",
+    "empty": {
+      "title": "No beneficiaries",
+      "description": "Add the people who will receive your keepsakes.",
+      "cta": "Add your first beneficiary"
+    },
+    "form": {
+      "firstName": "First name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Doe",
+      "email": "Email address",
+      "emailPlaceholder": "john@example.com",
+      "relationship": "Relationship",
+      "note": "Personal note",
+      "notePlaceholder": "A reminder for you (not visible to the beneficiary)",
+      "create": "Add beneficiary",
+      "creating": "Adding...",
+      "save": "Save",
+      "saving": "Saving...",
+      "optional": "optional"
+    },
+    "relationships": {
+      "SPOUSE": "Spouse",
+      "CHILD": "Child",
+      "PARENT": "Parent",
+      "SIBLING": "Sibling",
+      "GRANDCHILD": "Grandchild",
+      "GRANDPARENT": "Grandparent",
+      "FRIEND": "Friend",
+      "COLLEAGUE": "Colleague",
+      "OTHER": "Other"
+    },
+    "assignmentCount": "{count, plural, =0 {No keepsakes} =1 {1 keepsake assigned} other {# keepsakes assigned}}",
+    "delete": {
+      "button": "Delete this beneficiary",
+      "title": "Delete this beneficiary?",
+      "description": "This person will no longer receive any of your keepsakes. This action cannot be undone.",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
+    },
+    "notFound": {
+      "title": "Beneficiary not found",
+      "back": "Back to beneficiaries"
+    },
+    "errors": {
+      "emailExists": "A beneficiary with this email already exists"
+    }
+  },
+  "assignments": {
+    "title": "Recipients",
+    "add": "Add",
+    "whoReceives": "Who will receive this keepsake?",
+    "noBeneficiaries": "No beneficiaries yet?",
+    "addBeneficiary": "Add a beneficiary",
+    "personalMessage": "Personal message",
+    "personalMessagePlaceholder": "A specific note for this person...",
+    "noMessage": "No personal message",
+    "editMessage": "Edit message",
+    "removeAssignment": "Remove",
+    "saveMessage": "Save",
+    "empty": {
+      "title": "No recipients",
+      "description": "Add beneficiaries so they receive this keepsake."
+    }
   }
 }

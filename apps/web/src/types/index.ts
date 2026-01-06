@@ -137,3 +137,69 @@ export function getMaxFileSize(mediaType: MediaType): number {
       return MAX_DOCUMENT_SIZE;
   }
 }
+
+// Beneficiaries
+export type Relationship =
+  | 'SPOUSE'
+  | 'CHILD'
+  | 'PARENT'
+  | 'SIBLING'
+  | 'GRANDCHILD'
+  | 'GRANDPARENT'
+  | 'FRIEND'
+  | 'COLLEAGUE'
+  | 'OTHER';
+
+export const RELATIONSHIPS: Relationship[] = [
+  'SPOUSE',
+  'CHILD',
+  'PARENT',
+  'SIBLING',
+  'GRANDCHILD',
+  'GRANDPARENT',
+  'FRIEND',
+  'COLLEAGUE',
+  'OTHER',
+];
+
+export interface Beneficiary {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  email: string;
+  relationship: Relationship;
+  note: string | null;
+  assignmentCount: number;
+  createdAt: string;
+}
+
+export interface CreateBeneficiaryInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  relationship: Relationship;
+  note?: string;
+}
+
+export interface UpdateBeneficiaryInput {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  relationship?: Relationship;
+  note?: string | null;
+}
+
+// Keepsake Assignments
+export interface KeepsakeAssignment {
+  id: string;
+  keepsakeId: string;
+  beneficiaryId: string;
+  beneficiaryFirstName: string;
+  beneficiaryLastName: string;
+  beneficiaryFullName: string;
+  beneficiaryEmail: string;
+  beneficiaryRelationship: Relationship;
+  personalMessage: string | null;
+  createdAt: string;
+}

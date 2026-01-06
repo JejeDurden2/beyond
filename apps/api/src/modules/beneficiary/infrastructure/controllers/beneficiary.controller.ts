@@ -1,10 +1,173 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  HttpCode,
+  HttpStatus,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { CurrentUser } from '@/modules/auth/infrastructure/decorators/current-user.decorator';
+import { AuthenticatedUser } from '@/modules/auth/infrastructure/strategies/jwt.strategy';
+import { CreateBeneficiaryCommand } from '../../application/commands/create-beneficiary.command';
+import { UpdateBeneficiaryCommand } from '../../application/commands/update-beneficiary.command';
+import { DeleteBeneficiaryCommand } from '../../application/commands/delete-beneficiary.command';
+import { ListBeneficiariesQuery } from '../../application/queries/list-beneficiaries.query';
+import { GetBeneficiaryQuery } from '../../application/queries/get-beneficiary.query';
+import {
+  CreateBeneficiaryDto,
+  UpdateBeneficiaryDto,
+  BeneficiaryResponseDto,
+} from '../dto/beneficiary.dto';
 
-@Controller('beneficiaries')
+@Controller('vault/beneficiaries')
 export class BeneficiaryController {
-  @Get('vault/:vaultId')
-  async getByVaultId(@Param('vaultId') vaultId: string) {
-    // TODO: Implement with handler
-    return { vaultId, beneficiaries: [] };
+  constructor(
+    private readonly createBeneficiaryCommand: CreateBeneficiaryCommand,
+    private readonly updateBeneficiaryCommand: UpdateBeneficiaryCommand,
+    private readonly deleteBeneficiaryCommand: DeleteBeneficiaryCommand,
+    private readonly listBeneficiariesQuery: ListBeneficiariesQuery,
+    private readonly getBeneficiaryQuery: GetBeneficiaryQuery,
+  ) {}
+
+  @Post()
+  async create(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: CreateBeneficiaryDto,
+  ): Promise<BeneficiaryResponseDto> {
+    const result = await this.createBeneficiaryCommand.execute({
+      userId: user.id,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      email: dto.email,
+      relationship: dto.relationship,
+      note: dto.note,
+    });
+
+    if (result.isErr()) {
+      throw new BadRequestException(result.error);
+    }
+
+    const beneficiary = result.value;
+    return {
+      id: beneficiary.id,
+      firstName: beneficiary.firstName,
+      lastName: beneficiary.lastName,
+      fullName: beneficiary.fullName,
+      email: beneficiary.email,
+      relationship: beneficiary.relationship,
+      note: beneficiary.note,
+      assignmentCount: 0,
+      createdAt: beneficiary.createdAt.toISOString(),
+    };
+  }
+
+  @Get()
+  async list(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<{ beneficiaries: BeneficiaryResponseDto[] }> {
+    const result = await this.listBeneficiariesQuery.execute({
+      userId: user.id,
+    });
+
+    if (result.isErr()) {
+      throw new BadRequestException(result.error);
+    }
+
+    return {
+      beneficiaries: result.value.beneficiaries.map((b) => ({
+        id: b.id,
+        firstName: b.firstName,
+        lastName: b.lastName,
+        fullName: b.fullName,
+        email: b.email,
+        relationship: b.relationship,
+        note: b.note,
+        assignmentCount: b.assignmentCount,
+        createdAt: b.createdAt.toISOString(),
+      })),
+    };
+  }
+
+  @Get(':id')
+  async get(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BeneficiaryResponseDto> {
+    const result = await this.getBeneficiaryQuery.execute({
+      userId: user.id,
+      beneficiaryId: id,
+    });
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    const beneficiary = result.value;
+    return {
+      id: beneficiary.id,
+      firstName: beneficiary.firstName,
+      lastName: beneficiary.lastName,
+      fullName: beneficiary.fullName,
+      email: beneficiary.email,
+      relationship: beneficiary.relationship,
+      note: beneficiary.note,
+      assignmentCount: beneficiary.assignmentCount,
+      createdAt: beneficiary.createdAt.toISOString(),
+    };
+  }
+
+  @Patch(':id')
+  async update(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateBeneficiaryDto,
+  ): Promise<BeneficiaryResponseDto> {
+    const result = await this.updateBeneficiaryCommand.execute({
+      userId: user.id,
+      beneficiaryId: id,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      email: dto.email,
+      relationship: dto.relationship,
+      note: dto.note,
+    });
+
+    if (result.isErr()) {
+      if (result.error === 'Beneficiary not found') {
+        throw new NotFoundException(result.error);
+      }
+      throw new BadRequestException(result.error);
+    }
+
+    const beneficiary = result.value;
+    return {
+      id: beneficiary.id,
+      firstName: beneficiary.firstName,
+      lastName: beneficiary.lastName,
+      fullName: beneficiary.fullName,
+      email: beneficiary.email,
+      relationship: beneficiary.relationship,
+      note: beneficiary.note,
+      assignmentCount: 0,
+      createdAt: beneficiary.createdAt.toISOString(),
+    };
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string): Promise<void> {
+    const result = await this.deleteBeneficiaryCommand.execute({
+      userId: user.id,
+      beneficiaryId: id,
+    });
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
   }
 }

@@ -29,6 +29,18 @@ export class PrismaBeneficiaryRepository implements BeneficiaryRepository {
       .filter((b): b is Beneficiary => b !== null);
   }
 
+  async findByEmail(vaultId: string, email: string): Promise<Beneficiary | null> {
+    const record = await this.prisma.beneficiary.findUnique({
+      where: {
+        vaultId_email: { vaultId, email },
+      },
+    });
+
+    if (!record) return null;
+
+    return BeneficiaryMapper.toDomain(record);
+  }
+
   async findByAccessToken(token: string): Promise<Beneficiary | null> {
     const record = await this.prisma.beneficiary.findUnique({
       where: { accessToken: token },
@@ -52,6 +64,12 @@ export class PrismaBeneficiaryRepository implements BeneficiaryRepository {
   async delete(id: string): Promise<void> {
     await this.prisma.beneficiary.delete({
       where: { id },
+    });
+  }
+
+  async countAssignments(beneficiaryId: string): Promise<number> {
+    return this.prisma.keepsakeAssignment.count({
+      where: { beneficiaryId },
     });
   }
 }
