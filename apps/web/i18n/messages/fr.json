@@ -199,7 +199,6 @@
     },
     "form": {
       "step": "Étape {current} sur {total}",
-      "stepMedia": "Étape {current} sur {total}",
       "chooseType": "Quel type de souvenir souhaitez-vous créer ?",
       "titleLabel": "Titre",
       "titlePlaceholder": "Donnez un nom à ce souvenir",
@@ -213,8 +212,6 @@
       "letterPlaceholder": "Cher/Chère...",
       "wishPlaceholder": "Mon souhait est...",
       "optional": "optionnel",
-      "mediaHint": "Vous pourrez ajouter des photos ou vidéos après la création.",
-      "continueToMedia": "Continuer pour ajouter des médias",
       "create": "Créer le souvenir",
       "creating": "Création..."
     },

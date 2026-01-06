@@ -199,7 +199,6 @@
     },
     "form": {
       "step": "Step {current} of {total}",
-      "stepMedia": "Step {current} of {total}",
       "chooseType": "What type of keepsake would you like to create?",
       "titleLabel": "Title",
       "titlePlaceholder": "Give this keepsake a name",
@@ -213,8 +212,6 @@
       "letterPlaceholder": "Dear...",
       "wishPlaceholder": "My wish is...",
       "optional": "optional",
-      "mediaHint": "You'll be able to add photos or videos after creating the keepsake.",
-      "continueToMedia": "Continue to Add Media",
       "create": "Create Keepsake",
       "creating": "Creating..."
     },
