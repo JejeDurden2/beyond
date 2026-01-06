@@ -2,12 +2,20 @@
 
 import { Link, useRouter } from '@/i18n/navigation';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { AppShell } from '@/components/layout';
-import { getKeepsake, updateKeepsake, deleteKeepsake } from '@/lib/api/keepsakes';
+import { MediaUploader } from '@/components/features/media';
+import {
+  getKeepsake,
+  updateKeepsake,
+  deleteKeepsake,
+  getKeepsakeMedia,
+  uploadMedia,
+  deleteMedia,
+} from '@/lib/api/keepsakes';
 import { ApiError } from '@/lib/api/client';
-import type { Keepsake, KeepsakeType } from '@/types';
+import type { Keepsake, KeepsakeType, KeepsakeMedia, TriggerCondition } from '@/types';
 
 export default function KeepsakeDetailPage() {
   const router = useRouter();
@@ -18,14 +26,20 @@ export default function KeepsakeDetailPage() {
   const tCommon = useTranslations('common');
 
   const [keepsake, setKeepsake] = useState<Keepsake | null>(null);
+  const [media, setMedia] = useState<KeepsakeMedia[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [triggerCondition, setTriggerCondition] = useState<TriggerCondition>('on_death');
+  const [scheduledAt, setScheduledAt] = useState('');
+  const [revealDelay, setRevealDelay] = useState<number | ''>('');
 
   useEffect(() => {
     async function loadKeepsake() {
@@ -34,6 +48,15 @@ export default function KeepsakeDetailPage() {
         setKeepsake(data);
         setTitle(data.title);
         setContent(data.content || '');
+        setTriggerCondition(data.triggerCondition);
+        setScheduledAt(data.scheduledAt ? data.scheduledAt.split('T')[0] : '');
+        setRevealDelay(data.revealDelay ?? '');
+
+        // Load media for photo/video types
+        if (['photo', 'video'].includes(data.type)) {
+          const mediaResponse = await getKeepsakeMedia(id);
+          setMedia(mediaResponse.media);
+        }
       } catch (err) {
         console.error('Failed to load keepsake:', err);
         setError(tCommon('error'));
@@ -52,7 +75,13 @@ export default function KeepsakeDetailPage() {
     setError(null);
 
     try {
-      const updated = await updateKeepsake(id, { title, content });
+      const updated = await updateKeepsake(id, {
+        title,
+        content,
+        triggerCondition,
+        scheduledAt: triggerCondition === 'on_date' && scheduledAt ? scheduledAt : null,
+        revealDelay: revealDelay ? Number(revealDelay) : null,
+      });
       setKeepsake({ ...keepsake, ...updated });
     } catch (err) {
       if (err instanceof ApiError) {
@@ -82,6 +111,43 @@ export default function KeepsakeDetailPage() {
     }
   };
 
+  const handleMediaUpload = useCallback(
+    async (files: File[]) => {
+      setIsUploading(true);
+      setUploadProgress(0);
+      setError(null);
+
+      try {
+        const newMedia = await uploadMedia({
+          keepsakeId: id,
+          files,
+          onProgress: setUploadProgress,
+        });
+        setMedia((prev) => [...prev, ...newMedia]);
+      } catch (err) {
+        console.error('Upload failed:', err);
+        setError(t('media.errors.uploadFailed'));
+      } finally {
+        setIsUploading(false);
+        setUploadProgress(0);
+      }
+    },
+    [id, t],
+  );
+
+  const handleMediaRemove = useCallback(
+    async (mediaId: string) => {
+      try {
+        await deleteMedia(id, mediaId);
+        setMedia((prev) => prev.filter((m) => m.id !== mediaId));
+      } catch (err) {
+        console.error('Failed to delete media:', err);
+        setError(tCommon('error'));
+      }
+    },
+    [id, tCommon],
+  );
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', {
       year: 'numeric',
@@ -89,6 +155,30 @@ export default function KeepsakeDetailPage() {
       day: 'numeric',
     });
   };
+
+  // Determine which fields to show based on type
+  const isTextBased = keepsake && ['text', 'letter', 'wish'].includes(keepsake.type);
+  const isMediaBased = keepsake && ['photo', 'video'].includes(keepsake.type);
+  const isScheduledAction = keepsake?.type === 'scheduled_action';
+
+  const getContentLabel = (): string => {
+    if (isTextBased) return t('form.contentLabel');
+    if (isMediaBased) return t('form.descriptionLabel');
+    if (isScheduledAction) return t('form.instructionsLabel');
+    return t('form.contentLabel');
+  };
+
+  const getContentPlaceholder = (): string => {
+    if (!keepsake) return t('form.contentPlaceholder');
+    if (keepsake.type === 'text') return t('form.textPlaceholder');
+    if (keepsake.type === 'letter') return t('form.letterPlaceholder');
+    if (keepsake.type === 'wish') return t('form.wishPlaceholder');
+    if (isMediaBased) return t('form.descriptionPlaceholder');
+    if (isScheduledAction) return t('form.instructionsPlaceholder');
+    return t('form.contentPlaceholder');
+  };
+
+  const isContentRequired = isTextBased ?? false;
 
   if (isLoading) {
     return (
@@ -153,6 +243,7 @@ export default function KeepsakeDetailPage() {
                 </div>
               )}
 
+              {/* Title - always shown */}
               <div className="space-y-2">
                 <label htmlFor="title" className="block text-sm font-medium text-foreground">
                   {t('form.titleLabel')}
@@ -167,19 +258,112 @@ export default function KeepsakeDetailPage() {
                 />
               </div>
 
+              {/* Media Uploader - for photo/video types */}
+              {isMediaBased && (
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-foreground">
+                    {t('media.title')}
+                  </label>
+                  <MediaUploader
+                    media={media}
+                    isUploading={isUploading}
+                    uploadProgress={uploadProgress}
+                    onUpload={handleMediaUpload}
+                    onRemove={handleMediaRemove}
+                    maxFiles={keepsake.type === 'video' ? 5 : 20}
+                  />
+                </div>
+              )}
+
+              {/* Content/Description */}
               <div className="space-y-2">
                 <label htmlFor="content" className="block text-sm font-medium text-foreground">
-                  {t('form.contentLabel')}
+                  {getContentLabel()}
+                  {!isContentRequired && (
+                    <span className="text-muted-foreground font-normal ml-1">
+                      ({t('form.optional')})
+                    </span>
+                  )}
                 </label>
                 <textarea
                   id="content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  required
-                  rows={10}
+                  required={isContentRequired}
+                  rows={isTextBased ? 10 : 4}
                   className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out resize-none"
+                  placeholder={getContentPlaceholder()}
                 />
               </div>
+
+              {/* Trigger Condition - for scheduled_action */}
+              {isScheduledAction && (
+                <>
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="triggerCondition"
+                      className="block text-sm font-medium text-foreground"
+                    >
+                      {t('schedule.triggerLabel')}
+                    </label>
+                    <select
+                      id="triggerCondition"
+                      value={triggerCondition}
+                      onChange={(e) => setTriggerCondition(e.target.value as TriggerCondition)}
+                      className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
+                    >
+                      <option value="on_death">{t('trigger.on_death')}</option>
+                      <option value="on_date">{t('trigger.on_date')}</option>
+                      <option value="manual">{t('trigger.manual')}</option>
+                    </select>
+                  </div>
+
+                  {triggerCondition === 'on_date' && (
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="scheduledAt"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        {t('schedule.dateLabel')}
+                      </label>
+                      <input
+                        id="scheduledAt"
+                        type="date"
+                        value={scheduledAt}
+                        onChange={(e) => setScheduledAt(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
+                        className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
+                      />
+                    </div>
+                  )}
+
+                  {triggerCondition === 'on_death' && (
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="revealDelay"
+                        className="block text-sm font-medium text-foreground"
+                      >
+                        {t('schedule.delayLabel')}
+                        <span className="text-muted-foreground font-normal ml-1">
+                          ({t('form.optional')})
+                        </span>
+                      </label>
+                      <input
+                        id="revealDelay"
+                        type="number"
+                        min="0"
+                        max="365"
+                        value={revealDelay}
+                        onChange={(e) =>
+                          setRevealDelay(e.target.value ? Number(e.target.value) : '')
+                        }
+                        className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
+                        placeholder="0"
+                      />
+                    </div>
+                  )}
+                </>
+              )}
 
               <div className="flex items-center justify-between pt-4">
                 <button
@@ -191,7 +375,7 @@ export default function KeepsakeDetailPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSaving || !title || !content}
+                  disabled={isSaving || !title || (isContentRequired && !content)}
                   className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSaving ? t('edit.saving') : t('edit.save')}
