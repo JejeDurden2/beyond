@@ -1,0 +1,230 @@
+'use client';
+
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
+import { useAuth } from '@/hooks/use-auth';
+import { Header } from '@/components/layout';
+
+export function HomePage() {
+  const { isAuthenticated } = useAuth();
+  const t = useTranslations('landing');
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+
+      <main className="flex-1 flex flex-col">
+        {/* Hero Section */}
+        <section className="flex-1 flex flex-col items-center justify-center px-6 py-24">
+          <div className="max-w-3xl text-center space-y-8 animate-fade-in">
+            <h1 className="font-display text-display-lg text-foreground text-balance">
+              {t('hero.title')}
+            </h1>
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto text-balance">
+              {t('hero.subtitle')}
+            </p>
+            <div className="pt-6">
+              {isAuthenticated ? (
+                <Link
+                  href="/dashboard"
+                  className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-8 py-4 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md inline-block"
+                >
+                  {t('hero.ctaAuth')}
+                </Link>
+              ) : (
+                <Link
+                  href="/register"
+                  className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-8 py-4 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md inline-block"
+                >
+                  {t('hero.ctaGuest')}
+                </Link>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Trust Indicators */}
+        <section className="py-16 px-6 border-y border-border/30">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8">
+              <TrustIndicator
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                }
+                title={t('trust.secure.title')}
+                description={t('trust.secure.description')}
+              />
+              <TrustIndicator
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                }
+                title={t('trust.private.title')}
+                description={t('trust.private.description')}
+              />
+              <TrustIndicator
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                }
+                title={t('trust.trusted.title')}
+                description={t('trust.trusted.description')}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section className="py-24 px-6 bg-muted/30">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-center text-muted-foreground mb-12">{t('howItWorks.intro')}</p>
+            <div className="grid md:grid-cols-3 gap-8">
+              <StepCard
+                number="1"
+                title={t('howItWorks.step1.title')}
+                description={t('howItWorks.step1.description')}
+              />
+              <StepCard
+                number="2"
+                title={t('howItWorks.step2.title')}
+                description={t('howItWorks.step2.description')}
+              />
+              <StepCard
+                number="3"
+                title={t('howItWorks.step3.title')}
+                description={t('howItWorks.step3.description')}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-24 px-6">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="font-display text-display-sm text-foreground text-center mb-16">
+              {t('features.title')}
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <FeatureCard
+                icon="✉️"
+                title={t('features.letters.title')}
+                description={t('features.letters.description')}
+              />
+              <FeatureCard
+                icon="📷"
+                title={t('features.photos.title')}
+                description={t('features.photos.description')}
+              />
+              <FeatureCard
+                icon="⭐"
+                title={t('features.wishes.title')}
+                description={t('features.wishes.description')}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-24 px-6 bg-muted/30">
+          <div className="max-w-2xl mx-auto text-center space-y-8">
+            <h2 className="font-display text-display-sm text-foreground">{t('cta.title')}</h2>
+            <p className="text-lg text-muted-foreground">{t('cta.description')}</p>
+            {!isAuthenticated && (
+              <Link
+                href="/register"
+                className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-8 py-4 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md inline-block"
+              >
+                {t('hero.ctaGuest')}
+              </Link>
+            )}
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-border/50">
+        <div className="max-w-5xl mx-auto flex justify-between items-center text-sm text-muted-foreground">
+          <span className="font-display">Beyond</span>
+          <span>{t('footer.tagline')}</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function TrustIndicator({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="text-center space-y-3">
+      <div className="w-12 h-12 mx-auto bg-muted rounded-xl flex items-center justify-center text-muted-foreground">
+        {icon}
+      </div>
+      <h3 className="font-medium text-foreground">{title}</h3>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
+  );
+}
+
+function StepCard({
+  number,
+  title,
+  description,
+}: {
+  number: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="text-center space-y-4">
+      <div className="w-10 h-10 mx-auto bg-foreground text-background rounded-full flex items-center justify-center font-display text-lg">
+        {number}
+      </div>
+      <h3 className="font-display text-lg text-foreground">{title}</h3>
+      <p className="text-muted-foreground text-sm">{description}</p>
+    </div>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8 transition-shadow duration-200 ease-out hover:shadow-soft-md">
+      <span className="text-3xl block mb-4">{icon}</span>
+      <h3 className="font-display text-xl text-foreground mb-3">{title}</h3>
+      <p className="text-muted-foreground leading-relaxed">{description}</p>
+    </div>
+  );
+}

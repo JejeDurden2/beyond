@@ -1,4 +1,18 @@
 {
+  "seo": {
+    "home": {
+      "title": "Beyond - Plateforme d'héritage numérique sécurisée",
+      "description": "Préservez vos messages, photos et volontés pour vos proches. Un coffre numérique sécurisé pour votre héritage."
+    },
+    "login": {
+      "title": "Connexion - Beyond",
+      "description": "Connectez-vous à votre coffre Beyond pour accéder à vos souvenirs et messages préservés."
+    },
+    "register": {
+      "title": "Créer votre coffre - Beyond",
+      "description": "Créez votre coffre numérique sécurisé et commencez à préserver ce qui compte pour vos proches."
+    }
+  },
   "common": {
     "appName": "Beyond",
     "loading": "Chargement...",

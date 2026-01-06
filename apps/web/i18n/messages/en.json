@@ -1,4 +1,18 @@
 {
+  "seo": {
+    "home": {
+      "title": "Beyond - Secure Digital Legacy Platform",
+      "description": "Preserve your messages, photos, and wishes for loved ones. A secure digital vault for your legacy."
+    },
+    "login": {
+      "title": "Sign In - Beyond",
+      "description": "Sign in to your Beyond vault to access your preserved memories and messages."
+    },
+    "register": {
+      "title": "Create Your Vault - Beyond",
+      "description": "Create your secure digital vault and start preserving what matters for your loved ones."
+    }
+  },
   "common": {
     "appName": "Beyond",
     "loading": "Loading...",

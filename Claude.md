@@ -392,3 +392,33 @@ pnpm format:check  # Check formatting (CI)
 - [ ] No personal data in logs
 - [ ] Strict types, no `any`
 - [ ] Documentation updated if public API
+
+---
+
+## Pre-Commit Code Review
+
+Before committing, always perform a self-review:
+
+1. **Lint & Format**: Run `pnpm lint && pnpm format:check`
+2. **Type Check**: Ensure no TypeScript errors with `pnpm build`
+3. **Test**: Run `pnpm test` for affected packages
+4. **Security**: Check for exposed secrets, XSS vulnerabilities, SQL injection
+5. **Performance**: Verify no unnecessary re-renders, large bundles, or N+1 queries
+6. **Accessibility**: Ensure proper labels, roles, keyboard navigation
+7. **i18n**: Verify all user-facing strings are translated in both `fr.json` and `en.json`
+8. **SEO**: For public pages, ensure metadata is set with `generateMetadata()`
+
+### Automated Checks
+
+```bash
+# Run all checks before commit
+pnpm lint && pnpm format:check && pnpm test && pnpm build
+```
+
+### Manual Review Points
+
+- No `console.log` in production code (use NestJS Logger on backend)
+- No hardcoded URLs or secrets
+- Error boundaries for client components
+- Loading states for async operations
+- Proper error handling with user-friendly messages
