@@ -4,6 +4,15 @@ CREATE TYPE "VaultStatus" AS ENUM ('active', 'pending_verification', 'unsealed')
 -- CreateEnum
 CREATE TYPE "KeepsakeType" AS ENUM ('text', 'letter', 'photo', 'video', 'wish', 'scheduled_action');
 
+-- CreateEnum
+CREATE TYPE "KeepsakeStatus" AS ENUM ('draft', 'scheduled', 'delivered');
+
+-- CreateEnum
+CREATE TYPE "TriggerCondition" AS ENUM ('on_death', 'on_date', 'manual');
+
+-- CreateEnum
+CREATE TYPE "MediaType" AS ENUM ('image', 'video', 'document');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -12,6 +21,7 @@ CREATE TABLE "User" (
     "totpSecret" TEXT,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "emailVerificationToken" TEXT,
+    "emailVerificationTokenExpiry" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
@@ -40,12 +50,32 @@ CREATE TABLE "Keepsake" (
     "title" TEXT NOT NULL,
     "encryptedContent" TEXT NOT NULL,
     "contentIV" TEXT NOT NULL,
+    "status" "KeepsakeStatus" NOT NULL DEFAULT 'draft',
+    "triggerCondition" "TriggerCondition" NOT NULL DEFAULT 'on_death',
     "revealDelay" INTEGER,
     "revealDate" TIMESTAMP(3),
+    "scheduledAt" TIMESTAMP(3),
+    "deliveredAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Keepsake_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "KeepsakeMedia" (
+    "id" TEXT NOT NULL,
+    "keepsakeId" TEXT NOT NULL,
+    "type" "MediaType" NOT NULL,
+    "key" TEXT NOT NULL,
+    "filename" TEXT NOT NULL,
+    "mimeType" TEXT NOT NULL,
+    "size" INTEGER NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "KeepsakeMedia_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -112,6 +142,18 @@ CREATE UNIQUE INDEX "Vault_userId_key" ON "Vault"("userId");
 CREATE INDEX "Keepsake_vaultId_idx" ON "Keepsake"("vaultId");
 
 -- CreateIndex
+CREATE INDEX "Keepsake_status_idx" ON "Keepsake"("status");
+
+-- CreateIndex
+CREATE INDEX "Keepsake_deletedAt_idx" ON "Keepsake"("deletedAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "KeepsakeMedia_key_key" ON "KeepsakeMedia"("key");
+
+-- CreateIndex
+CREATE INDEX "KeepsakeMedia_keepsakeId_idx" ON "KeepsakeMedia"("keepsakeId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Beneficiary_accessToken_key" ON "Beneficiary"("accessToken");
 
 -- CreateIndex
@@ -143,6 +185,9 @@ ALTER TABLE "Vault" ADD CONSTRAINT "Vault_userId_fkey" FOREIGN KEY ("userId") RE
 
 -- AddForeignKey
 ALTER TABLE "Keepsake" ADD CONSTRAINT "Keepsake_vaultId_fkey" FOREIGN KEY ("vaultId") REFERENCES "Vault"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "KeepsakeMedia" ADD CONSTRAINT "KeepsakeMedia_keepsakeId_fkey" FOREIGN KEY ("keepsakeId") REFERENCES "Keepsake"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Beneficiary" ADD CONSTRAINT "Beneficiary_vaultId_fkey" FOREIGN KEY ("vaultId") REFERENCES "Vault"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
