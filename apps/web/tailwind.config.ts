@@ -6,6 +6,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Beyond brand colors
+        'navy-deep': 'hsl(var(--navy-deep))',
+        'navy-light': 'hsl(var(--navy-light))',
+        'gold-heritage': 'hsl(var(--gold-heritage))',
+        'gold-soft': 'hsl(var(--gold-soft))',
+        cream: 'hsl(var(--cream))',
+        'warm-gray': 'hsl(var(--warm-gray))',
+        slate: 'hsl(var(--slate))',
+        // Semantic colors (mapped to brand)
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         muted: {
@@ -43,6 +52,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         display: ['var(--font-display)', 'Georgia', 'serif'],
+        'serif-brand': ['Georgia', 'Times New Roman', 'serif'],
       },
       fontSize: {
         'display-lg': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],

@@ -4,6 +4,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
 import { LanguageSwitcher } from '@/components/features/settings';
+import { Logo } from '@/components/ui';
 
 export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -14,14 +15,12 @@ export function Header() {
   const isActive = (path: string) => pathname === path || pathname.endsWith(path);
 
   return (
-    <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-warm-gray bg-cream/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link
-            href={isAuthenticated ? '/dashboard' : '/'}
-            className="font-display text-xl text-foreground"
-          >
-            Beyond
+          <Link href={isAuthenticated ? '/dashboard' : '/'} className="flex items-center">
+            <Logo variant="symbol" className="h-8 md:hidden" />
+            <Logo variant="full" className="hidden md:block h-10" />
           </Link>
 
           {isAuthenticated && (
@@ -30,8 +29,8 @@ export function Header() {
                 href="/dashboard"
                 className={`text-sm font-medium transition-colors duration-200 ease-out ${
                   isActive('/dashboard')
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-navy-deep'
+                    : 'text-navy-light hover:text-gold-heritage'
                 }`}
               >
                 {t('dashboard')}
@@ -40,11 +39,21 @@ export function Header() {
                 href="/keepsakes"
                 className={`text-sm font-medium transition-colors duration-200 ease-out ${
                   pathname.includes('/keepsakes')
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-navy-deep'
+                    : 'text-navy-light hover:text-gold-heritage'
                 }`}
               >
                 {t('keepsakes')}
+              </Link>
+              <Link
+                href="/beneficiaries"
+                className={`text-sm font-medium transition-colors duration-200 ease-out ${
+                  pathname.includes('/beneficiaries')
+                    ? 'text-navy-deep'
+                    : 'text-navy-light hover:text-gold-heritage'
+                }`}
+              >
+                {t('beneficiaries')}
               </Link>
             </nav>
           )}
@@ -56,10 +65,10 @@ export function Header() {
           </div>
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground hidden sm:block">{user?.email}</span>
+              <span className="text-sm text-slate hidden sm:block">{user?.email}</span>
               <button
                 onClick={logout}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out"
+                className="text-sm font-medium text-navy-light hover:text-gold-heritage transition-colors duration-200 ease-out"
               >
                 {t('logout')}
               </button>
@@ -68,13 +77,13 @@ export function Header() {
             <div className="flex items-center gap-3">
               <Link
                 href="/login"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out"
+                className="text-sm font-medium text-navy-light hover:text-gold-heritage transition-colors duration-200 ease-out"
               >
                 {t('login')}
               </Link>
               <Link
                 href="/register"
-                className="bg-foreground text-background hover:bg-foreground/90 rounded-lg px-4 py-2 text-sm font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
+                className="bg-gold-heritage text-cream hover:bg-gold-soft rounded-lg px-4 py-2 text-sm font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
               >
                 {tLanding('ctaGuest')}
               </Link>

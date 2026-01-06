@@ -115,10 +115,25 @@ export class KeepsakeAssignmentController {
     @Param('keepsakeId') keepsakeId: string,
     @Param('beneficiaryId') beneficiaryId: string,
   ): Promise<void> {
+    // Get current assignments
+    const assignmentsResult = await this.getKeepsakeAssignmentsQuery.execute({
+      userId: user.id,
+      keepsakeId,
+    });
+
+    if (assignmentsResult.isErr()) {
+      throw new NotFoundException(assignmentsResult.error);
+    }
+
+    // Filter out the beneficiary to remove
+    const remainingBeneficiaryIds = assignmentsResult.value.assignments
+      .filter((a) => a.beneficiaryId !== beneficiaryId)
+      .map((a) => a.beneficiaryId);
+
     const result = await this.bulkAssignCommand.execute({
       userId: user.id,
       keepsakeId,
-      beneficiaryIds: [],
+      beneficiaryIds: remainingBeneficiaryIds,
     });
 
     if (result.isErr()) {

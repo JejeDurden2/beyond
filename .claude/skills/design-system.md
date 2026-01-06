@@ -6,44 +6,57 @@
 
 ### Design Principles
 
-- **Quiet confidence**: No flashy colors, let typography and spacing do the work
+- **Quiet confidence**: Navy and gold convey trust and heritage
 - **Depth through subtlety**: Soft shadows, fine borders, layered surfaces
 - **Intentional whitespace**: Generous padding, content breathes
 - **Micro-interactions**: Smooth transitions that feel expensive
 
 ---
 
-## Color Palette
+## Brand Color Palette
 
-### Light Mode (CSS Variables in `globals.css`)
+### Primary Colors (CSS Variables in `globals.css`)
 
 ```css
 :root {
-  --background: 40 20% 99%; /* Warm off-white */
-  --foreground: 220 20% 14%; /* Deep charcoal */
-  --muted: 40 15% 96%;
-  --muted-foreground: 220 10% 40%;
-  --accent: 35 30% 50%; /* Muted gold */
-  --accent-foreground: 40 20% 99%;
-  --border: 40 15% 90%;
-  --ring: 35 30% 50%;
-  --card: 0 0% 100%;
-  --card-foreground: 220 20% 14%;
+  /* Beyond Brand Colors */
+  --navy-deep: 213 54% 24%; /* #1a365d - textes, headers */
+  --navy-light: 213 52% 34%; /* #2c5282 - liens, textes secondaires */
+  --gold-heritage: 43 86% 38%; /* #B8860B - accents, CTAs, bordures actives */
+  --gold-soft: 43 64% 56%; /* #D4A84B - hovers, highlights */
+  --cream: 43 50% 98%; /* #FDFBF7 - background principal */
+  --warm-gray: 40 22% 96%; /* #F7F5F2 - cards, sections alternees */
+  --slate: 215 16% 47%; /* #64748b - texte body */
 }
 ```
 
-### Dark Mode
+### Semantic Mappings
 
-```css
-.dark {
-  --background: 220 20% 10%;
-  --foreground: 40 15% 96%;
-  --muted: 220 15% 15%;
-  --muted-foreground: 220 10% 60%;
-  --accent: 35 30% 50%;
-  --border: 220 15% 20%;
-  --card: 220 20% 12%;
-}
+| Semantic Token       | Maps To       | Usage                 |
+| -------------------- | ------------- | --------------------- |
+| `primary`            | navy-deep     | Main text, headers    |
+| `primary-foreground` | cream         | Text on primary bg    |
+| `secondary`          | warm-gray     | Secondary backgrounds |
+| `accent`             | gold-heritage | CTAs, active states   |
+| `background`         | cream         | Main background       |
+| `foreground`         | navy-deep     | Body text             |
+| `muted`              | warm-gray     | Muted backgrounds     |
+| `muted-foreground`   | slate         | Muted text            |
+
+### Tailwind Usage
+
+```tsx
+// Primary button (gold CTA)
+<button className="bg-gold-heritage text-cream hover:bg-gold-soft">
+
+// Links
+<a className="text-navy-light hover:text-gold-heritage">
+
+// Cards
+<div className="bg-warm-gray border-border/50">
+
+// Headings
+<h1 className="text-navy-deep font-serif-brand">
 ```
 
 ---
@@ -52,8 +65,9 @@
 
 ### Fonts
 
+- **Serif (headings)**: Georgia, 'Times New Roman', serif - via `font-serif-brand`
 - **Sans (body)**: Inter via `--font-sans`
-- **Display (headings)**: Fraunces via `--font-display` - elegant serif
+- **Display**: Fraunces via `--font-display` (alternate for special headings)
 
 ### Font Sizes (Tailwind)
 
@@ -68,9 +82,23 @@ fontSize: {
 ### Usage
 
 ```tsx
-<h1 className="font-display text-display-lg text-foreground">Hero Title</h1>
-<h2 className="font-display text-display-sm text-foreground">Section Title</h2>
-<p className="text-muted-foreground text-lg leading-relaxed">Body text</p>
+<h1 className="font-serif-brand text-display-lg text-navy-deep">Hero Title</h1>
+<h2 className="font-serif-brand text-display-sm text-navy-deep">Section Title</h2>
+<p className="text-slate text-lg leading-relaxed">Body text</p>
+```
+
+---
+
+## Logo
+
+The `Logo` component in `components/ui/Logo.tsx` supports three variants:
+
+```tsx
+import { Logo } from '@/components/ui';
+
+<Logo variant="full" />     // Full logo with symbol + text (default)
+<Logo variant="symbol" />   // Symbol only (for mobile/favicon)
+<Logo variant="text" />     // Text only with underline
 ```
 
 ---
@@ -117,15 +145,15 @@ All interactive elements use `transition-all duration-200 ease-out`.
 ### Cards
 
 ```tsx
-<div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8 transition-shadow duration-200 ease-out hover:shadow-soft-md">
+<div className="bg-warm-gray rounded-2xl border border-border/50 shadow-soft p-8 transition-shadow duration-200 ease-out hover:shadow-soft-md">
   {/* content */}
 </div>
 ```
 
-### Primary Button
+### Primary Button (Gold CTA)
 
 ```tsx
-<button className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-8 py-4 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md">
+<button className="bg-gold-heritage text-cream hover:bg-gold-soft rounded-xl px-8 py-4 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md">
   Get Started
 </button>
 ```
@@ -138,10 +166,18 @@ All interactive elements use `transition-all duration-200 ease-out`.
 </button>
 ```
 
+### Links
+
+```tsx
+<a className="text-navy-light hover:text-gold-heritage transition-colors duration-200 ease-out">
+  Click here
+</a>
+```
+
 ### Inputs
 
 ```tsx
-<input className="rounded-xl border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:ring-accent/20 transition-colors" />
+<input className="rounded-xl border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-gold-heritage focus:ring-gold-heritage/50 transition-colors" />
 ```
 
 ### Section Spacing
@@ -152,23 +188,41 @@ All interactive elements use `transition-all duration-200 ease-out`.
 </section>
 ```
 
+### Header/Navbar
+
+```tsx
+<header className="border-b border-warm-gray bg-cream/80 backdrop-blur-sm sticky top-0 z-50">
+```
+
 ---
 
 ## Selection Styling
 
 ```css
 ::selection {
-  @apply bg-accent/20 text-foreground;
+  @apply bg-gold-heritage/20 text-foreground;
 }
+```
+
+---
+
+## Focus Rings
+
+```css
+focus:ring-gold-heritage/50
+focus:border-gold-heritage
 ```
 
 ---
 
 ## Key Rules
 
-1. **Headings**: Always use `font-display` for h1, h2
-2. **Transitions**: Always `duration-200 ease-out`
-3. **Borders**: Use `border-border/50` or `border-border/60` for subtlety
-4. **Shadows**: Replace harsh shadows with `shadow-soft` variants
-5. **Spacing**: Generous - sections get `py-24`, cards get `p-8`
-6. **Colors**: No saturated colors, warm neutrals only
+1. **Headings**: Always use `font-serif-brand` for h1, h2
+2. **CTAs**: Use `bg-gold-heritage` with `text-cream`
+3. **Links**: Use `text-navy-light hover:text-gold-heritage`
+4. **Cards**: Use `bg-warm-gray` with subtle border
+5. **Transitions**: Always `duration-200 ease-out`
+6. **Borders**: Use `border-border/50` or `border-warm-gray` for subtlety
+7. **Shadows**: Replace harsh shadows with `shadow-soft` variants
+8. **Spacing**: Generous - sections get `py-24`, cards get `p-8`
+9. **Focus states**: Use `ring-gold-heritage/50`
