@@ -10,6 +10,7 @@
     "test:coverage": "turbo run test -- --coverage",
     "test:e2e": "turbo run test:e2e",
     "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
     "db:generate": "pnpm --filter @beyond/api db:generate",
