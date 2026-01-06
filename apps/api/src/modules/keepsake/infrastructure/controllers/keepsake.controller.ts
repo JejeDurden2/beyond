@@ -44,10 +44,7 @@ import {
   KeepsakeRepository,
   KeepsakeMediaRepository,
 } from '../../domain/repositories/keepsake.repository';
-import {
-  STORAGE_SERVICE,
-  StorageService,
-} from '../../application/ports/storage.port';
+import { STORAGE_SERVICE, StorageService } from '../../application/ports/storage.port';
 import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
 
 class CreateKeepsakeDto {
@@ -169,10 +166,7 @@ export class KeepsakeController {
     private readonly vaultRepository: VaultRepository,
   ) {}
 
-  private async getKeepsakeEntity(
-    userId: string,
-    keepsakeId: string,
-  ): Promise<Keepsake | null> {
+  private async getKeepsakeEntity(userId: string, keepsakeId: string): Promise<Keepsake | null> {
     const vault = await this.vaultRepository.findByUserId(userId);
     if (!vault) return null;
 
@@ -197,10 +191,7 @@ export class KeepsakeController {
   }
 
   @Get()
-  async findAll(
-    @CurrentUser() user: AuthenticatedUser,
-    @Query() query: GetKeepsakesQueryDto,
-  ) {
+  async findAll(@CurrentUser() user: AuthenticatedUser, @Query() query: GetKeepsakesQueryDto) {
     return this.getKeepsakesQuery.execute({
       userId: user.id,
       status: query.status,
@@ -359,10 +350,7 @@ export class KeepsakeController {
   }
 
   @Get(':id/media')
-  async getMedia(
-    @CurrentUser() user: AuthenticatedUser,
-    @Param('id') keepsakeId: string,
-  ) {
+  async getMedia(@CurrentUser() user: AuthenticatedUser, @Param('id') keepsakeId: string) {
     const keepsake = await this.getKeepsakeEntity(user.id, keepsakeId);
 
     if (!keepsake) {

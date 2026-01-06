@@ -59,11 +59,7 @@ export class KeepsakeMedia extends Entity<KeepsakeMediaProps> {
       return err(mediaTypeResult.error);
     }
 
-    const validationResult = this.validateFile(
-      mediaTypeResult.value,
-      input.mimeType,
-      input.size,
-    );
+    const validationResult = this.validateFile(mediaTypeResult.value, input.mimeType, input.size);
     if (validationResult.isErr()) {
       return err(validationResult.error);
     }

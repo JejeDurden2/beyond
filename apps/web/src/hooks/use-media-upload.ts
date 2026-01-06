@@ -23,7 +23,10 @@ export interface UseMediaUploadReturn extends MediaUploadState {
   upload: (files: File[]) => Promise<void>;
   remove: (mediaId: string) => Promise<void>;
   refresh: () => Promise<void>;
-  validateFiles: (files: File[]) => { valid: File[]; invalid: Array<{ file: File; reason: string }> };
+  validateFiles: (files: File[]) => {
+    valid: File[];
+    invalid: Array<{ file: File; reason: string }>;
+  };
 }
 
 export function useMediaUpload({
@@ -79,9 +82,7 @@ export function useMediaUpload({
       const { valid, invalid } = validateFiles(files);
 
       if (invalid.length > 0) {
-        const errorMessage = invalid
-          .map((i) => `${i.file.name}: ${i.reason}`)
-          .join('\n');
+        const errorMessage = invalid.map((i) => `${i.file.name}: ${i.reason}`).join('\n');
         const error = new Error(errorMessage);
         setState((prev) => ({ ...prev, error }));
         onError?.(error);

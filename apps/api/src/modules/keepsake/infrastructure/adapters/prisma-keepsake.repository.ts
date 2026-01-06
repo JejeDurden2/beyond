@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/shared/infrastructure/prisma/prisma.service';
-import {
-  KeepsakeRepository,
-  KeepsakeFilters,
-} from '../../domain/repositories/keepsake.repository';
+import { KeepsakeRepository, KeepsakeFilters } from '../../domain/repositories/keepsake.repository';
 import { Keepsake, KeepsakeStatus } from '../../domain/entities/keepsake.entity';
 import { KeepsakeMapper } from '../mappers/keepsake.mapper';
 import { KeepsakeStatus as PrismaKeepsakeStatus, Prisma } from '@prisma/client';
@@ -28,10 +25,7 @@ export class PrismaKeepsakeRepository implements KeepsakeRepository {
     return KeepsakeMapper.toDomain(record);
   }
 
-  async findByVaultId(
-    vaultId: string,
-    filters?: KeepsakeFilters,
-  ): Promise<Keepsake[]> {
+  async findByVaultId(vaultId: string, filters?: KeepsakeFilters): Promise<Keepsake[]> {
     const where: Prisma.KeepsakeWhereInput = {
       vaultId,
     };

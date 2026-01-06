@@ -79,9 +79,7 @@ export class KeepsakeMapper {
     });
   }
 
-  static toPersistence(
-    keepsake: Keepsake,
-  ): Omit<PrismaKeepsake, 'createdAt' | 'updatedAt'> {
+  static toPersistence(keepsake: Keepsake): Omit<PrismaKeepsake, 'createdAt' | 'updatedAt'> {
     return {
       id: keepsake.id,
       vaultId: keepsake.vaultId,
@@ -127,9 +125,7 @@ export class KeepsakeMediaMapper {
     });
   }
 
-  static toPersistence(
-    media: KeepsakeMedia,
-  ): Omit<PrismaKeepsakeMedia, 'createdAt'> {
+  static toPersistence(media: KeepsakeMedia): Omit<PrismaKeepsakeMedia, 'createdAt'> {
     return {
       id: media.id,
       keepsakeId: media.keepsakeId,

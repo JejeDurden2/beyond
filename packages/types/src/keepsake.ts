@@ -1,10 +1,4 @@
-export type KeepsakeType =
-  | 'text'
-  | 'letter'
-  | 'photo'
-  | 'video'
-  | 'wish'
-  | 'scheduled_action';
+export type KeepsakeType = 'text' | 'letter' | 'photo' | 'video' | 'wish' | 'scheduled_action';
 
 export type KeepsakeStatus = 'draft' | 'scheduled' | 'delivered';
 

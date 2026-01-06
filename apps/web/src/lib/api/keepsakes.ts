@@ -79,7 +79,16 @@ export async function requestUploadUrl(
 export async function confirmMediaUpload(
   keepsakeId: string,
   input: ConfirmMediaUploadRequest,
-): Promise<{ media: Array<{ id: string; key: string; filename: string; type: string; size: number; order: number }> }> {
+): Promise<{
+  media: Array<{
+    id: string;
+    key: string;
+    filename: string;
+    type: string;
+    size: number;
+    order: number;
+  }>;
+}> {
   return apiClient(`/keepsakes/${keepsakeId}/media/confirm`, {
     method: 'POST',
     body: JSON.stringify(input),
@@ -126,7 +135,11 @@ export interface UploadMediaOptions {
   onProgress?: (progress: number) => void;
 }
 
-export async function uploadMedia({ keepsakeId, files, onProgress }: UploadMediaOptions): Promise<KeepsakeMedia[]> {
+export async function uploadMedia({
+  keepsakeId,
+  files,
+  onProgress,
+}: UploadMediaOptions): Promise<KeepsakeMedia[]> {
   const uploadedMedia: Array<{
     key: string;
     filename: string;
