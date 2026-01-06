@@ -24,7 +24,7 @@ export class PrismaKeepsakeMediaRepository implements KeepsakeMediaRepository {
       orderBy: { order: 'asc' },
     });
 
-    return records.map(KeepsakeMediaMapper.toDomain);
+    return records.map((record) => KeepsakeMediaMapper.toDomain(record));
   }
 
   async findByKey(key: string): Promise<KeepsakeMedia | null> {

@@ -24,7 +24,9 @@ export class PrismaBeneficiaryRepository implements BeneficiaryRepository {
       orderBy: { createdAt: 'desc' },
     });
 
-    return records.map(BeneficiaryMapper.toDomain).filter((b): b is Beneficiary => b !== null);
+    return records
+      .map((record) => BeneficiaryMapper.toDomain(record))
+      .filter((b): b is Beneficiary => b !== null);
   }
 
   async findByAccessToken(token: string): Promise<Beneficiary | null> {

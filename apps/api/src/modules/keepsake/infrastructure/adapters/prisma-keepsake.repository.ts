@@ -43,7 +43,7 @@ export class PrismaKeepsakeRepository implements KeepsakeRepository {
       orderBy: { createdAt: 'desc' },
     });
 
-    return records.map(KeepsakeMapper.toDomain);
+    return records.map((record) => KeepsakeMapper.toDomain(record));
   }
 
   async save(keepsake: Keepsake): Promise<void> {
