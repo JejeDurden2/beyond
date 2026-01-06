@@ -15,6 +15,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
     "db:generate": "pnpm --filter @beyond/api db:generate",
     "db:migrate": "pnpm --filter @beyond/api db:migrate",
+    "db:deploy": "pnpm --filter @beyond/api db:deploy",
     "db:push": "pnpm --filter @beyond/api db:push",
     "db:studio": "pnpm --filter @beyond/api db:studio"
   },
