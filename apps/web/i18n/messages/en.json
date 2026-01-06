@@ -227,6 +227,42 @@
     },
     "card": {
       "updatedAt": "Updated {date}"
+    },
+    "status": {
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "delivered": "Delivered"
+    },
+    "trigger": {
+      "on_death": "On passing",
+      "on_date": "On specific date",
+      "manual": "Manual delivery"
+    },
+    "media": {
+      "title": "Attachments",
+      "dropzone": "Drop files here or click to upload",
+      "dropzoneHint": "Images (10MB), Videos (500MB), PDFs (20MB)",
+      "uploading": "Uploading...",
+      "uploadProgress": "{progress}%",
+      "remove": "Remove",
+      "types": {
+        "image": "Image",
+        "video": "Video",
+        "document": "Document"
+      },
+      "errors": {
+        "unsupportedType": "Unsupported file type: {type}",
+        "fileTooLarge": "File exceeds {maxSize}MB limit",
+        "uploadFailed": "Upload failed"
+      }
+    },
+    "schedule": {
+      "button": "Schedule",
+      "unschedule": "Unschedule",
+      "title": "Delivery Settings",
+      "triggerLabel": "Deliver when",
+      "dateLabel": "Delivery date",
+      "delayLabel": "Delay after trigger (days)"
     }
   },
   "settings": {

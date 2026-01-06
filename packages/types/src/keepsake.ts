@@ -1,24 +1,15 @@
-export interface User {
-  id: string;
-  email: string;
-  emailVerified: boolean;
-}
+export type KeepsakeType =
+  | 'text'
+  | 'letter'
+  | 'photo'
+  | 'video'
+  | 'wish'
+  | 'scheduled_action';
 
-export interface AuthResponse {
-  accessToken: string;
-  user: User;
-}
-
-export interface Vault {
-  id: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type KeepsakeType = 'text' | 'letter' | 'photo' | 'video' | 'wish' | 'scheduled_action';
 export type KeepsakeStatus = 'draft' | 'scheduled' | 'delivered';
+
 export type TriggerCondition = 'on_death' | 'on_date' | 'manual';
+
 export type MediaType = 'image' | 'video' | 'document';
 
 export interface KeepsakeMedia {
@@ -37,21 +28,7 @@ export interface KeepsakeMedia {
 
 export interface Keepsake {
   id: string;
-  type: KeepsakeType;
-  title: string;
-  content?: string;
-  status: KeepsakeStatus;
-  triggerCondition: TriggerCondition;
-  revealDelay: number | null;
-  revealDate: string | null;
-  scheduledAt: string | null;
-  deliveredAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface KeepsakeSummary {
-  id: string;
+  vaultId: string;
   type: KeepsakeType;
   title: string;
   status: KeepsakeStatus;
@@ -64,7 +41,11 @@ export interface KeepsakeSummary {
   updatedAt: string;
 }
 
-export interface CreateKeepsakeInput {
+export interface KeepsakeWithMedia extends Keepsake {
+  media: KeepsakeMedia[];
+}
+
+export interface CreateKeepsakeRequest {
   type: KeepsakeType;
   title: string;
   content: string;
@@ -74,7 +55,7 @@ export interface CreateKeepsakeInput {
   scheduledAt?: string;
 }
 
-export interface UpdateKeepsakeInput {
+export interface UpdateKeepsakeRequest {
   title?: string;
   content?: string;
   triggerCondition?: TriggerCondition;
@@ -102,6 +83,21 @@ export interface ConfirmMediaUploadRequest {
     size: number;
     order?: number;
   }>;
+}
+
+export interface ConfirmMediaUploadResponse {
+  media: Array<{
+    id: string;
+    key: string;
+    filename: string;
+    type: MediaType;
+    size: number;
+    order: number;
+  }>;
+}
+
+export interface ReorderMediaRequest {
+  mediaIds: string[];
 }
 
 export interface GetMediaResponse {

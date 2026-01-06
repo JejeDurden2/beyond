@@ -48,21 +48,29 @@ enum VaultStatus {
 }
 
 model Keepsake {
-  id               String       @id @default(uuid())
+  id               String           @id @default(uuid())
   vaultId          String
-  vault            Vault        @relation(fields: [vaultId], references: [id])
+  vault            Vault            @relation(fields: [vaultId], references: [id])
   type             KeepsakeType
   title            String
   encryptedContent String
   contentIV        String
+  status           KeepsakeStatus   @default(draft)
+  triggerCondition TriggerCondition @default(on_death)
   revealDelay      Int?
   revealDate       DateTime?
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+  scheduledAt      DateTime?
+  deliveredAt      DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
 
   assignments KeepsakeAssignment[]
+  media       KeepsakeMedia[]
 
   @@index([vaultId])
+  @@index([status])
+  @@index([deletedAt])
 }
 
 enum KeepsakeType {
@@ -72,6 +80,39 @@ enum KeepsakeType {
   video
   wish
   scheduled_action
+}
+
+enum KeepsakeStatus {
+  draft
+  scheduled
+  delivered
+}
+
+enum TriggerCondition {
+  on_death
+  on_date
+  manual
+}
+
+model KeepsakeMedia {
+  id         String    @id @default(uuid())
+  keepsakeId String
+  keepsake   Keepsake  @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  type       MediaType
+  key        String    @unique
+  filename   String
+  mimeType   String
+  size       Int
+  order      Int       @default(0)
+  createdAt  DateTime  @default(now())
+
+  @@index([keepsakeId])
+}
+
+enum MediaType {
+  image
+  video
+  document
 }
 
 model Beneficiary {

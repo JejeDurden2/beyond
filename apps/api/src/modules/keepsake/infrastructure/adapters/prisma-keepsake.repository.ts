@@ -1,8 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/shared/infrastructure/prisma/prisma.service';
-import { KeepsakeRepository } from '../../domain/repositories/keepsake.repository';
-import { Keepsake } from '../../domain/entities/keepsake.entity';
+import {
+  KeepsakeRepository,
+  KeepsakeFilters,
+} from '../../domain/repositories/keepsake.repository';
+import { Keepsake, KeepsakeStatus } from '../../domain/entities/keepsake.entity';
 import { KeepsakeMapper } from '../mappers/keepsake.mapper';
+import { KeepsakeStatus as PrismaKeepsakeStatus, Prisma } from '@prisma/client';
+
+const statusToPrisma: Record<KeepsakeStatus, PrismaKeepsakeStatus> = {
+  [KeepsakeStatus.DRAFT]: 'draft',
+  [KeepsakeStatus.SCHEDULED]: 'scheduled',
+  [KeepsakeStatus.DELIVERED]: 'delivered',
+};
 
 @Injectable()
 export class PrismaKeepsakeRepository implements KeepsakeRepository {
@@ -10,7 +20,7 @@ export class PrismaKeepsakeRepository implements KeepsakeRepository {
 
   async findById(id: string): Promise<Keepsake | null> {
     const record = await this.prisma.keepsake.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!record) return null;
@@ -18,9 +28,24 @@ export class PrismaKeepsakeRepository implements KeepsakeRepository {
     return KeepsakeMapper.toDomain(record);
   }
 
-  async findByVaultId(vaultId: string): Promise<Keepsake[]> {
+  async findByVaultId(
+    vaultId: string,
+    filters?: KeepsakeFilters,
+  ): Promise<Keepsake[]> {
+    const where: Prisma.KeepsakeWhereInput = {
+      vaultId,
+    };
+
+    if (!filters?.includeDeleted) {
+      where.deletedAt = null;
+    }
+
+    if (filters?.status) {
+      where.status = statusToPrisma[filters.status];
+    }
+
     const records = await this.prisma.keepsake.findMany({
-      where: { vaultId },
+      where,
       orderBy: { createdAt: 'desc' },
     });
 

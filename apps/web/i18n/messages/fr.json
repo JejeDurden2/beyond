@@ -227,6 +227,42 @@
     },
     "card": {
       "updatedAt": "Modifié {date}"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "scheduled": "Programmé",
+      "delivered": "Transmis"
+    },
+    "trigger": {
+      "on_death": "Au décès",
+      "on_date": "À une date précise",
+      "manual": "Transmission manuelle"
+    },
+    "media": {
+      "title": "Pièces jointes",
+      "dropzone": "Déposez vos fichiers ici ou cliquez pour téléverser",
+      "dropzoneHint": "Images (10 Mo), Vidéos (500 Mo), PDFs (20 Mo)",
+      "uploading": "Téléversement...",
+      "uploadProgress": "{progress}%",
+      "remove": "Supprimer",
+      "types": {
+        "image": "Image",
+        "video": "Vidéo",
+        "document": "Document"
+      },
+      "errors": {
+        "unsupportedType": "Type de fichier non supporté : {type}",
+        "fileTooLarge": "Le fichier dépasse la limite de {maxSize} Mo",
+        "uploadFailed": "Le téléversement a échoué"
+      }
+    },
+    "schedule": {
+      "button": "Programmer",
+      "unschedule": "Déprogrammer",
+      "title": "Paramètres de transmission",
+      "triggerLabel": "Transmettre quand",
+      "dateLabel": "Date de transmission",
+      "delayLabel": "Délai après déclenchement (jours)"
     }
   },
   "settings": {

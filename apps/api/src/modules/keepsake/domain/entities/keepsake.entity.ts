@@ -11,16 +11,33 @@ export enum KeepsakeType {
   SCHEDULED_ACTION = 'scheduled_action',
 }
 
+export enum KeepsakeStatus {
+  DRAFT = 'draft',
+  SCHEDULED = 'scheduled',
+  DELIVERED = 'delivered',
+}
+
+export enum TriggerCondition {
+  ON_DEATH = 'on_death',
+  ON_DATE = 'on_date',
+  MANUAL = 'manual',
+}
+
 export interface KeepsakeProps {
   id?: string;
   vaultId: string;
   type: KeepsakeType;
   title: string;
   encryptedContent: EncryptedContent;
+  status: KeepsakeStatus;
+  triggerCondition: TriggerCondition;
   revealDelay?: number | null;
   revealDate?: Date | null;
+  scheduledAt?: Date | null;
+  deliveredAt?: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
+  deletedAt?: Date | null;
 }
 
 export interface CreateKeepsakeInput {
@@ -29,16 +46,20 @@ export interface CreateKeepsakeInput {
   title: string;
   content: string;
   encryptionKey: Buffer;
+  triggerCondition?: TriggerCondition;
   revealDelay?: number;
   revealDate?: Date;
+  scheduledAt?: Date;
 }
 
 export interface UpdateKeepsakeInput {
   title?: string;
   content?: string;
   encryptionKey?: Buffer;
+  triggerCondition?: TriggerCondition;
   revealDelay?: number | null;
   revealDate?: Date | null;
+  scheduledAt?: Date | null;
 }
 
 export class Keepsake extends AggregateRoot<KeepsakeProps> {
@@ -68,14 +89,21 @@ export class Keepsake extends AggregateRoot<KeepsakeProps> {
       return err(encryptionResult.error);
     }
 
+    const triggerCondition = input.triggerCondition ?? TriggerCondition.ON_DEATH;
+
     return ok(
       new Keepsake({
         vaultId: input.vaultId,
         type: input.type,
         title: input.title.trim(),
         encryptedContent: encryptionResult.value,
+        status: KeepsakeStatus.DRAFT,
+        triggerCondition,
         revealDelay: input.revealDelay ?? null,
         revealDate: input.revealDate ?? null,
+        scheduledAt: input.scheduledAt ?? null,
+        deliveredAt: null,
+        deletedAt: null,
       }),
     );
   }
@@ -113,6 +141,10 @@ export class Keepsake extends AggregateRoot<KeepsakeProps> {
       this.props.encryptedContent = encryptionResult.value;
     }
 
+    if (input.triggerCondition !== undefined) {
+      this.props.triggerCondition = input.triggerCondition;
+    }
+
     if (input.revealDelay !== undefined) {
       this.props.revealDelay = input.revealDelay;
     }
@@ -121,8 +153,45 @@ export class Keepsake extends AggregateRoot<KeepsakeProps> {
       this.props.revealDate = input.revealDate;
     }
 
+    if (input.scheduledAt !== undefined) {
+      this.props.scheduledAt = input.scheduledAt;
+    }
+
     this._updatedAt = new Date();
     return ok(undefined);
+  }
+
+  schedule(): Result<void, string> {
+    if (this.props.status !== KeepsakeStatus.DRAFT) {
+      return err('Only draft keepsakes can be scheduled');
+    }
+    this.props.status = KeepsakeStatus.SCHEDULED;
+    this._updatedAt = new Date();
+    return ok(undefined);
+  }
+
+  deliver(): Result<void, string> {
+    if (this.props.status !== KeepsakeStatus.SCHEDULED) {
+      return err('Only scheduled keepsakes can be delivered');
+    }
+    this.props.status = KeepsakeStatus.DELIVERED;
+    this.props.deliveredAt = new Date();
+    this._updatedAt = new Date();
+    return ok(undefined);
+  }
+
+  unschedule(): Result<void, string> {
+    if (this.props.status !== KeepsakeStatus.SCHEDULED) {
+      return err('Only scheduled keepsakes can be unscheduled');
+    }
+    this.props.status = KeepsakeStatus.DRAFT;
+    this._updatedAt = new Date();
+    return ok(undefined);
+  }
+
+  softDelete(): void {
+    this.props.deletedAt = new Date();
+    this._updatedAt = new Date();
   }
 
   decryptContent(encryptionKey: Buffer): Result<string, string> {
@@ -145,11 +214,43 @@ export class Keepsake extends AggregateRoot<KeepsakeProps> {
     return this.props.encryptedContent;
   }
 
+  get status(): KeepsakeStatus {
+    return this.props.status;
+  }
+
+  get triggerCondition(): TriggerCondition {
+    return this.props.triggerCondition;
+  }
+
   get revealDelay(): number | null {
     return this.props.revealDelay ?? null;
   }
 
   get revealDate(): Date | null {
     return this.props.revealDate ?? null;
+  }
+
+  get scheduledAt(): Date | null {
+    return this.props.scheduledAt ?? null;
+  }
+
+  get deliveredAt(): Date | null {
+    return this.props.deliveredAt ?? null;
+  }
+
+  get deletedAt(): Date | null {
+    return this.props.deletedAt ?? null;
+  }
+
+  get isDraft(): boolean {
+    return this.props.status === KeepsakeStatus.DRAFT;
+  }
+
+  get isScheduled(): boolean {
+    return this.props.status === KeepsakeStatus.SCHEDULED;
+  }
+
+  get isDelivered(): boolean {
+    return this.props.status === KeepsakeStatus.DELIVERED;
   }
 }

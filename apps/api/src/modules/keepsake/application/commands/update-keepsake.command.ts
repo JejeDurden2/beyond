@@ -10,7 +10,11 @@ import {
   KeepsakeRepository,
   KEEPSAKE_REPOSITORY,
 } from '../../domain/repositories/keepsake.repository';
-import { KeepsakeType } from '../../domain/entities/keepsake.entity';
+import {
+  KeepsakeType,
+  KeepsakeStatus,
+  TriggerCondition,
+} from '../../domain/entities/keepsake.entity';
 import { createHash } from 'crypto';
 
 export interface UpdateKeepsakeInput {
@@ -18,16 +22,21 @@ export interface UpdateKeepsakeInput {
   keepsakeId: string;
   title?: string;
   content?: string;
+  triggerCondition?: TriggerCondition;
   revealDelay?: number | null;
   revealDate?: Date | null;
+  scheduledAt?: Date | null;
 }
 
 export interface UpdateKeepsakeOutput {
   id: string;
   type: KeepsakeType;
   title: string;
+  status: KeepsakeStatus;
+  triggerCondition: TriggerCondition;
   revealDelay: number | null;
   revealDate: Date | null;
+  scheduledAt: Date | null;
   updatedAt: Date;
 }
 
@@ -63,8 +72,10 @@ export class UpdateKeepsakeCommand {
       title: input.title,
       content: input.content,
       encryptionKey,
+      triggerCondition: input.triggerCondition,
       revealDelay: input.revealDelay,
       revealDate: input.revealDate,
+      scheduledAt: input.scheduledAt,
     });
 
     if (updateResult.isErr()) {
@@ -77,8 +88,11 @@ export class UpdateKeepsakeCommand {
       id: keepsake.id,
       type: keepsake.type,
       title: keepsake.title,
+      status: keepsake.status,
+      triggerCondition: keepsake.triggerCondition,
       revealDelay: keepsake.revealDelay,
       revealDate: keepsake.revealDate,
+      scheduledAt: keepsake.scheduledAt,
       updatedAt: keepsake.updatedAt,
     };
   }
