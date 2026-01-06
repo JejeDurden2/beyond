@@ -54,9 +54,7 @@ const logger = pino({
     }
     return {};
   },
-  transport: process.env.NODE_ENV === 'development'
-    ? { target: 'pino-pretty' }
-    : undefined,
+  transport: process.env.NODE_ENV === 'development' ? { target: 'pino-pretty' } : undefined,
 });
 
 @Injectable()
@@ -72,12 +70,15 @@ export class LoggerService {
   }
 
   error(message: string, error?: Error, data?: Record<string, unknown>): void {
-    logger.error({
-      context: this.context,
-      err: error,
-      stack: error?.stack,
-      ...data
-    }, message);
+    logger.error(
+      {
+        context: this.context,
+        err: error,
+        stack: error?.stack,
+        ...data,
+      },
+      message,
+    );
   }
 
   warn(message: string, data?: Record<string, unknown>): void {

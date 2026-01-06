@@ -8,7 +8,10 @@ export abstract class DomainError extends Error {
   abstract readonly code: string;
   abstract readonly statusCode: number;
 
-  constructor(message: string, public readonly metadata?: Record<string, unknown>) {
+  constructor(
+    message: string,
+    public readonly metadata?: Record<string, unknown>,
+  ) {
     super(message);
     this.name = this.constructor.name;
   }
@@ -77,9 +80,8 @@ export const Result = {
 
   flatMap: <T, U, E extends DomainError>(
     result: Result<T, E>,
-    fn: (value: T) => Result<U, E>
-  ): Result<U, E> =>
-    result.ok ? fn(result.value) : result,
+    fn: (value: T) => Result<U, E>,
+  ): Result<U, E> => (result.ok ? fn(result.value) : result),
 };
 ```
 
@@ -145,7 +147,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const res = exception.getResponse();
-      body = typeof res === 'object' ? res as Record<string, unknown> : { message: res };
+      body = typeof res === 'object' ? (res as Record<string, unknown>) : { message: res };
     }
     // Prisma errors
     else if (exception instanceof Prisma.PrismaClientKnownRequestError) {

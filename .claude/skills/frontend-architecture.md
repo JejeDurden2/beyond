@@ -52,7 +52,7 @@ export function DataTable<T>({
   columns,
   isLoading = false,
   onRowClick,
-  emptyMessage = "No data found"
+  emptyMessage = 'No data found',
 }: DataTableProps<T>): JSX.Element {
   // Implementation
 }

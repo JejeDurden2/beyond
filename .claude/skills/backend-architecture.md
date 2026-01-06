@@ -154,11 +154,13 @@ export class FeatureController {
 
 ```typescript
 // main.ts
-app.useGlobalPipes(new ValidationPipe({
-  transform: true,
-  whitelist: true,
-  forbidNonWhitelisted: true,
-}));
+app.useGlobalPipes(
+  new ValidationPipe({
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }),
+);
 app.useGlobalInterceptors(new LoggingInterceptor());
 app.useGlobalFilters(new AllExceptionsFilter());
 ```

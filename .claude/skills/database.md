@@ -109,8 +109,8 @@ services:
     container_name: app-jaeger
     restart: unless-stopped
     ports:
-      - '16686:16686'  # UI
-      - '4318:4318'    # OTLP HTTP
+      - '16686:16686' # UI
+      - '4318:4318' # OTLP HTTP
     environment:
       COLLECTOR_OTLP_ENABLED: true
 

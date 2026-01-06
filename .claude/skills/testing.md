@@ -2,11 +2,11 @@
 
 ## Overview
 
-| Type | Tool | Target | Coverage |
-|------|------|--------|----------|
-| Unit | Vitest | Domain, Utils, Use Cases | 80%+ |
-| Integration | Vitest + Supertest | API endpoints | 70%+ |
-| E2E | Playwright | User flows critiques | Smoke tests |
+| Type        | Tool               | Target                   | Coverage    |
+| ----------- | ------------------ | ------------------------ | ----------- |
+| Unit        | Vitest             | Domain, Utils, Use Cases | 80%+        |
+| Integration | Vitest + Supertest | API endpoints            | 70%+        |
+| E2E         | Playwright         | User flows critiques     | Smoke tests |
 
 ---
 

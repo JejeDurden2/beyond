@@ -56,36 +56,42 @@ pnpm format:check      # Formatting consistent
 ### 2. Code Quality Review
 
 #### TypeScript
+
 - [ ] No `any` types — all types explicit or properly inferred
 - [ ] Explicit return types on all exported functions
 - [ ] No type assertions (`as`) unless absolutely necessary with comment
 - [ ] Null/undefined handled properly (optional chaining, nullish coalescing)
 
 #### Architecture
+
 - [ ] Domain layer has zero imports from infrastructure
 - [ ] Use cases return `Result<T, E>`, not throwing exceptions
 - [ ] Controllers only orchestrate, no business logic
 - [ ] Components are reusable, no hardcoded values
 
 #### Error Handling
+
 - [ ] All errors are typed `DomainError` subclasses
 - [ ] Error messages are user-friendly and actionable
 - [ ] Errors include relevant metadata for debugging
 - [ ] No swallowed errors (empty catch blocks)
 
 #### Performance
+
 - [ ] No N+1 queries — use includes/joins
 - [ ] Large lists paginated
 - [ ] Expensive computations memoized
 - [ ] Images optimized, lazy loaded
 
 #### Security
+
 - [ ] No secrets in code — use env variables
 - [ ] User input validated (Zod/class-validator)
 - [ ] No SQL injection (Prisma parameterized)
 - [ ] Sensitive data not logged
 
 #### Internationalization
+
 - [ ] All user-facing strings use translation keys
 - [ ] French translation added (source of truth)
 - [ ] English translation added
@@ -136,20 +142,20 @@ pnpm dev               # App runs without errors
 
 ## Common Issues to Self-Fix
 
-| Issue | Fix |
-|-------|-----|
-| Missing return type | Add explicit `: ReturnType` |
-| `any` type | Replace with proper type or `unknown` |
-| Long function (>20 lines) | Extract helper functions |
-| Nested conditionals | Use early returns |
-| Duplicated code | Extract to shared util/component |
-| Missing error handling | Add Result pattern or try/catch |
-| Hardcoded string | Extract to constant or env var |
-| Missing validation | Add Zod schema or class-validator |
-| No tests | Write unit test for business logic |
-| Console.log left in | Remove or replace with logger |
-| Hardcoded UI text | Extract to translation file (fr.json first) |
-| String concatenation in i18n | Use interpolation `{variable}` |
+| Issue                        | Fix                                         |
+| ---------------------------- | ------------------------------------------- |
+| Missing return type          | Add explicit `: ReturnType`                 |
+| `any` type                   | Replace with proper type or `unknown`       |
+| Long function (>20 lines)    | Extract helper functions                    |
+| Nested conditionals          | Use early returns                           |
+| Duplicated code              | Extract to shared util/component            |
+| Missing error handling       | Add Result pattern or try/catch             |
+| Hardcoded string             | Extract to constant or env var              |
+| Missing validation           | Add Zod schema or class-validator           |
+| No tests                     | Write unit test for business logic          |
+| Console.log left in          | Remove or replace with logger               |
+| Hardcoded UI text            | Extract to translation file (fr.json first) |
+| String concatenation in i18n | Use interpolation `{variable}`              |
 
 ---
 
@@ -180,12 +186,18 @@ module.exports = {
   rules: {
     // TypeScript
     '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/explicit-function-return-type': ['error', {
-      allowExpressions: true
-    }],
-    '@typescript-eslint/no-unused-vars': ['error', {
-      argsIgnorePattern: '^_'
-    }],
+    '@typescript-eslint/explicit-function-return-type': [
+      'error',
+      {
+        allowExpressions: true,
+      },
+    ],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+      },
+    ],
     '@typescript-eslint/consistent-type-imports': 'error',
 
     // React
@@ -193,11 +205,14 @@ module.exports = {
     'react/prop-types': 'off',
 
     // Import order
-    'import/order': ['error', {
-      groups: ['builtin', 'external', 'internal', 'parent', 'sibling'],
-      'newlines-between': 'always',
-      alphabetize: { order: 'asc' },
-    }],
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling'],
+        'newlines-between': 'always',
+        alphabetize: { order: 'asc' },
+      },
+    ],
   },
 };
 ```

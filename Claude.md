@@ -7,6 +7,7 @@ Monorepo full-stack application with React frontend and NestJS backend, followin
 ## Tech Stack
 
 ### Frontend (`/apps/web`)
+
 - **Framework**: React 18+ with TypeScript (strict mode)
 - **Styling**: Tailwind CSS + shadcn/ui
 - **Deployment**: Vercel
@@ -14,6 +15,7 @@ Monorepo full-stack application with React frontend and NestJS backend, followin
 - **i18n**: next-intl (French default, English secondary)
 
 ### Backend (`/apps/api`)
+
 - **Framework**: NestJS with TypeScript (strict mode)
 - **ORM**: Prisma
 - **Database**: PostgreSQL (Neon)
@@ -21,6 +23,7 @@ Monorepo full-stack application with React frontend and NestJS backend, followin
 - **Architecture**: DDD + Hexagonal (Ports & Adapters)
 
 ### Shared (`/packages/shared`)
+
 - Types, DTOs, validation schemas (Zod), constants
 
 ---
@@ -50,6 +53,7 @@ Monorepo full-stack application with React frontend and NestJS backend, followin
 ## Environment Variables
 
 ### Backend (`apps/api/.env`)
+
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/app_dev"
 PORT=3001
@@ -59,6 +63,7 @@ JWT_EXPIRATION="7d"
 ```
 
 ### Frontend (`apps/web/.env.local`)
+
 ```env
 NEXT_PUBLIC_API_URL="http://localhost:3001"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
@@ -104,6 +109,7 @@ pnpm db:studio              # Open Prisma Studio
 ## Rules for Claude
 
 ### ALWAYS
+
 1. Create reusable, typed components — no one-off implementations
 2. Implement mobile-first, then scale up (sm → md → lg → xl)
 3. Add proper TypeScript types with explicit return types
@@ -119,6 +125,7 @@ pnpm db:studio              # Open Prisma Studio
 13. **Use i18n for ALL user-facing strings** — French first, then English
 
 ### NEVER
+
 14. Use `any` type — use `unknown` + type guards
 15. Put business logic in controllers or components
 16. Skip validation (Zod on frontend, class-validator on backend)
@@ -130,6 +137,7 @@ pnpm db:studio              # Open Prisma Studio
 22. Hardcode user-facing text — use translation keys
 
 ### PREFER
+
 23. Composition over inheritance
 24. Small, focused functions (< 20 lines)
 25. Named exports over default exports
