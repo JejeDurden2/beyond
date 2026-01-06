@@ -271,6 +271,11 @@
       "triggerLabel": "Transmettre quand",
       "dateLabel": "Date de transmission",
       "delayLabel": "Délai après déclenchement (jours)"
+    },
+    "visualization": {
+      "edit": "Modifier",
+      "close": "Fermer",
+      "view": "Lire"
     }
   },
   "settings": {

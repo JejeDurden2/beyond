@@ -271,6 +271,11 @@
       "triggerLabel": "Deliver when",
       "dateLabel": "Delivery date",
       "delayLabel": "Delay after trigger (days)"
+    },
+    "visualization": {
+      "edit": "Edit",
+      "close": "Close",
+      "view": "Read"
     }
   },
   "settings": {

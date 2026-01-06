@@ -1,19 +1,30 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
-import { useEffect, useState } from 'react';
+import { Link, useRouter } from '@/i18n/navigation';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { KeepsakeTypeIcon, ChevronRight, Plus } from '@/components/ui';
-import { getKeepsakes } from '@/lib/api/keepsakes';
+import {
+  KeepsakeVisualization,
+  useKeepsakeVisualization,
+} from '@/components/features/visualizations';
+import { getKeepsakes, getKeepsake } from '@/lib/api/keepsakes';
 import { KEEPSAKE_TYPES, formatDate } from '@/lib/constants';
-import type { KeepsakeSummary, KeepsakeType } from '@/types';
+import type { KeepsakeSummary, KeepsakeType, Keepsake } from '@/types';
 
 export default function KeepsakesPage() {
+  const router = useRouter();
   const t = useTranslations('keepsakes');
+  const { isTextBased } = useKeepsakeVisualization();
+
   const [keepsakes, setKeepsakes] = useState<KeepsakeSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterType, setFilterType] = useState<KeepsakeType | 'all'>('all');
+
+  // Visualization state
+  const [selectedKeepsake, setSelectedKeepsake] = useState<Keepsake | null>(null);
+  const [isLoadingKeepsake, setIsLoadingKeepsake] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -31,6 +42,39 @@ export default function KeepsakesPage() {
 
   const filteredKeepsakes =
     filterType === 'all' ? keepsakes : keepsakes.filter((k) => k.type === filterType);
+
+  const handleKeepsakeClick = useCallback(
+    async (keepsake: KeepsakeSummary) => {
+      // For non-text keepsakes, go directly to edit page
+      if (!isTextBased(keepsake.type)) {
+        router.push(`/keepsakes/${keepsake.id}`);
+        return;
+      }
+
+      // For text-based keepsakes, load full content and show visualization
+      setIsLoadingKeepsake(true);
+      try {
+        const fullKeepsake = await getKeepsake(keepsake.id);
+        setSelectedKeepsake(fullKeepsake);
+      } catch {
+        // On error, fallback to edit page
+        router.push(`/keepsakes/${keepsake.id}`);
+      } finally {
+        setIsLoadingKeepsake(false);
+      }
+    },
+    [isTextBased, router],
+  );
+
+  const handleCloseVisualization = useCallback(() => {
+    setSelectedKeepsake(null);
+  }, []);
+
+  const handleEditFromVisualization = useCallback(() => {
+    if (selectedKeepsake) {
+      router.push(`/keepsakes/${selectedKeepsake.id}`);
+    }
+  }, [selectedKeepsake, router]);
 
   return (
     <AppShell requireAuth>
@@ -88,10 +132,11 @@ export default function KeepsakesPage() {
         ) : (
           <div className="space-y-4">
             {filteredKeepsakes.map((keepsake) => (
-              <Link
+              <button
                 key={keepsake.id}
-                href={`/keepsakes/${keepsake.id}`}
-                className="block bg-card rounded-2xl border border-border/50 shadow-soft p-6 transition-shadow duration-200 ease-out hover:shadow-soft-md"
+                onClick={() => handleKeepsakeClick(keepsake)}
+                disabled={isLoadingKeepsake}
+                className="block w-full text-left bg-card rounded-2xl border border-border/50 shadow-soft p-6 transition-shadow duration-200 ease-out hover:shadow-soft-md disabled:opacity-70"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -109,11 +154,22 @@ export default function KeepsakesPage() {
                   </div>
                   <ChevronRight className="w-5 h-5 text-muted-foreground" />
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
         )}
       </div>
+
+      {/* Visualization Modal */}
+      {selectedKeepsake && (
+        <KeepsakeVisualization
+          type={selectedKeepsake.type}
+          title={selectedKeepsake.title}
+          content={selectedKeepsake.content || ''}
+          onEdit={handleEditFromVisualization}
+          onClose={handleCloseVisualization}
+        />
+      )}
     </AppShell>
   );
 }

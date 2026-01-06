@@ -1,21 +1,32 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
-import { useEffect, useState } from 'react';
+import { Link, useRouter } from '@/i18n/navigation';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { KeepsakeTypeIcon, ChevronRight, Plus } from '@/components/ui';
+import {
+  KeepsakeVisualization,
+  useKeepsakeVisualization,
+} from '@/components/features/visualizations';
 import { useAuth } from '@/hooks/use-auth';
-import { getKeepsakes } from '@/lib/api/keepsakes';
+import { getKeepsakes, getKeepsake } from '@/lib/api/keepsakes';
 import { formatDate } from '@/lib/constants';
-import type { KeepsakeSummary, KeepsakeType } from '@/types';
+import type { KeepsakeSummary, KeepsakeType, Keepsake } from '@/types';
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { user } = useAuth();
   const t = useTranslations('dashboard');
   const tKeepsakes = useTranslations('keepsakes');
+  const { isTextBased } = useKeepsakeVisualization();
+
   const [keepsakes, setKeepsakes] = useState<KeepsakeSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Visualization state
+  const [selectedKeepsake, setSelectedKeepsake] = useState<Keepsake | null>(null);
+  const [isLoadingKeepsake, setIsLoadingKeepsake] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -30,6 +41,39 @@ export default function DashboardPage() {
     }
     loadData();
   }, []);
+
+  const handleKeepsakeClick = useCallback(
+    async (keepsake: KeepsakeSummary) => {
+      // For non-text keepsakes, go directly to edit page
+      if (!isTextBased(keepsake.type)) {
+        router.push(`/keepsakes/${keepsake.id}`);
+        return;
+      }
+
+      // For text-based keepsakes, load full content and show visualization
+      setIsLoadingKeepsake(true);
+      try {
+        const fullKeepsake = await getKeepsake(keepsake.id);
+        setSelectedKeepsake(fullKeepsake);
+      } catch {
+        // On error, fallback to edit page
+        router.push(`/keepsakes/${keepsake.id}`);
+      } finally {
+        setIsLoadingKeepsake(false);
+      }
+    },
+    [isTextBased, router],
+  );
+
+  const handleCloseVisualization = useCallback(() => {
+    setSelectedKeepsake(null);
+  }, []);
+
+  const handleEditFromVisualization = useCallback(() => {
+    if (selectedKeepsake) {
+      router.push(`/keepsakes/${selectedKeepsake.id}`);
+    }
+  }, [selectedKeepsake, router]);
 
   return (
     <AppShell requireAuth>
@@ -86,12 +130,28 @@ export default function DashboardPage() {
           ) : (
             <div className="space-y-4">
               {keepsakes.slice(0, 5).map((keepsake) => (
-                <KeepsakeRow key={keepsake.id} keepsake={keepsake} />
+                <KeepsakeRow
+                  key={keepsake.id}
+                  keepsake={keepsake}
+                  onClick={() => handleKeepsakeClick(keepsake)}
+                  isLoading={isLoadingKeepsake}
+                />
               ))}
             </div>
           )}
         </div>
       </div>
+
+      {/* Visualization Modal */}
+      {selectedKeepsake && (
+        <KeepsakeVisualization
+          type={selectedKeepsake.type}
+          title={selectedKeepsake.title}
+          content={selectedKeepsake.content || ''}
+          onEdit={handleEditFromVisualization}
+          onClose={handleCloseVisualization}
+        />
+      )}
     </AppShell>
   );
 }
@@ -157,13 +217,22 @@ function EmptyState() {
   );
 }
 
-function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
+function KeepsakeRow({
+  keepsake,
+  onClick,
+  isLoading,
+}: {
+  keepsake: KeepsakeSummary;
+  onClick: () => void;
+  isLoading: boolean;
+}) {
   const t = useTranslations('keepsakes');
 
   return (
-    <Link
-      href={`/keepsakes/${keepsake.id}`}
-      className="block bg-card rounded-2xl border border-border/50 shadow-soft p-6 transition-shadow duration-200 ease-out hover:shadow-soft-md"
+    <button
+      onClick={onClick}
+      disabled={isLoading}
+      className="block w-full text-left bg-card rounded-2xl border border-border/50 shadow-soft p-6 transition-shadow duration-200 ease-out hover:shadow-soft-md disabled:opacity-70"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -178,6 +247,6 @@ function KeepsakeRow({ keepsake }: { keepsake: KeepsakeSummary }) {
         </div>
         <ChevronRight className="w-5 h-5 text-muted-foreground" />
       </div>
-    </Link>
+    </button>
   );
 }
