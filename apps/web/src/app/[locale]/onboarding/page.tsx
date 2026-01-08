@@ -105,11 +105,13 @@ export default function OnboardingPage() {
     }) => {
       setIsSubmitting(true);
       try {
-        // Save profile
-        await updateProfile({
-          firstName: data.firstName,
-          lastName: data.lastName,
-        });
+        // Save profile only if we have data
+        if (data.firstName || data.lastName) {
+          await updateProfile({
+            ...(data.firstName && { firstName: data.firstName }),
+            ...(data.lastName && { lastName: data.lastName }),
+          });
+        }
 
         // Upload avatar if provided
         if (data.avatarFile) {
@@ -139,11 +141,13 @@ export default function OnboardingPage() {
   const handleBeneficiarySkip = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      // Save profile
-      await updateProfile({
-        firstName: data.firstName,
-        lastName: data.lastName,
-      });
+      // Save profile only if we have data
+      if (data.firstName || data.lastName) {
+        await updateProfile({
+          ...(data.firstName && { firstName: data.firstName }),
+          ...(data.lastName && { lastName: data.lastName }),
+        });
+      }
 
       // Upload avatar if provided
       if (data.avatarFile) {
