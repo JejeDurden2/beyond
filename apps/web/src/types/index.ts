@@ -1,7 +1,29 @@
 export interface User {
   id: string;
   email: string;
+  firstName: string | null;
+  lastName: string | null;
+  avatarUrl: string | null;
+  onboardingCompletedAt: string | null;
   emailVerified: boolean;
+  hasTotpEnabled: boolean;
+  createdAt: string;
+}
+
+export interface UpdateProfileInput {
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface AvatarUploadResponse {
+  uploadUrl: string;
+  key: string;
+  expiresAt: string;
 }
 
 export interface AuthResponse {

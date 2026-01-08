@@ -357,5 +357,92 @@
       "title": "Aucun destinataire",
       "description": "Ajoutez des bénéficiaires pour qu'ils reçoivent ce souvenir."
     }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Bienvenue sur Beyond",
+      "subtitle": "Vous êtes sur le point de créer quelque chose de précieux : un espace pour préserver ce qui compte, pour ceux qui comptent.",
+      "cta": "Commencer",
+      "trust": "Vos données sont chiffrées. Personne, pas même nous, ne peut accéder à vos contenus."
+    },
+    "identity": {
+      "title": "Comment vous appelez-vous ?",
+      "subtitle": "Ces informations aideront vos proches à vous identifier.",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "addPhoto": "Ajouter une photo",
+      "changePhoto": "Changer"
+    },
+    "intention": {
+      "title": "Qu'aimeriez-vous préserver ?",
+      "subtitle": "Sélectionnez ce qui vous parle.",
+      "options": {
+        "letters": "Des lettres pour mes proches",
+        "photos": "Des photos et souvenirs",
+        "videos": "Des messages vidéo",
+        "wishes": "Mes volontés et souhaits",
+        "gifts": "Des attentions programmées"
+      },
+      "skip": "Passer"
+    },
+    "beneficiary": {
+      "title": "À qui souhaitez-vous transmettre vos souvenirs ?",
+      "subtitle": "Ajoutez votre premier bénéficiaire. Vous pourrez en ajouter d'autres plus tard.",
+      "later": "Plus tard",
+      "addAndFinish": "Ajouter et terminer"
+    },
+    "completion": {
+      "title": "Votre coffre est prêt, {firstName}.",
+      "subtitle": "Vous pouvez maintenant commencer à préserver ce qui compte pour vous.",
+      "createFirst": "Créer mon premier souvenir",
+      "exploreDashboard": "Explorer mon tableau de bord",
+      "or": "ou"
+    },
+    "step": "Étape {current} sur {total}",
+    "back": "Retour",
+    "continue": "Continuer"
+  },
+  "profile": {
+    "title": "Profil",
+    "memberSince": "Membre depuis {date}",
+    "sections": {
+      "personal": "Informations personnelles",
+      "security": "Sécurité",
+      "danger": "Zone dangereuse"
+    },
+    "fields": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Adresse email",
+      "password": "Mot de passe",
+      "twoFactor": "Double authentification"
+    },
+    "actions": {
+      "edit": "Modifier",
+      "enable": "Activer",
+      "enabled": "Activée",
+      "disabled": "Non activée",
+      "logout": "Se déconnecter",
+      "deleteAccount": "Supprimer mon compte"
+    },
+    "changePassword": {
+      "title": "Changer de mot de passe",
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "confirm": "Confirmer le nouveau mot de passe",
+      "submit": "Mettre à jour"
+    },
+    "deleteAccount": {
+      "title": "Supprimer votre compte ?",
+      "warning": "Cette action est irréversible. Toutes vos données, souvenirs et bénéficiaires seront définitivement supprimés.",
+      "confirmLabel": "Tapez SUPPRIMER pour confirmer",
+      "confirm": "Supprimer définitivement",
+      "cancel": "Annuler"
+    },
+    "avatar": {
+      "change": "Changer la photo",
+      "remove": "Supprimer",
+      "uploading": "Envoi en cours..."
+    }
   }
 }

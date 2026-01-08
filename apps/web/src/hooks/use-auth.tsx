@@ -46,7 +46,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string) => {
       const response = await authApi.login({ email, password });
       setUser(response.user);
-      router.push('/dashboard');
+      // Redirect to onboarding if not completed
+      if (!response.user.onboardingCompletedAt) {
+        router.push('/onboarding');
+      } else {
+        router.push('/dashboard');
+      }
     },
     [router],
   );
@@ -55,7 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string) => {
       const response = await authApi.register({ email, password });
       setUser(response.user);
-      router.push('/dashboard');
+      // Always redirect to onboarding after registration
+      router.push('/onboarding');
     },
     [router],
   );

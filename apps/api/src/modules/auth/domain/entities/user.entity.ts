@@ -8,10 +8,21 @@ export interface UserProps {
   id?: string;
   email: Email;
   password: Password;
+
+  // Profile fields
+  firstName?: string | null;
+  lastName?: string | null;
+  avatarUrl?: string | null;
+
+  // Onboarding
+  onboardingCompletedAt?: Date | null;
+
+  // Security
   emailVerified: boolean;
   emailVerificationToken?: string | null;
   emailVerificationTokenExpiry?: Date | null;
   totpSecret?: string | null;
+
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date | null;
@@ -88,6 +99,22 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.deletedAt ?? null;
   }
 
+  get firstName(): string | null {
+    return this.props.firstName ?? null;
+  }
+
+  get lastName(): string | null {
+    return this.props.lastName ?? null;
+  }
+
+  get avatarUrl(): string | null {
+    return this.props.avatarUrl ?? null;
+  }
+
+  get onboardingCompletedAt(): Date | null {
+    return this.props.onboardingCompletedAt ?? null;
+  }
+
   async verifyPassword(plainPassword: string): Promise<boolean> {
     return this.props.password.compare(plainPassword);
   }
@@ -128,6 +155,31 @@ export class User extends AggregateRoot<UserProps> {
 
   softDelete(): void {
     this.props.deletedAt = new Date();
+    this._updatedAt = new Date();
+  }
+
+  updateProfile(data: { firstName?: string; lastName?: string }): void {
+    if (data.firstName !== undefined) {
+      this.props.firstName = data.firstName;
+    }
+    if (data.lastName !== undefined) {
+      this.props.lastName = data.lastName;
+    }
+    this._updatedAt = new Date();
+  }
+
+  setAvatarUrl(url: string | null): void {
+    this.props.avatarUrl = url;
+    this._updatedAt = new Date();
+  }
+
+  completeOnboarding(): void {
+    this.props.onboardingCompletedAt = new Date();
+    this._updatedAt = new Date();
+  }
+
+  async updatePassword(newPassword: Password): Promise<void> {
+    this.props.password = newPassword;
     this._updatedAt = new Date();
   }
 }

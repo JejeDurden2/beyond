@@ -11,10 +11,21 @@ model User {
   id                           String    @id @default(uuid())
   email                        String    @unique
   passwordHash                 String
+
+  // Profile fields
+  firstName                    String?
+  lastName                     String?
+  avatarUrl                    String?
+
+  // Onboarding
+  onboardingCompletedAt        DateTime?
+
+  // Security & verification
   totpSecret                   String?
   emailVerified                Boolean   @default(false)
   emailVerificationToken       String?   @unique
   emailVerificationTokenExpiry DateTime?
+
   createdAt                    DateTime  @default(now())
   updatedAt                    DateTime  @updatedAt
   deletedAt                    DateTime?

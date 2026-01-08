@@ -357,5 +357,92 @@
       "title": "No recipients",
       "description": "Add beneficiaries so they receive this keepsake."
     }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to Beyond",
+      "subtitle": "You're about to create something precious: a space to preserve what matters, for those who matter.",
+      "cta": "Get Started",
+      "trust": "Your data is encrypted. No one, not even us, can access your content."
+    },
+    "identity": {
+      "title": "What's your name?",
+      "subtitle": "This information will help your loved ones identify you.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "addPhoto": "Add a photo",
+      "changePhoto": "Change"
+    },
+    "intention": {
+      "title": "What would you like to preserve?",
+      "subtitle": "Select what resonates with you.",
+      "options": {
+        "letters": "Letters for my loved ones",
+        "photos": "Photos and memories",
+        "videos": "Video messages",
+        "wishes": "My wishes and desires",
+        "gifts": "Scheduled gifts"
+      },
+      "skip": "Skip"
+    },
+    "beneficiary": {
+      "title": "Who would you like to share your keepsakes with?",
+      "subtitle": "Add your first beneficiary. You can add more later.",
+      "later": "Later",
+      "addAndFinish": "Add and finish"
+    },
+    "completion": {
+      "title": "Your vault is ready, {firstName}.",
+      "subtitle": "You can now start preserving what matters to you.",
+      "createFirst": "Create my first keepsake",
+      "exploreDashboard": "Explore my dashboard",
+      "or": "or"
+    },
+    "step": "Step {current} of {total}",
+    "back": "Back",
+    "continue": "Continue"
+  },
+  "profile": {
+    "title": "Profile",
+    "memberSince": "Member since {date}",
+    "sections": {
+      "personal": "Personal information",
+      "security": "Security",
+      "danger": "Danger zone"
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email address",
+      "password": "Password",
+      "twoFactor": "Two-factor authentication"
+    },
+    "actions": {
+      "edit": "Edit",
+      "enable": "Enable",
+      "enabled": "Enabled",
+      "disabled": "Not enabled",
+      "logout": "Log out",
+      "deleteAccount": "Delete my account"
+    },
+    "changePassword": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "submit": "Update"
+    },
+    "deleteAccount": {
+      "title": "Delete your account?",
+      "warning": "This action is irreversible. All your data, keepsakes, and beneficiaries will be permanently deleted.",
+      "confirmLabel": "Type DELETE to confirm",
+      "confirm": "Delete permanently",
+      "cancel": "Cancel"
+    },
+    "avatar": {
+      "change": "Change photo",
+      "remove": "Remove",
+      "uploading": "Uploading..."
+    }
   }
 }
