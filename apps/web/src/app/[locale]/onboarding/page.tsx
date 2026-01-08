@@ -34,12 +34,12 @@ export default function OnboardingPage() {
   const [data, setData] = useState<OnboardingData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Redirect if onboarding already completed
+  // Redirect if onboarding already completed (but not if we're on completion step)
   useEffect(() => {
-    if (user?.onboardingCompletedAt) {
+    if (user?.onboardingCompletedAt && step !== 'completion') {
       router.replace('/dashboard');
     }
-  }, [user, router]);
+  }, [user, router, step]);
 
   // Load saved data from localStorage on mount
   useEffect(() => {
@@ -173,8 +173,8 @@ export default function OnboardingPage() {
     router.push('/dashboard');
   }, [router]);
 
-  // Don't render anything if user has already completed onboarding
-  if (user?.onboardingCompletedAt) {
+  // Don't render anything if user has already completed onboarding (but allow completion step)
+  if (user?.onboardingCompletedAt && step !== 'completion') {
     return null;
   }
 

@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Relationship, RELATIONSHIPS } from '../../domain/entities/beneficiary.entity';
 
 export class CreateBeneficiaryDto {
@@ -14,7 +14,7 @@ export class CreateBeneficiaryDto {
   @IsNotEmpty()
   email!: string;
 
-  @IsEnum(RELATIONSHIPS)
+  @IsIn(RELATIONSHIPS)
   relationship!: Relationship;
 
   @IsString()
@@ -35,7 +35,7 @@ export class UpdateBeneficiaryDto {
   @IsOptional()
   email?: string;
 
-  @IsEnum(RELATIONSHIPS)
+  @IsIn(RELATIONSHIPS)
   @IsOptional()
   relationship?: Relationship;
 
