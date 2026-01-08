@@ -171,7 +171,8 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "welcome": "Bienvenue dans votre coffre",
+    "welcome": "Bonjour{name, select, other { {name}} }",
+    "subtitle": "Votre espace pour préserver ce qui compte",
     "stats": {
       "vault": {
         "title": "État du coffre",
@@ -191,6 +192,10 @@
       "title": "Souvenirs récents",
       "viewAll": "Voir tous",
       "updatedAt": "Modifié {date}"
+    },
+    "reassurance": {
+      "title": "Votre coffre personnel",
+      "description": "Vos souvenirs sont chiffrés et protégés. Seuls vos proches désignés y auront accès, le moment venu."
     },
     "empty": {
       "title": "Votre coffre est vide",

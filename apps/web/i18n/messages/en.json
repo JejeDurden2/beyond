@@ -171,7 +171,8 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome to your vault",
+    "welcome": "Hello{name, select, other { {name}} }",
+    "subtitle": "Your space to preserve what matters",
     "stats": {
       "vault": {
         "title": "Vault Status",
@@ -191,6 +192,10 @@
       "title": "Recent Keepsakes",
       "viewAll": "View all",
       "updatedAt": "Updated {date}"
+    },
+    "reassurance": {
+      "title": "Your personal vault",
+      "description": "Your memories are encrypted and protected. Only your designated loved ones will have access, when the time comes."
     },
     "empty": {
       "title": "Your vault is empty",

@@ -14,4 +14,5 @@ export {
   Lock,
   Globe,
   ShieldCheck,
+  Vault,
 } from './Icons';

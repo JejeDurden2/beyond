@@ -22,6 +22,7 @@ import {
   Globe,
   ShieldCheck,
   Plus,
+  Vault,
   type LucideIcon,
   type LucideProps,
 } from 'lucide-react';
@@ -53,6 +54,7 @@ export {
   Globe,
   ShieldCheck,
   Plus,
+  Vault,
 };
 
 // Keepsake type icons mapping

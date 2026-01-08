@@ -4,7 +4,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
-import { KeepsakeTypeIcon, ChevronRight, Plus } from '@/components/ui';
+import { KeepsakeTypeIcon, ChevronRight, Plus, Vault } from '@/components/ui';
 import {
   KeepsakeVisualization,
   useKeepsakeVisualization,
@@ -80,19 +80,13 @@ export default function DashboardPage() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="space-y-2 mb-12">
           <h1 className="font-display text-display-sm text-foreground">
-            {t('title')}
-            {user?.email ? `, ${user.email.split('@')[0]}` : ''}.
+            {t('welcome', { name: user?.firstName || '' })}
           </h1>
-          <p className="text-lg text-muted-foreground">{t('welcome')}</p>
+          <p className="text-lg text-muted-foreground">{t('subtitle')}</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-12">
-          <StatCard
-            title={t('stats.vault.title')}
-            value={t('stats.vault.active')}
-            subtitle={t('welcome')}
-            icon={<div className="w-3 h-3 rounded-full bg-green-500" />}
-          />
+          <ReassuranceCard />
           <StatCard
             title={t('stats.keepsakes.title')}
             value={isLoading ? '...' : keepsakes.length.toString()}
@@ -191,6 +185,24 @@ function StatCard({
           {linkLabel} <ChevronRight className="w-4 h-4 inline" />
         </Link>
       )}
+    </div>
+  );
+}
+
+function ReassuranceCard() {
+  const t = useTranslations('dashboard.reassurance');
+
+  return (
+    <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-6">
+      <div className="flex items-start gap-4">
+        <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+          <Vault className="w-5 h-5 text-accent" />
+        </div>
+        <div className="space-y-1">
+          <h3 className="font-medium text-foreground">{t('title')}</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">{t('description')}</p>
+        </div>
+      </div>
     </div>
   );
 }
