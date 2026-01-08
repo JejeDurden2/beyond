@@ -1,37 +1,48 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { locales, type Locale } from '../../../../i18n.config';
 
+const localeLabels: Record<Locale, { flag: string; name: string; shortName: string }> = {
+  fr: { flag: '🇫🇷', name: 'Français', shortName: 'FR' },
+  en: { flag: '🇬🇧', name: 'English', shortName: 'EN' },
+};
+
 export function LanguageSwitcher() {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const router = useRouter();
   const pathname = usePathname();
-  const t = useTranslations('settings.language');
 
   const switchLocale = (newLocale: Locale) => {
-    // Remove current locale prefix if present
-    const pathWithoutLocale = pathname.replace(/^\/(fr|en)/, '') || '/';
-    // Add new locale prefix (fr is default, so no prefix needed)
-    const newPath = newLocale === 'fr' ? pathWithoutLocale : `/${newLocale}${pathWithoutLocale}`;
-    router.push(newPath);
+    router.replace(pathname, { locale: newLocale });
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">{t('title')}:</span>
-      <select
-        value={locale}
-        onChange={(e) => switchLocale(e.target.value as Locale)}
-        className="rounded-xl border border-border/60 bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-      >
-        {locales.map((loc) => (
-          <option key={loc} value={loc}>
-            {t(loc)}
-          </option>
-        ))}
-      </select>
+    <div className="flex items-center gap-1 p-1 rounded-full bg-muted/50 border border-border/40">
+      {locales.map((loc) => {
+        const isActive = locale === loc;
+        const { shortName } = localeLabels[loc];
+
+        return (
+          <button
+            key={loc}
+            onClick={() => switchLocale(loc)}
+            className={`
+              px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ease-out
+              ${
+                isActive
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }
+            `}
+            aria-label={localeLabels[loc].name}
+            aria-pressed={isActive}
+          >
+            {shortName}
+          </button>
+        );
+      })}
     </div>
   );
 }
