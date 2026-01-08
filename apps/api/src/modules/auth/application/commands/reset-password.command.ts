@@ -33,7 +33,9 @@ export class ResetPasswordCommand {
     }
 
     if (!resetToken.isValid()) {
-      this.logger.debug(`Reset token is invalid: expired=${resetToken.isExpired()}, used=${resetToken.isUsed()}`);
+      this.logger.debug(
+        `Reset token is invalid: expired=${resetToken.isExpired()}, used=${resetToken.isUsed()}`,
+      );
       return err('Invalid or expired reset link');
     }
 

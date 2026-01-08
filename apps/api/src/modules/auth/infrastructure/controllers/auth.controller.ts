@@ -1,4 +1,13 @@
-import { Controller, Post, Get, Body, Param, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  HttpCode,
+  HttpStatus,
+  BadRequestException,
+} from '@nestjs/common';
 import { RegisterCommand } from '../../application/commands/register.command';
 import { VerifyEmailCommand } from '../../application/commands/verify-email.command';
 import { ForgotPasswordCommand } from '../../application/commands/forgot-password.command';
