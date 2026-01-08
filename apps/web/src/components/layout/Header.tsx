@@ -2,6 +2,7 @@
 
 import { Link, usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
+import { User } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { LanguageSwitcher } from '@/components/features/settings';
 import { Logo } from '@/components/ui';
@@ -55,6 +56,16 @@ export function Header() {
               >
                 {t('beneficiaries')}
               </Link>
+              <Link
+                href="/settings/profile"
+                className={`text-sm font-medium transition-colors duration-200 ease-out ${
+                  pathname.includes('/settings')
+                    ? 'text-navy-deep'
+                    : 'text-navy-light hover:text-gold-heritage'
+                }`}
+              >
+                {t('settings')}
+              </Link>
             </nav>
           )}
         </div>
@@ -66,6 +77,13 @@ export function Header() {
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
               <span className="text-sm text-slate hidden sm:block">{user?.email}</span>
+              <Link
+                href="/settings/profile"
+                className="p-2 rounded-lg text-navy-light hover:text-navy-deep hover:bg-warm-gray/50 transition-colors"
+                title={t('settings')}
+              >
+                <User className="w-5 h-5" />
+              </Link>
               <button
                 onClick={logout}
                 className="text-sm font-medium text-navy-light hover:text-gold-heritage transition-colors duration-200 ease-out"

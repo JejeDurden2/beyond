@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { UserRepository, USER_REPOSITORY } from '../../../auth/domain/repositories/user.repository';
 
 export interface CompleteOnboardingCommandInput {
@@ -23,8 +23,11 @@ export class CompleteOnboardingCommand {
       throw new NotFoundException('User not found');
     }
 
+    // Make idempotent - return existing timestamp if already completed
     if (user.onboardingCompletedAt) {
-      throw new BadRequestException('Onboarding already completed');
+      return {
+        onboardingCompletedAt: user.onboardingCompletedAt,
+      };
     }
 
     user.completeOnboarding();
