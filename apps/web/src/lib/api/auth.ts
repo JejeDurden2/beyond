@@ -38,3 +38,28 @@ export async function getCurrentUser(): Promise<User> {
 export function logout(): void {
   clearToken();
 }
+
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface ResetPasswordInput {
+  token: string;
+  newPassword: string;
+}
+
+export async function forgotPassword(input: ForgotPasswordInput): Promise<{ message: string }> {
+  return apiClient<{ message: string }>('/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify(input),
+    skipAuth: true,
+  });
+}
+
+export async function resetPassword(input: ResetPasswordInput): Promise<{ message: string }> {
+  return apiClient<{ message: string }>('/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify(input),
+    skipAuth: true,
+  });
+}

@@ -196,3 +196,15 @@ model DeathDeclaration {
   @@unique([vaultId, trustedContactId])
   @@index([vaultId])
 }
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+}

@@ -11,6 +11,14 @@
     "register": {
       "title": "Créer votre coffre - Beyond",
       "description": "Créez votre coffre numérique sécurisé et commencez à préserver ce qui compte pour vos proches."
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié - Beyond",
+      "description": "Réinitialisez votre mot de passe pour accéder à votre coffre Beyond."
+    },
+    "resetPassword": {
+      "title": "Réinitialiser le mot de passe - Beyond",
+      "description": "Créez un nouveau mot de passe pour votre compte Beyond."
     }
   },
   "common": {
@@ -104,7 +112,8 @@
       "submit": "Se connecter",
       "submitting": "Connexion...",
       "noAccount": "Pas encore de compte ?",
-      "register": "Créer un compte"
+      "register": "Créer un compte",
+      "forgotPassword": "Mot de passe oublié ?"
     },
     "register": {
       "title": "Créer votre coffre",
@@ -125,6 +134,32 @@
       "fair": "Correct",
       "good": "Bon",
       "strong": "Fort"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation",
+      "email": "Email",
+      "emailPlaceholder": "vous@exemple.com",
+      "submit": "Envoyer le lien",
+      "submitting": "Envoi...",
+      "backToLogin": "Retour à la connexion",
+      "successTitle": "Email envoyé",
+      "successMessage": "Si un compte existe avec cette adresse, vous recevrez un email avec les instructions pour réinitialiser votre mot de passe."
+    },
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Choisissez un nouveau mot de passe sécurisé",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordPlaceholder": "Minimum 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Retapez votre mot de passe",
+      "submit": "Réinitialiser",
+      "submitting": "Réinitialisation...",
+      "backToLogin": "Retour à la connexion",
+      "successTitle": "Mot de passe réinitialisé",
+      "successMessage": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter.",
+      "goToLogin": "Se connecter",
+      "invalidToken": "Ce lien est invalide ou a expiré. Veuillez demander un nouveau lien de réinitialisation."
     },
     "errors": {
       "invalidCredentials": "Email ou mot de passe incorrect",
