@@ -8,7 +8,7 @@ import { LanguageSwitcher } from '@/components/features/settings';
 import { Logo } from '@/components/ui';
 
 export function Header() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const pathname = usePathname();
   const t = useTranslations('nav');
   const tLanding = useTranslations('landing.hero');
@@ -56,16 +56,6 @@ export function Header() {
               >
                 {t('beneficiaries')}
               </Link>
-              <Link
-                href="/settings/profile"
-                className={`text-sm font-medium transition-colors duration-200 ease-out ${
-                  pathname.includes('/settings')
-                    ? 'text-navy-deep'
-                    : 'text-navy-light hover:text-gold-heritage'
-                }`}
-              >
-                {t('settings')}
-              </Link>
             </nav>
           )}
         </div>
@@ -75,11 +65,14 @@ export function Header() {
             <LanguageSwitcher />
           </div>
           {isAuthenticated ? (
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-slate hidden sm:block">{user?.email}</span>
+            <div className="flex items-center gap-3">
               <Link
                 href="/settings/profile"
-                className="p-2 rounded-lg text-navy-light hover:text-navy-deep hover:bg-warm-gray/50 transition-colors"
+                className={`p-2 rounded-lg transition-colors ${
+                  pathname.includes('/settings')
+                    ? 'text-navy-deep bg-warm-gray/50'
+                    : 'text-navy-light hover:text-navy-deep hover:bg-warm-gray/50'
+                }`}
                 title={t('settings')}
               >
                 <User className="w-5 h-5" />
