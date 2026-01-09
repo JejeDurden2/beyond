@@ -26,8 +26,7 @@ import {
   type LucideIcon,
   type LucideProps,
 } from 'lucide-react';
-import type { KeepsakeType } from '@/types';
-import type { Relationship } from '@/types';
+import type { KeepsakeType, Relationship } from '@/types';
 
 // Re-export individual icons for direct use
 export {

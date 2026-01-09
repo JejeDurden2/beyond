@@ -13,7 +13,13 @@ export interface LoginQueryOutput {
   user: {
     id: string;
     email: string;
+    firstName: string | null;
+    lastName: string | null;
+    avatarUrl: string | null;
+    onboardingCompletedAt: Date | null;
     emailVerified: boolean;
+    hasTotpEnabled: boolean;
+    createdAt: Date;
   };
 }
 
@@ -54,7 +60,13 @@ export class LoginQuery {
       user: {
         id: user.id,
         email: user.email.value,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatarUrl: user.avatarUrl,
+        onboardingCompletedAt: user.onboardingCompletedAt,
         emailVerified: user.emailVerified,
+        hasTotpEnabled: !!user.totpSecret,
+        createdAt: user.createdAt,
       },
     };
   }
