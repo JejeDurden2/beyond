@@ -2,26 +2,14 @@ import { Injectable, Inject, UnauthorizedException, BadRequestException } from '
 import { JwtService } from '@nestjs/jwt';
 import { Email } from '../../domain/value-objects/email.value-object';
 import { UserRepository, USER_REPOSITORY } from '../../domain/repositories/user.repository';
+import type { AuthResponse } from '../types';
 
 export interface LoginQueryInput {
   email: string;
   password: string;
 }
 
-export interface LoginQueryOutput {
-  accessToken: string;
-  user: {
-    id: string;
-    email: string;
-    firstName: string | null;
-    lastName: string | null;
-    avatarUrl: string | null;
-    onboardingCompletedAt: Date | null;
-    emailVerified: boolean;
-    hasTotpEnabled: boolean;
-    createdAt: Date;
-  };
-}
+export type LoginQueryOutput = AuthResponse;
 
 @Injectable()
 export class LoginQuery {

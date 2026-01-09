@@ -1,3 +1,4 @@
+import type React from 'react';
 import {
   FileText,
   Mail,
@@ -28,7 +29,6 @@ import {
 } from 'lucide-react';
 import type { KeepsakeType, Relationship } from '@/types';
 
-// Re-export individual icons for direct use
 export {
   FileText,
   Mail,
@@ -56,7 +56,6 @@ export {
   Vault,
 };
 
-// Keepsake type icons mapping
 export const KEEPSAKE_TYPE_ICON_COMPONENTS: Record<KeepsakeType, LucideIcon> = {
   text: FileText,
   letter: Mail,
@@ -66,7 +65,6 @@ export const KEEPSAKE_TYPE_ICON_COMPONENTS: Record<KeepsakeType, LucideIcon> = {
   scheduled_action: CalendarClock,
 };
 
-// Relationship icons mapping
 export const RELATIONSHIP_ICON_COMPONENTS: Record<Relationship, LucideIcon> = {
   SPOUSE: Heart,
   CHILD: Baby,
@@ -79,39 +77,38 @@ export const RELATIONSHIP_ICON_COMPONENTS: Record<Relationship, LucideIcon> = {
   OTHER: User,
 };
 
-// Media type icons
 export const MEDIA_TYPE_ICON_COMPONENTS: Record<string, LucideIcon> = {
   image: Image,
   video: FileVideo,
   document: File,
 };
 
-// Keepsake Type Icon component
 interface KeepsakeTypeIconProps extends LucideProps {
   type: KeepsakeType;
 }
 
-export function KeepsakeTypeIcon({ type, ...props }: KeepsakeTypeIconProps) {
+export function KeepsakeTypeIcon({ type, ...props }: KeepsakeTypeIconProps): React.ReactElement {
   const IconComponent = KEEPSAKE_TYPE_ICON_COMPONENTS[type] || File;
   return <IconComponent {...props} />;
 }
 
-// Relationship Icon component
 interface RelationshipIconProps extends LucideProps {
   relationship: Relationship;
 }
 
-export function RelationshipIcon({ relationship, ...props }: RelationshipIconProps) {
+export function RelationshipIcon({
+  relationship,
+  ...props
+}: RelationshipIconProps): React.ReactElement {
   const IconComponent = RELATIONSHIP_ICON_COMPONENTS[relationship] || User;
   return <IconComponent {...props} />;
 }
 
-// Media Type Icon component
 interface MediaTypeIconProps extends LucideProps {
   mediaType: 'image' | 'video' | 'document';
 }
 
-export function MediaTypeIcon({ mediaType, ...props }: MediaTypeIconProps) {
+export function MediaTypeIcon({ mediaType, ...props }: MediaTypeIconProps): React.ReactElement {
   const IconComponent = MEDIA_TYPE_ICON_COMPONENTS[mediaType] || File;
   return <IconComponent {...props} />;
 }
