@@ -2,7 +2,7 @@ import type { KeepsakeType } from '@/types';
 
 // Use KeepsakeTypeIcon component from '@/components/ui' for icons
 export const KEEPSAKE_TYPES: KeepsakeType[] = [
-  'text',
+  'document',
   'letter',
   'photo',
   'video',

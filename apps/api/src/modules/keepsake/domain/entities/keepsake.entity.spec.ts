@@ -9,7 +9,7 @@ describe('Keepsake Entity', () => {
     it('should create a valid keepsake', () => {
       const result = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'My Message',
         content: 'Hello, this is my message.',
         encryptionKey: validKey,
@@ -19,7 +19,7 @@ describe('Keepsake Entity', () => {
       if (result.isOk()) {
         const keepsake = result.value;
         expect(keepsake.vaultId).toBe('vault-123');
-        expect(keepsake.type).toBe(KeepsakeType.TEXT);
+        expect(keepsake.type).toBe(KeepsakeType.DOCUMENT);
         expect(keepsake.title).toBe('My Message');
         expect(keepsake.id).toBeDefined();
       }
@@ -45,7 +45,7 @@ describe('Keepsake Entity', () => {
 
     it('should support all keepsake types', () => {
       const types = [
-        KeepsakeType.TEXT,
+        KeepsakeType.DOCUMENT,
         KeepsakeType.LETTER,
         KeepsakeType.PHOTO,
         KeepsakeType.VIDEO,
@@ -69,7 +69,7 @@ describe('Keepsake Entity', () => {
     it('should set reveal delay when provided', () => {
       const result = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Delayed Message',
         content: 'This will be revealed later.',
         encryptionKey: validKey,
@@ -86,7 +86,7 @@ describe('Keepsake Entity', () => {
       const revealDate = new Date('2025-12-25');
       const result = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Christmas Message',
         content: 'Merry Christmas!',
         encryptionKey: validKey,
@@ -102,7 +102,7 @@ describe('Keepsake Entity', () => {
     it('should reject empty title', () => {
       const result = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: '',
         content: 'Content',
         encryptionKey: validKey,
@@ -117,7 +117,7 @@ describe('Keepsake Entity', () => {
     it('should reject title exceeding max length', () => {
       const result = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'a'.repeat(256),
         content: 'Content',
         encryptionKey: validKey,
@@ -132,7 +132,7 @@ describe('Keepsake Entity', () => {
     it('should reject empty vaultId', () => {
       const result = Keepsake.create({
         vaultId: '',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Title',
         content: 'Content',
         encryptionKey: validKey,
@@ -150,7 +150,7 @@ describe('Keepsake Entity', () => {
       const originalContent = 'This is my secret message.';
       const createResult = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Secret',
         content: originalContent,
         encryptionKey: validKey,
@@ -170,7 +170,7 @@ describe('Keepsake Entity', () => {
     it('should fail with wrong key', () => {
       const createResult = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Secret',
         content: 'Secret content',
         encryptionKey: validKey,
@@ -190,7 +190,7 @@ describe('Keepsake Entity', () => {
     it('should update title', () => {
       const createResult = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Original Title',
         content: 'Content',
         encryptionKey: validKey,
@@ -209,7 +209,7 @@ describe('Keepsake Entity', () => {
     it('should update content when key provided', () => {
       const createResult = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Title',
         content: 'Original content',
         encryptionKey: validKey,
@@ -239,7 +239,7 @@ describe('Keepsake Entity', () => {
     it('should update reveal delay', () => {
       const createResult = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Title',
         content: 'Content',
         encryptionKey: validKey,
@@ -258,7 +258,7 @@ describe('Keepsake Entity', () => {
     it('should reject invalid title on update', () => {
       const createResult = Keepsake.create({
         vaultId: 'vault-123',
-        type: KeepsakeType.TEXT,
+        type: KeepsakeType.DOCUMENT,
         title: 'Original Title',
         content: 'Content',
         encryptionKey: validKey,

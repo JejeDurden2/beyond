@@ -57,7 +57,7 @@ export {
 };
 
 export const KEEPSAKE_TYPE_ICON_COMPONENTS: Record<KeepsakeType, LucideIcon> = {
-  text: FileText,
+  document: File,
   letter: Mail,
   photo: Camera,
   video: Video,

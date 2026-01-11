@@ -17,7 +17,7 @@ import { EncryptedContent } from '../../domain/value-objects/encrypted-content.v
 
 export class KeepsakeMapper {
   private static readonly typeToDomain: Record<PrismaKeepsakeType, KeepsakeType> = {
-    text: KeepsakeType.TEXT,
+    document: KeepsakeType.DOCUMENT,
     letter: KeepsakeType.LETTER,
     photo: KeepsakeType.PHOTO,
     video: KeepsakeType.VIDEO,
@@ -26,7 +26,7 @@ export class KeepsakeMapper {
   };
 
   private static readonly typeToPersistence: Record<KeepsakeType, PrismaKeepsakeType> = {
-    [KeepsakeType.TEXT]: 'text',
+    [KeepsakeType.DOCUMENT]: 'document',
     [KeepsakeType.LETTER]: 'letter',
     [KeepsakeType.PHOTO]: 'photo',
     [KeepsakeType.VIDEO]: 'video',

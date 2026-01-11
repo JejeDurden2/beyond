@@ -209,7 +209,7 @@
     "new": "Nouveau souvenir",
     "filter": {
       "all": "Tous",
-      "text": "Textes",
+      "document": "Documents",
       "letter": "Lettres",
       "photo": "Photos",
       "video": "Vidéos",
@@ -222,7 +222,7 @@
       "cta": "Créer votre premier souvenir"
     },
     "types": {
-      "text": "Texte",
+      "document": "Document",
       "letter": "Lettre",
       "photo": "Photo",
       "video": "Vidéo",
@@ -230,7 +230,7 @@
       "scheduled_action": "Action"
     },
     "typeDescriptions": {
-      "text": "Un message ou une note simple",
+      "document": "Des fichiers importants à transmettre (PDF, Word, Excel, images)",
       "letter": "Une lettre personnelle pour un proche",
       "photo": "Une image à préserver",
       "video": "Une vidéo à transmettre",
@@ -289,7 +289,7 @@
     "media": {
       "title": "Pièces jointes",
       "dropzone": "Déposez vos fichiers ici ou cliquez pour téléverser",
-      "dropzoneHint": "Images (10 Mo), Vidéos (500 Mo), PDFs (20 Mo)",
+      "dropzoneHint": "PDF, Word, Excel, Images (10 Mo max)",
       "uploading": "Téléversement...",
       "uploadProgress": "{progress}%",
       "remove": "Supprimer",
@@ -316,6 +316,7 @@
       "edit": "Modifier",
       "close": "Fermer",
       "view": "Lire",
+      "download": "Télécharger",
       "zoomIn": "Agrandir",
       "zoomOut": "Réduire",
       "previous": "Photo précédente",

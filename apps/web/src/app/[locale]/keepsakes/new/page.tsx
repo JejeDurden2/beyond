@@ -69,11 +69,11 @@ export default function NewKeepsakePage() {
     if (!selectedType || !title) return;
 
     // For text-based types, content is required
-    const isTextBased = ['text', 'letter', 'wish'].includes(selectedType);
+    const isTextBased = ['letter', 'wish'].includes(selectedType);
     if (isTextBased && !content) return;
 
     // For media types, at least one file is required
-    const isMediaBased = ['photo', 'video'].includes(selectedType);
+    const isMediaBased = ['document', 'photo', 'video'].includes(selectedType);
     if (isMediaBased && selectedFiles.length === 0) return;
 
     setIsLoading(true);
@@ -111,36 +111,61 @@ export default function NewKeepsakePage() {
   const typeLabel = selectedType ? t(`types.${selectedType}`) : '';
 
   // Determine which fields to show based on type
-  const isTextBased = selectedType && ['text', 'letter', 'wish'].includes(selectedType);
-  const isMediaBased = selectedType && ['photo', 'video'].includes(selectedType);
+  const isTextBased = selectedType && ['letter', 'wish'].includes(selectedType);
+  const isMediaBased = selectedType && ['document', 'photo', 'video'].includes(selectedType);
   const isScheduledAction = selectedType === 'scheduled_action';
 
-  const getContentLabel = (): string => {
-    if (isTextBased) return t('form.contentLabel');
-    if (isMediaBased) return t('form.descriptionLabel');
-    if (isScheduledAction) return t('form.instructionsLabel');
+  function getContentLabel(): string {
+    if (isMediaBased) {
+      return t('form.descriptionLabel');
+    }
+    if (isScheduledAction) {
+      return t('form.instructionsLabel');
+    }
     return t('form.contentLabel');
-  };
+  }
 
-  const getContentPlaceholder = (): string => {
-    if (selectedType === 'text') return t('form.textPlaceholder');
-    if (selectedType === 'letter') return t('form.letterPlaceholder');
-    if (selectedType === 'wish') return t('form.wishPlaceholder');
-    if (isMediaBased) return t('form.descriptionPlaceholder');
-    if (isScheduledAction) return t('form.instructionsPlaceholder');
-    return t('form.contentPlaceholder');
-  };
+  function getContentPlaceholder(): string {
+    switch (selectedType) {
+      case 'letter':
+        return t('form.letterPlaceholder');
+      case 'wish':
+        return t('form.wishPlaceholder');
+      case 'document':
+      case 'photo':
+      case 'video':
+        return t('form.descriptionPlaceholder');
+      case 'scheduled_action':
+        return t('form.instructionsPlaceholder');
+      default:
+        return t('form.contentPlaceholder');
+    }
+  }
 
   const isContentRequired = isTextBased ?? false;
   const isMediaRequired = isMediaBased ?? false;
   const canSubmit =
     title && (!isContentRequired || content) && (!isMediaRequired || selectedFiles.length > 0);
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  function formatFileSize(bytes: number): string {
+    if (bytes < 1024) {
+      return `${bytes} B`;
+    }
+    if (bytes < 1024 * 1024) {
+      return `${(bytes / 1024).toFixed(1)} KB`;
+    }
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
+  }
+
+  function getMediaTypeFromMime(mimeType: string): 'image' | 'video' | 'document' {
+    if (mimeType.startsWith('image/')) {
+      return 'image';
+    }
+    if (mimeType.startsWith('video/')) {
+      return 'video';
+    }
+    return 'document';
+  }
 
   return (
     <AppShell requireAuth>
@@ -290,13 +315,7 @@ export default function NewKeepsakePage() {
                             </button>
                             <div className="flex items-center gap-3">
                               <MediaTypeIcon
-                                mediaType={
-                                  sf.file.type.startsWith('image/')
-                                    ? 'image'
-                                    : sf.file.type.startsWith('video/')
-                                      ? 'video'
-                                      : 'document'
-                                }
+                                mediaType={getMediaTypeFromMime(sf.file.type)}
                                 className="w-6 h-6 text-muted-foreground"
                               />
                               <div className="min-w-0 flex-1">

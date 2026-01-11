@@ -1,4 +1,4 @@
-export type KeepsakeType = 'text' | 'letter' | 'photo' | 'video' | 'wish' | 'scheduled_action';
+export type KeepsakeType = 'document' | 'letter' | 'photo' | 'video' | 'wish' | 'scheduled_action';
 
 export type KeepsakeStatus = 'draft' | 'scheduled' | 'delivered';
 
@@ -100,11 +100,17 @@ export interface GetMediaResponse {
 
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
 export const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm'];
-export const ALLOWED_DOCUMENT_TYPES = ['application/pdf'];
+export const ALLOWED_DOCUMENT_TYPES = [
+  'application/pdf',
+  'application/msword', // .doc
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+  'application/vnd.ms-excel', // .xls
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+];
 
 export const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 export const MAX_VIDEO_SIZE = 500 * 1024 * 1024; // 500MB
-export const MAX_DOCUMENT_SIZE = 20 * 1024 * 1024; // 20MB
+export const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024; // 10MB
 
 export function getAllowedMimeTypes(): string[] {
   return [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES, ...ALLOWED_DOCUMENT_TYPES];

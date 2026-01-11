@@ -84,7 +84,7 @@ model Keepsake {
 }
 
 enum KeepsakeType {
-  text
+  document
   letter
   photo
   video

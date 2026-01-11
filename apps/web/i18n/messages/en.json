@@ -209,7 +209,7 @@
     "new": "New Keepsake",
     "filter": {
       "all": "All",
-      "text": "Texts",
+      "document": "Documents",
       "letter": "Letters",
       "photo": "Photos",
       "video": "Videos",
@@ -222,7 +222,7 @@
       "cta": "Create your first keepsake"
     },
     "types": {
-      "text": "Text",
+      "document": "Document",
       "letter": "Letter",
       "photo": "Photo",
       "video": "Video",
@@ -230,7 +230,7 @@
       "scheduled_action": "Action"
     },
     "typeDescriptions": {
-      "text": "A simple message or note",
+      "document": "Important files to pass on (PDF, Word, Excel, images)",
       "letter": "A personal letter for someone special",
       "photo": "An image to preserve",
       "video": "A video to pass on",
@@ -289,7 +289,7 @@
     "media": {
       "title": "Attachments",
       "dropzone": "Drop files here or click to upload",
-      "dropzoneHint": "Images (10MB), Videos (500MB), PDFs (20MB)",
+      "dropzoneHint": "PDF, Word, Excel, Images (10MB max)",
       "uploading": "Uploading...",
       "uploadProgress": "{progress}%",
       "remove": "Remove",
@@ -316,6 +316,7 @@
       "edit": "Edit",
       "close": "Close",
       "view": "Read",
+      "download": "Download",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "previous": "Previous photo",

@@ -9,11 +9,17 @@ export enum MediaType {
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
 const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm'];
-const ALLOWED_DOCUMENT_TYPES = ['application/pdf'];
+const ALLOWED_DOCUMENT_TYPES = [
+  'application/pdf',
+  'application/msword', // .doc
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+  'application/vnd.ms-excel', // .xls
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+];
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_VIDEO_SIZE = 500 * 1024 * 1024; // 500MB
-const MAX_DOCUMENT_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024; // 10MB (reduced from 20MB per user requirement)
 
 export interface KeepsakeMediaProps {
   id?: string;

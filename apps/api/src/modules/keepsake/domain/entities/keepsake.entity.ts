@@ -3,7 +3,7 @@ import { Result, ok, err } from 'neverthrow';
 import { EncryptedContent } from '../value-objects/encrypted-content.value-object';
 
 export enum KeepsakeType {
-  TEXT = 'text',
+  DOCUMENT = 'document',
   LETTER = 'letter',
   PHOTO = 'photo',
   VIDEO = 'video',

@@ -16,7 +16,6 @@ import {
   uploadMedia,
   deleteMedia,
 } from '@/lib/api/keepsakes';
-import { ApiError } from '@/lib/api/client';
 import type { Keepsake, KeepsakeType, KeepsakeMedia, TriggerCondition } from '@/types';
 
 export default function KeepsakeDetailPage() {
@@ -54,8 +53,8 @@ export default function KeepsakeDetailPage() {
         setScheduledAt(data.scheduledAt ? data.scheduledAt.split('T')[0] : '');
         setRevealDelay(data.revealDelay ?? '');
 
-        // Load media for photo/video types
-        if (['photo', 'video'].includes(data.type)) {
+        // Load media for document/photo/video types
+        if (['document', 'photo', 'video'].includes(data.type)) {
           const mediaResponse = await getKeepsakeMedia(id);
           setMedia(mediaResponse.media);
         }
@@ -85,12 +84,8 @@ export default function KeepsakeDetailPage() {
         revealDelay: revealDelay ? Number(revealDelay) : null,
       });
       setKeepsake({ ...keepsake, ...updated });
-    } catch (err) {
-      if (err instanceof ApiError) {
-        setError(tCommon('error'));
-      } else {
-        setError(tCommon('error'));
-      }
+    } catch {
+      setError(tCommon('error'));
     } finally {
       setIsSaving(false);
     }
@@ -103,12 +98,8 @@ export default function KeepsakeDetailPage() {
     try {
       await deleteKeepsake(id);
       router.push('/keepsakes');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        setError(tCommon('error'));
-      } else {
-        setError(tCommon('error'));
-      }
+    } catch {
+      setError(tCommon('error'));
       setIsDeleting(false);
     }
   };
@@ -159,26 +150,40 @@ export default function KeepsakeDetailPage() {
   };
 
   // Determine which fields to show based on type
-  const isTextBased = keepsake && ['text', 'letter', 'wish'].includes(keepsake.type);
-  const isMediaBased = keepsake && ['photo', 'video'].includes(keepsake.type);
+  const isTextBased = keepsake && ['letter', 'wish'].includes(keepsake.type);
+  const isMediaBased = keepsake && ['document', 'photo', 'video'].includes(keepsake.type);
   const isScheduledAction = keepsake?.type === 'scheduled_action';
 
-  const getContentLabel = (): string => {
-    if (isTextBased) return t('form.contentLabel');
-    if (isMediaBased) return t('form.descriptionLabel');
-    if (isScheduledAction) return t('form.instructionsLabel');
+  function getContentLabel(): string {
+    if (isMediaBased) {
+      return t('form.descriptionLabel');
+    }
+    if (isScheduledAction) {
+      return t('form.instructionsLabel');
+    }
     return t('form.contentLabel');
-  };
+  }
 
-  const getContentPlaceholder = (): string => {
-    if (!keepsake) return t('form.contentPlaceholder');
-    if (keepsake.type === 'text') return t('form.textPlaceholder');
-    if (keepsake.type === 'letter') return t('form.letterPlaceholder');
-    if (keepsake.type === 'wish') return t('form.wishPlaceholder');
-    if (isMediaBased) return t('form.descriptionPlaceholder');
-    if (isScheduledAction) return t('form.instructionsPlaceholder');
-    return t('form.contentPlaceholder');
-  };
+  function getContentPlaceholder(): string {
+    if (!keepsake) {
+      return t('form.contentPlaceholder');
+    }
+
+    switch (keepsake.type) {
+      case 'letter':
+        return t('form.letterPlaceholder');
+      case 'wish':
+        return t('form.wishPlaceholder');
+      case 'document':
+      case 'photo':
+      case 'video':
+        return t('form.descriptionPlaceholder');
+      case 'scheduled_action':
+        return t('form.instructionsPlaceholder');
+      default:
+        return t('form.contentPlaceholder');
+    }
+  }
 
   const isContentRequired = isTextBased ?? false;
 
