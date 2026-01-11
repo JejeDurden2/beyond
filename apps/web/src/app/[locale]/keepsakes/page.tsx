@@ -140,7 +140,10 @@ export default function KeepsakesPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <KeepsakeTypeIcon type={keepsake.type} className="w-6 h-6 text-muted-foreground" />
+                    <KeepsakeTypeIcon
+                      type={keepsake.type}
+                      className="w-6 h-6 text-muted-foreground"
+                    />
                     <div>
                       <h3 className="font-medium text-foreground">{keepsake.title}</h3>
                       <p className="text-sm text-muted-foreground">

@@ -207,3 +207,20 @@ model PasswordResetToken {
   @@index([token])
   @@index([userId])
 }
+
+model SecureFile {
+  id           String   @id @default(uuid())
+  ownerId      String
+  filename     String
+  mimeType     String
+  size         Int
+  storageKey   String   @unique
+  encryptedKey String   // Base64 encoded DEK encrypted with master key
+  iv           String   // Base64 encoded initialization vector
+  authTag      String   // Base64 encoded authentication tag
+  algorithm    String   @default("aes-256-gcm")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([ownerId])
+}

@@ -8,6 +8,7 @@ import { VaultModule } from './modules/vault/vault.module';
 import { KeepsakeModule } from './modules/keepsake/keepsake.module';
 import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
 import { KeepsakeAssignmentModule } from './modules/keepsake-assignment/keepsake-assignment.module';
+import { SecureFileModule } from './modules/secure-file/secure-file.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { KeepsakeAssignmentModule } from './modules/keepsake-assignment/keepsake
     KeepsakeModule,
     BeneficiaryModule,
     KeepsakeAssignmentModule,
+    SecureFileModule,
   ],
 })
 export class AppModule {}

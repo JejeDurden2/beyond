@@ -170,7 +170,10 @@ export default function NewKeepsakePage() {
                   onClick={() => handleTypeSelect(type)}
                   className="bg-card rounded-2xl border border-border/50 shadow-soft p-6 text-center transition-all duration-200 ease-out hover:shadow-soft-md hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20"
                 >
-                  <KeepsakeTypeIcon type={type} className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                  <KeepsakeTypeIcon
+                    type={type}
+                    className="w-8 h-8 mx-auto mb-2 text-muted-foreground"
+                  />
                   <span className="font-medium text-foreground block">{t(`types.${type}`)}</span>
                   <span className="text-xs text-muted-foreground">
                     {t(`typeDescriptions.${type}`)}
