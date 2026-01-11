@@ -172,7 +172,7 @@ export default function NewKeepsakePage() {
                 >
                   <KeepsakeTypeIcon
                     type={type}
-                    className="w-8 h-8 mx-auto mb-2 text-muted-foreground"
+                    className="w-8 h-8 mx-auto mb-2 text-icon-line"
                   />
                   <span className="font-medium text-foreground block">{t(`types.${type}`)}</span>
                   <span className="text-xs text-muted-foreground">
@@ -297,7 +297,7 @@ export default function NewKeepsakePage() {
                                       ? 'video'
                                       : 'document'
                                 }
-                                className="w-6 h-6 text-muted-foreground"
+                                className="w-6 h-6 text-icon-line"
                               />
                               <div className="min-w-0 flex-1">
                                 <div className="text-sm font-medium truncate" title={sf.file.name}>

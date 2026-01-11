@@ -149,7 +149,7 @@ function KeepsakeRow({ keepsake }: { keepsake: BeneficiaryKeepsake }) {
         <div className="flex items-center gap-3">
           <KeepsakeTypeIcon
             type={keepsake.keepsakeType as KeepsakeType}
-            className="w-5 h-5 text-muted-foreground"
+            className="w-5 h-5 text-icon-line"
           />
           <div>
             <h3 className="font-medium text-foreground">{keepsake.keepsakeTitle}</h3>
@@ -159,7 +159,7 @@ function KeepsakeRow({ keepsake }: { keepsake: BeneficiaryKeepsake }) {
             </p>
           </div>
         </div>
-        <ChevronRight className="w-5 h-5 text-muted-foreground" />
+        <ChevronRight className="w-5 h-5 text-icon-line" />
       </div>
       {keepsake.personalMessage && (
         <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border/40 italic">

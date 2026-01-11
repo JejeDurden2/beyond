@@ -140,7 +140,7 @@ function MediaItem({ media, onRemove }: MediaItemProps) {
       </button>
 
       <div className="flex items-center gap-3">
-        <MediaTypeIcon mediaType={media.type} className="w-6 h-6 text-muted-foreground" />
+        <MediaTypeIcon mediaType={media.type} className="w-6 h-6 text-icon-line" />
         <div className="min-w-0 flex-1">
           <div className="text-sm font-medium truncate" title={media.filename}>
             {media.filename}
