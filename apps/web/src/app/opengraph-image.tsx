@@ -28,7 +28,7 @@ export default async function Image(): Promise<ImageResponse> {
         <g transform="translate(5, 10)">
           <path
             d="M 0 25 Q 20 0, 40 25"
-            stroke="#1a365d"
+            stroke="#173C7F"
             strokeWidth="4"
             fill="none"
             strokeLinecap="round"
@@ -40,7 +40,7 @@ export default async function Image(): Promise<ImageResponse> {
             fill="none"
             strokeLinecap="round"
           />
-          <circle cx="32" cy="25" r="5" fill="#1a365d" />
+          <circle cx="32" cy="25" r="5" fill="#173C7F" />
         </g>
       </svg>
 
@@ -49,7 +49,7 @@ export default async function Image(): Promise<ImageResponse> {
         style={{
           fontSize: 72,
           fontWeight: 400,
-          color: '#1a365d',
+          color: '#173C7F',
           letterSpacing: '0.2em',
           marginBottom: 20,
         }}

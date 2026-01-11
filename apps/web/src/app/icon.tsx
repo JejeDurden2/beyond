@@ -11,7 +11,7 @@ export default function Icon(): ImageResponse {
     <div
       style={{
         fontSize: 24,
-        background: '#1a365d',
+        background: '#173C7F',
         width: '100%',
         height: '100%',
         display: 'flex',
