@@ -396,7 +396,8 @@
     "empty": {
       "title": "No recipients",
       "description": "Add beneficiaries so they receive this keepsake."
-    }
+    },
+    "createNew": "New"
   },
   "onboarding": {
     "welcome": {

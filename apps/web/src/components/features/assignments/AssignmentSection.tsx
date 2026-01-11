@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { Check, X, MessageSquare, Trash2 } from 'lucide-react';
+import { Check, X, MessageSquare, Trash2, Plus } from 'lucide-react';
 import { useBeneficiaries } from '@/hooks/use-beneficiaries';
 import {
   useKeepsakeAssignments,
@@ -190,28 +190,33 @@ export function AssignmentSection({ keepsakeId }: AssignmentSectionProps) {
       )}
 
       {/* Unassigned beneficiaries - click to add */}
-      {unassignedBeneficiaries.length > 0 && (
-        <div>
-          <p className="text-xs font-medium text-muted-foreground mb-2">{t('whoReceives')}</p>
-          <div className="flex flex-wrap gap-2">
-            {unassignedBeneficiaries.map((beneficiary) => (
-              <button
-                key={beneficiary.id}
-                type="button"
-                onClick={() => handleAddBeneficiary(beneficiary.id)}
-                disabled={bulkUpdate.isPending}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/60 bg-background hover:border-accent hover:bg-accent/5 text-sm text-foreground transition-colors disabled:opacity-50"
-              >
-                <RelationshipIcon
-                  relationship={beneficiary.relationship}
-                  className="w-3.5 h-3.5 text-muted-foreground"
-                />
-                {beneficiary.fullName}
-              </button>
-            ))}
-          </div>
+      <div>
+        <p className="text-xs font-medium text-muted-foreground mb-2">{t('whoReceives')}</p>
+        <div className="flex flex-wrap gap-2">
+          {unassignedBeneficiaries.map((beneficiary) => (
+            <button
+              key={beneficiary.id}
+              type="button"
+              onClick={() => handleAddBeneficiary(beneficiary.id)}
+              disabled={bulkUpdate.isPending}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/60 bg-background hover:border-accent hover:bg-accent/5 text-sm text-foreground transition-colors disabled:opacity-50"
+            >
+              <RelationshipIcon
+                relationship={beneficiary.relationship}
+                className="w-3.5 h-3.5 text-muted-foreground"
+              />
+              {beneficiary.fullName}
+            </button>
+          ))}
+          <Link
+            href="/beneficiaries/new"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-dashed border-border/60 bg-background hover:border-accent hover:bg-accent/5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            {t('createNew')}
+          </Link>
         </div>
-      )}
+      </div>
     </div>
   );
 }

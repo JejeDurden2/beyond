@@ -396,7 +396,8 @@
     "empty": {
       "title": "Aucun destinataire",
       "description": "Ajoutez des bénéficiaires pour qu'ils reçoivent ce souvenir."
-    }
+    },
+    "createNew": "Nouveau"
   },
   "onboarding": {
     "welcome": {
