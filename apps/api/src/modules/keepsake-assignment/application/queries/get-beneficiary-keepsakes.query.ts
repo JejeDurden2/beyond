@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Result, ok, err } from 'neverthrow';
 import {
   KeepsakeAssignmentRepository,
+  KeepsakeAssignmentWithKeepsake,
   KEEPSAKE_ASSIGNMENT_REPOSITORY,
 } from '../../domain/repositories/keepsake-assignment.repository';
 import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
@@ -15,16 +16,7 @@ export interface GetBeneficiaryKeepsakesInput {
   beneficiaryId: string;
 }
 
-export interface BeneficiaryKeepsakeItem {
-  id: string;
-  keepsakeId: string;
-  keepsakeTitle: string;
-  keepsakeType: string;
-  keepsakeStatus: string;
-  keepsakeUpdatedAt: Date;
-  personalMessage: string | null;
-  createdAt: Date;
-}
+export type BeneficiaryKeepsakeItem = KeepsakeAssignmentWithKeepsake;
 
 export interface GetBeneficiaryKeepsakesResult {
   keepsakes: BeneficiaryKeepsakeItem[];
@@ -54,21 +46,10 @@ export class GetBeneficiaryKeepsakesQuery {
       return err('Beneficiary not found');
     }
 
-    const assignments = await this.assignmentRepository.findByBeneficiaryIdWithKeepsakes(
+    const keepsakes = await this.assignmentRepository.findByBeneficiaryIdWithKeepsakes(
       input.beneficiaryId,
     );
 
-    return ok({
-      keepsakes: assignments.map((a) => ({
-        id: a.id,
-        keepsakeId: a.keepsakeId,
-        keepsakeTitle: a.keepsakeTitle,
-        keepsakeType: a.keepsakeType,
-        keepsakeStatus: a.keepsakeStatus,
-        keepsakeUpdatedAt: a.keepsakeUpdatedAt,
-        personalMessage: a.personalMessage,
-        createdAt: a.createdAt,
-      })),
-    });
+    return ok({ keepsakes });
   }
 }

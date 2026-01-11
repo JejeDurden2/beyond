@@ -9,7 +9,7 @@ import {
   deleteBeneficiary,
   getBeneficiaryKeepsakes,
 } from '@/lib/api/beneficiaries';
-import type { CreateBeneficiaryInput, UpdateBeneficiaryInput } from '@/types';
+import type { UpdateBeneficiaryInput } from '@/types';
 
 export function useBeneficiaries() {
   return useQuery({
@@ -30,7 +30,7 @@ export function useCreateBeneficiary() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: CreateBeneficiaryInput) => createBeneficiary(input),
+    mutationFn: createBeneficiary,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
     },
@@ -54,7 +54,7 @@ export function useDeleteBeneficiary() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => deleteBeneficiary(id),
+    mutationFn: deleteBeneficiary,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
     },

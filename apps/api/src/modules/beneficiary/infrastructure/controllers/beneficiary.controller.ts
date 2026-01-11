@@ -25,6 +25,33 @@ import {
   BeneficiaryResponseDto,
   BeneficiaryKeepsakeResponseDto,
 } from '../dto/beneficiary.dto';
+import type { Relationship } from '../../domain/entities/beneficiary.entity';
+
+interface BeneficiaryData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  email: string;
+  relationship: Relationship;
+  note: string | null;
+  assignmentCount?: number;
+  createdAt: Date;
+}
+
+function toBeneficiaryDto(beneficiary: BeneficiaryData): BeneficiaryResponseDto {
+  return {
+    id: beneficiary.id,
+    firstName: beneficiary.firstName,
+    lastName: beneficiary.lastName,
+    fullName: beneficiary.fullName,
+    email: beneficiary.email,
+    relationship: beneficiary.relationship,
+    note: beneficiary.note,
+    assignmentCount: beneficiary.assignmentCount ?? 0,
+    createdAt: beneficiary.createdAt.toISOString(),
+  };
+}
 
 @Controller('vault/beneficiaries')
 export class BeneficiaryController {
@@ -55,18 +82,7 @@ export class BeneficiaryController {
       throw new BadRequestException(result.error);
     }
 
-    const beneficiary = result.value;
-    return {
-      id: beneficiary.id,
-      firstName: beneficiary.firstName,
-      lastName: beneficiary.lastName,
-      fullName: beneficiary.fullName,
-      email: beneficiary.email,
-      relationship: beneficiary.relationship,
-      note: beneficiary.note,
-      assignmentCount: 0,
-      createdAt: beneficiary.createdAt.toISOString(),
-    };
+    return toBeneficiaryDto(result.value);
   }
 
   @Get()
@@ -82,17 +98,7 @@ export class BeneficiaryController {
     }
 
     return {
-      beneficiaries: result.value.beneficiaries.map((b) => ({
-        id: b.id,
-        firstName: b.firstName,
-        lastName: b.lastName,
-        fullName: b.fullName,
-        email: b.email,
-        relationship: b.relationship,
-        note: b.note,
-        assignmentCount: b.assignmentCount,
-        createdAt: b.createdAt.toISOString(),
-      })),
+      beneficiaries: result.value.beneficiaries.map((b) => toBeneficiaryDto(b)),
     };
   }
 
@@ -110,18 +116,7 @@ export class BeneficiaryController {
       throw new NotFoundException(result.error);
     }
 
-    const beneficiary = result.value;
-    return {
-      id: beneficiary.id,
-      firstName: beneficiary.firstName,
-      lastName: beneficiary.lastName,
-      fullName: beneficiary.fullName,
-      email: beneficiary.email,
-      relationship: beneficiary.relationship,
-      note: beneficiary.note,
-      assignmentCount: beneficiary.assignmentCount,
-      createdAt: beneficiary.createdAt.toISOString(),
-    };
+    return toBeneficiaryDto(result.value);
   }
 
   @Get(':id/keepsakes')
@@ -175,18 +170,7 @@ export class BeneficiaryController {
       throw new BadRequestException(result.error);
     }
 
-    const beneficiary = result.value;
-    return {
-      id: beneficiary.id,
-      firstName: beneficiary.firstName,
-      lastName: beneficiary.lastName,
-      fullName: beneficiary.fullName,
-      email: beneficiary.email,
-      relationship: beneficiary.relationship,
-      note: beneficiary.note,
-      assignmentCount: 0,
-      createdAt: beneficiary.createdAt.toISOString(),
-    };
+    return toBeneficiaryDto(result.value);
   }
 
   @Delete(':id')
