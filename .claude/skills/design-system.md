@@ -20,12 +20,12 @@
 ```css
 :root {
   /* Beyond Brand Colors */
-  --navy-deep: 213 54% 24%; /* #1a365d - textes, headers */
-  --navy-light: 213 52% 34%; /* #2c5282 - liens, textes secondaires */
+  --navy-deep: 217 69% 30%; /* #173C7F - textes, headers */
+  --navy-light: 215 56% 46%; /* #3262B7 - liens, textes secondaires */
   --gold-heritage: 43 86% 38%; /* #B8860B - accents, CTAs, bordures actives */
   --gold-soft: 43 64% 56%; /* #D4A84B - hovers, highlights */
   --cream: 43 50% 98%; /* #FDFBF7 - background principal */
-  --warm-gray: 40 22% 96%; /* #F7F5F2 - cards, sections alternees */
+  --warm-gray: 202 42% 88%; /* #D1E3ED - cards, sections alternees */
   --slate: 215 16% 47%; /* #64748b - texte body */
 }
 ```
