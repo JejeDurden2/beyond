@@ -7,6 +7,7 @@ import {
   createBeneficiary,
   updateBeneficiary,
   deleteBeneficiary,
+  getBeneficiaryKeepsakes,
 } from '@/lib/api/beneficiaries';
 import type { CreateBeneficiaryInput, UpdateBeneficiaryInput } from '@/types';
 
@@ -57,5 +58,13 @@ export function useDeleteBeneficiary() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
     },
+  });
+}
+
+export function useBeneficiaryKeepsakes(beneficiaryId: string) {
+  return useQuery({
+    queryKey: ['beneficiaries', beneficiaryId, 'keepsakes'],
+    queryFn: () => getBeneficiaryKeepsakes(beneficiaryId),
+    enabled: !!beneficiaryId,
   });
 }

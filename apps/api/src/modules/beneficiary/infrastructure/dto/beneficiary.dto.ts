@@ -55,3 +55,14 @@ export interface BeneficiaryResponseDto {
   assignmentCount: number;
   createdAt: string;
 }
+
+export interface BeneficiaryKeepsakeResponseDto {
+  id: string;
+  keepsakeId: string;
+  keepsakeTitle: string;
+  keepsakeType: string;
+  keepsakeStatus: string;
+  keepsakeUpdatedAt: string;
+  personalMessage: string | null;
+  createdAt: string;
+}

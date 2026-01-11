@@ -1,5 +1,10 @@
 import { apiClient } from './client';
-import type { Beneficiary, CreateBeneficiaryInput, UpdateBeneficiaryInput } from '@/types';
+import type {
+  Beneficiary,
+  CreateBeneficiaryInput,
+  UpdateBeneficiaryInput,
+  BeneficiaryKeepsake,
+} from '@/types';
 
 export interface GetBeneficiariesResponse {
   beneficiaries: Beneficiary[];
@@ -34,4 +39,16 @@ export async function deleteBeneficiary(id: string): Promise<void> {
   return apiClient<void>(`/vault/beneficiaries/${id}`, {
     method: 'DELETE',
   });
+}
+
+export interface GetBeneficiaryKeepsakesResponse {
+  keepsakes: BeneficiaryKeepsake[];
+}
+
+export async function getBeneficiaryKeepsakes(
+  beneficiaryId: string,
+): Promise<GetBeneficiaryKeepsakesResponse> {
+  return apiClient<GetBeneficiaryKeepsakesResponse>(
+    `/vault/beneficiaries/${beneficiaryId}/keepsakes`,
+  );
 }

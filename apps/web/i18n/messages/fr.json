@@ -379,6 +379,11 @@
     },
     "errors": {
       "emailExists": "Un bénéficiaire avec cette adresse email existe déjà"
+    },
+    "detail": {
+      "keepsakes": "{count, plural, =0 {Aucun souvenir assigné} =1 {1 souvenir assigné} other {# souvenirs assignés}}",
+      "noKeepsakes": "Aucun souvenir n'a encore été assigné à cette personne.",
+      "createKeepsake": "Créer un souvenir"
     }
   },
   "assignments": {
@@ -397,7 +402,7 @@
       "title": "Aucun destinataire",
       "description": "Ajoutez des bénéficiaires pour qu'ils reçoivent ce souvenir."
     },
-    "createNew": "Nouveau"
+    "createNew": "Ajouter"
   },
   "onboarding": {
     "welcome": {

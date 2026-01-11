@@ -225,3 +225,14 @@ export interface KeepsakeAssignment {
   personalMessage: string | null;
   createdAt: string;
 }
+
+export interface BeneficiaryKeepsake {
+  id: string;
+  keepsakeId: string;
+  keepsakeTitle: string;
+  keepsakeType: KeepsakeType;
+  keepsakeStatus: KeepsakeStatus;
+  keepsakeUpdatedAt: string;
+  personalMessage: string | null;
+  createdAt: string;
+}

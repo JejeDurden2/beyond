@@ -1,7 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Result, ok, err } from 'neverthrow';
 import { Beneficiary, Relationship } from '../../domain/entities/beneficiary.entity';
-import { BeneficiaryRepository } from '../../domain/repositories/beneficiary.repository';
+import {
+  BeneficiaryRepository,
+  BENEFICIARY_REPOSITORY,
+} from '../../domain/repositories/beneficiary.repository';
 import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
 
 export interface CreateBeneficiaryInput {
@@ -27,7 +30,7 @@ export interface CreateBeneficiaryResult {
 @Injectable()
 export class CreateBeneficiaryCommand {
   constructor(
-    @Inject('BeneficiaryRepository')
+    @Inject(BENEFICIARY_REPOSITORY)
     private readonly beneficiaryRepository: BeneficiaryRepository,
     @Inject('VaultRepository')
     private readonly vaultRepository: VaultRepository,

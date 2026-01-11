@@ -379,6 +379,11 @@
     },
     "errors": {
       "emailExists": "A beneficiary with this email already exists"
+    },
+    "detail": {
+      "keepsakes": "{count, plural, =0 {No keepsakes assigned} =1 {1 keepsake assigned} other {# keepsakes assigned}}",
+      "noKeepsakes": "No keepsakes have been assigned to this person yet.",
+      "createKeepsake": "Create a keepsake"
     }
   },
   "assignments": {
@@ -397,7 +402,7 @@
       "title": "No recipients",
       "description": "Add beneficiaries so they receive this keepsake."
     },
-    "createNew": "New"
+    "createNew": "Add"
   },
   "onboarding": {
     "welcome": {

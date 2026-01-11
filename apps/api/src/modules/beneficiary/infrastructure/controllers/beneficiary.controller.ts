@@ -18,10 +18,12 @@ import { UpdateBeneficiaryCommand } from '../../application/commands/update-bene
 import { DeleteBeneficiaryCommand } from '../../application/commands/delete-beneficiary.command';
 import { ListBeneficiariesQuery } from '../../application/queries/list-beneficiaries.query';
 import { GetBeneficiaryQuery } from '../../application/queries/get-beneficiary.query';
+import { GetBeneficiaryKeepsakesQuery } from '@/modules/keepsake-assignment/application/queries/get-beneficiary-keepsakes.query';
 import {
   CreateBeneficiaryDto,
   UpdateBeneficiaryDto,
   BeneficiaryResponseDto,
+  BeneficiaryKeepsakeResponseDto,
 } from '../dto/beneficiary.dto';
 
 @Controller('vault/beneficiaries')
@@ -32,6 +34,7 @@ export class BeneficiaryController {
     private readonly deleteBeneficiaryCommand: DeleteBeneficiaryCommand,
     private readonly listBeneficiariesQuery: ListBeneficiariesQuery,
     private readonly getBeneficiaryQuery: GetBeneficiaryQuery,
+    private readonly getBeneficiaryKeepsakesQuery: GetBeneficiaryKeepsakesQuery,
   ) {}
 
   @Post()
@@ -118,6 +121,34 @@ export class BeneficiaryController {
       note: beneficiary.note,
       assignmentCount: beneficiary.assignmentCount,
       createdAt: beneficiary.createdAt.toISOString(),
+    };
+  }
+
+  @Get(':id/keepsakes')
+  async getKeepsakes(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<{ keepsakes: BeneficiaryKeepsakeResponseDto[] }> {
+    const result = await this.getBeneficiaryKeepsakesQuery.execute({
+      userId: user.id,
+      beneficiaryId: id,
+    });
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return {
+      keepsakes: result.value.keepsakes.map((k) => ({
+        id: k.id,
+        keepsakeId: k.keepsakeId,
+        keepsakeTitle: k.keepsakeTitle,
+        keepsakeType: k.keepsakeType,
+        keepsakeStatus: k.keepsakeStatus,
+        keepsakeUpdatedAt: k.keepsakeUpdatedAt.toISOString(),
+        personalMessage: k.personalMessage,
+        createdAt: k.createdAt.toISOString(),
+      })),
     };
   }
 

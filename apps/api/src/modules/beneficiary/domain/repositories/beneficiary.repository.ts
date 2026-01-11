@@ -1,5 +1,7 @@
 import { Beneficiary } from '../entities/beneficiary.entity';
 
+export const BENEFICIARY_REPOSITORY = 'BeneficiaryRepository';
+
 export interface BeneficiaryRepository {
   findById(id: string): Promise<Beneficiary | null>;
   findByVaultId(vaultId: string): Promise<Beneficiary[]>;

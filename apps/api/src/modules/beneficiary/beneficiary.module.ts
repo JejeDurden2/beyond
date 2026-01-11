@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { BeneficiaryController } from './infrastructure/controllers/beneficiary.controller';
 import { PrismaBeneficiaryRepository } from './infrastructure/adapters/prisma-beneficiary.repository';
 import { CreateBeneficiaryCommand } from './application/commands/create-beneficiary.command';
@@ -6,14 +6,16 @@ import { UpdateBeneficiaryCommand } from './application/commands/update-benefici
 import { DeleteBeneficiaryCommand } from './application/commands/delete-beneficiary.command';
 import { ListBeneficiariesQuery } from './application/queries/list-beneficiaries.query';
 import { GetBeneficiaryQuery } from './application/queries/get-beneficiary.query';
+import { BENEFICIARY_REPOSITORY } from './domain/repositories/beneficiary.repository';
 import { VaultModule } from '../vault/vault.module';
+import { KeepsakeAssignmentModule } from '../keepsake-assignment/keepsake-assignment.module';
 
 @Module({
-  imports: [VaultModule],
+  imports: [VaultModule, forwardRef(() => KeepsakeAssignmentModule)],
   controllers: [BeneficiaryController],
   providers: [
     {
-      provide: 'BeneficiaryRepository',
+      provide: BENEFICIARY_REPOSITORY,
       useClass: PrismaBeneficiaryRepository,
     },
     CreateBeneficiaryCommand,
@@ -22,6 +24,6 @@ import { VaultModule } from '../vault/vault.module';
     ListBeneficiariesQuery,
     GetBeneficiaryQuery,
   ],
-  exports: ['BeneficiaryRepository'],
+  exports: [BENEFICIARY_REPOSITORY],
 })
 export class BeneficiaryModule {}

@@ -7,10 +7,20 @@ export interface KeepsakeAssignmentWithDetails extends KeepsakeAssignment {
   beneficiaryRelationship: string;
 }
 
+export interface KeepsakeAssignmentWithKeepsake extends KeepsakeAssignment {
+  keepsakeTitle: string;
+  keepsakeType: string;
+  keepsakeStatus: string;
+  keepsakeUpdatedAt: Date;
+}
+
 export interface KeepsakeAssignmentRepository {
   findByKeepsakeId(keepsakeId: string): Promise<KeepsakeAssignment[]>;
   findByBeneficiaryId(beneficiaryId: string): Promise<KeepsakeAssignment[]>;
   findByKeepsakeIdWithDetails(keepsakeId: string): Promise<KeepsakeAssignmentWithDetails[]>;
+  findByBeneficiaryIdWithKeepsakes(
+    beneficiaryId: string,
+  ): Promise<KeepsakeAssignmentWithKeepsake[]>;
   findOne(keepsakeId: string, beneficiaryId: string): Promise<KeepsakeAssignment | null>;
   save(assignment: KeepsakeAssignment): Promise<void>;
   delete(keepsakeId: string, beneficiaryId: string): Promise<void>;

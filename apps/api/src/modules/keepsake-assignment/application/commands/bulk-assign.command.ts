@@ -9,7 +9,10 @@ import {
   KEEPSAKE_REPOSITORY,
   KeepsakeRepository,
 } from '@/modules/keepsake/domain/repositories/keepsake.repository';
-import { BeneficiaryRepository } from '@/modules/beneficiary/domain/repositories/beneficiary.repository';
+import {
+  BeneficiaryRepository,
+  BENEFICIARY_REPOSITORY,
+} from '@/modules/beneficiary/domain/repositories/beneficiary.repository';
 
 export interface BulkAssignInput {
   userId: string;
@@ -26,7 +29,7 @@ export class BulkAssignCommand {
     private readonly vaultRepository: VaultRepository,
     @Inject(KEEPSAKE_REPOSITORY)
     private readonly keepsakeRepository: KeepsakeRepository,
-    @Inject('BeneficiaryRepository')
+    @Inject(BENEFICIARY_REPOSITORY)
     private readonly beneficiaryRepository: BeneficiaryRepository,
   ) {}
 

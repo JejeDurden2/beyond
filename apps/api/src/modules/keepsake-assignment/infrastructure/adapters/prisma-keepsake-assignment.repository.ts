@@ -3,6 +3,7 @@ import { PrismaService } from '@/shared/infrastructure/prisma/prisma.service';
 import {
   KeepsakeAssignmentRepository,
   KeepsakeAssignmentWithDetails,
+  KeepsakeAssignmentWithKeepsake,
 } from '../../domain/repositories/keepsake-assignment.repository';
 import { KeepsakeAssignment } from '../../domain/entities/keepsake-assignment.entity';
 import { KeepsakeAssignmentMapper } from '../mappers/keepsake-assignment.mapper';
@@ -55,6 +56,35 @@ export class PrismaKeepsakeAssignmentRepository implements KeepsakeAssignmentRep
         }) as KeepsakeAssignmentWithDetails;
       })
       .filter((a): a is KeepsakeAssignmentWithDetails => a !== null);
+  }
+
+  async findByBeneficiaryIdWithKeepsakes(
+    beneficiaryId: string,
+  ): Promise<KeepsakeAssignmentWithKeepsake[]> {
+    const records = await this.prisma.keepsakeAssignment.findMany({
+      where: {
+        beneficiaryId,
+        keepsake: { deletedAt: null },
+      },
+      include: {
+        keepsake: true,
+      },
+      orderBy: { keepsake: { updatedAt: 'desc' } },
+    });
+
+    return records
+      .map((record) => {
+        const assignment = KeepsakeAssignmentMapper.toDomain(record);
+        if (!assignment) return null;
+
+        return Object.assign(assignment, {
+          keepsakeTitle: record.keepsake.title,
+          keepsakeType: record.keepsake.type,
+          keepsakeStatus: record.keepsake.status,
+          keepsakeUpdatedAt: record.keepsake.updatedAt,
+        }) as KeepsakeAssignmentWithKeepsake;
+      })
+      .filter((a): a is KeepsakeAssignmentWithKeepsake => a !== null);
   }
 
   async findOne(keepsakeId: string, beneficiaryId: string): Promise<KeepsakeAssignment | null> {

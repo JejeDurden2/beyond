@@ -4,6 +4,7 @@ import { PrismaKeepsakeAssignmentRepository } from './infrastructure/adapters/pr
 import { BulkAssignCommand } from './application/commands/bulk-assign.command';
 import { UpdatePersonalMessageCommand } from './application/commands/update-personal-message.command';
 import { GetKeepsakeAssignmentsQuery } from './application/queries/get-keepsake-assignments.query';
+import { GetBeneficiaryKeepsakesQuery } from './application/queries/get-beneficiary-keepsakes.query';
 import { KEEPSAKE_ASSIGNMENT_REPOSITORY } from './domain/repositories/keepsake-assignment.repository';
 import { VaultModule } from '../vault/vault.module';
 import { KeepsakeModule } from '../keepsake/keepsake.module';
@@ -20,7 +21,8 @@ import { BeneficiaryModule } from '../beneficiary/beneficiary.module';
     BulkAssignCommand,
     UpdatePersonalMessageCommand,
     GetKeepsakeAssignmentsQuery,
+    GetBeneficiaryKeepsakesQuery,
   ],
-  exports: [KEEPSAKE_ASSIGNMENT_REPOSITORY],
+  exports: [KEEPSAKE_ASSIGNMENT_REPOSITORY, GetBeneficiaryKeepsakesQuery],
 })
 export class KeepsakeAssignmentModule {}
