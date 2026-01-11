@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Pencil, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import type { KeepsakeMedia } from '@/types';
@@ -16,24 +16,44 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
   const t = useTranslations('keepsakes.visualization');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const images = media.filter((m) => m.type === 'image');
   const currentImage = images[currentIndex];
   const hasMultiple = images.length > 1;
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
+    setIsImageLoaded(false);
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     setIsZoomed(false);
-  };
+  }, [images.length]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
+    setIsImageLoaded(false);
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     setIsZoomed(false);
-  };
+  }, [images.length]);
 
   const toggleZoom = () => {
     setIsZoomed((prev) => !prev);
   };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && hasMultiple) {
+        goToPrevious();
+      } else if (e.key === 'ArrowRight' && hasMultiple) {
+        goToNext();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        toggleZoom();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasMultiple, goToPrevious, goToNext]);
 
   if (images.length === 0) {
     onEdit();
@@ -41,188 +61,254 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <button
-        type="button"
-        className="absolute inset-0 bg-navy-deep/90 backdrop-blur-md cursor-default"
-        style={{ animation: 'fadeIn 0.5s ease-out' }}
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Backdrop with subtle texture */}
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#0d0d14] to-[#08080c]"
+        style={{ animation: 'backdropFade 0.6s ease-out' }}
         onClick={onClose}
-        aria-label={t('close')}
       />
 
-      {/* Frame container */}
+      {/* Ambient light effect */}
       <div
-        className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-8"
-        style={{ animation: 'photoReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1)' }}
-      >
-        {/* Top bar with title and actions */}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(184, 134, 11, 0.03) 0%, transparent 70%)',
+          animation: 'ambientPulse 8s ease-in-out infinite',
+        }}
+      />
+
+      {/* Main container */}
+      <div className="relative w-full h-full flex flex-col">
+        {/* Minimal top bar */}
         <div
-          className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 md:p-6 bg-gradient-to-b from-navy-deep/80 to-transparent"
-          style={{ animation: 'slideDown 0.6s ease-out 0.3s both' }}
+          className="relative z-30 flex items-center justify-between px-4 py-3 md:px-8 md:py-5"
+          style={{ animation: 'fadeSlideDown 0.5s ease-out 0.2s both' }}
         >
-          <h2 className="font-serif-brand text-base md:text-xl lg:text-2xl text-cream/90 truncate max-w-[50%] md:max-w-[60%]">
-            {title}
-          </h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-gradient-to-b from-gold-heritage to-gold-heritage/30 rounded-full" />
+            <h2 className="font-serif-brand text-lg md:text-xl text-cream/90 tracking-wide">
+              {title}
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-1 md:gap-2">
             <button
               onClick={toggleZoom}
-              className="p-2 rounded-full bg-cream/10 text-cream hover:bg-cream/20 transition-colors duration-300"
+              className="group relative p-2.5 md:p-3 rounded-full transition-all duration-300 hover:bg-white/5"
               aria-label={isZoomed ? t('zoomOut') : t('zoomIn')}
             >
               {isZoomed ? (
-                <ZoomOut className="w-4 h-4 md:w-5 md:h-5" />
+                <ZoomOut className="w-4 h-4 md:w-5 md:h-5 text-cream/60 group-hover:text-cream transition-colors" />
               ) : (
-                <ZoomIn className="w-4 h-4 md:w-5 md:h-5" />
+                <ZoomIn className="w-4 h-4 md:w-5 md:h-5 text-cream/60 group-hover:text-cream transition-colors" />
               )}
             </button>
             <button
               onClick={onEdit}
-              className="p-2 rounded-full bg-cream/10 text-cream hover:bg-gold-soft/30 transition-colors duration-300"
+              className="group relative p-2.5 md:p-3 rounded-full transition-all duration-300 hover:bg-white/5"
               aria-label={t('edit')}
             >
-              <Pencil className="w-4 h-4 md:w-5 md:h-5" />
+              <Pencil className="w-4 h-4 md:w-5 md:h-5 text-cream/60 group-hover:text-gold-heritage transition-colors" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-full bg-cream/10 text-cream hover:bg-red-500/30 transition-colors duration-300"
+              className="group relative p-2.5 md:p-3 rounded-full transition-all duration-300 hover:bg-white/5"
               aria-label={t('close')}
             >
-              <X className="w-4 h-4 md:w-5 md:h-5" />
+              <X className="w-4 h-4 md:w-5 md:h-5 text-cream/60 group-hover:text-cream transition-colors" />
             </button>
           </div>
         </div>
 
-        {/* Main image area */}
-        <div
-          className={`relative flex items-center justify-center transition-all duration-500 ${
-            isZoomed ? 'w-full h-full' : 'max-w-4xl max-h-[70vh]'
-          }`}
-        >
-          {/* Navigation arrows */}
+        {/* Image area */}
+        <div className="flex-1 relative flex items-center justify-center px-4 md:px-16 lg:px-24">
+          {/* Navigation arrows - elegant minimal style */}
           {hasMultiple && (
             <>
               <button
                 onClick={goToPrevious}
-                className="absolute left-2 md:left-4 z-10 p-3 rounded-full bg-navy-deep/60 text-cream hover:bg-navy-deep/80 transition-all duration-300 hover:scale-110"
+                className="absolute left-2 md:left-6 lg:left-12 z-20 group p-3 md:p-4 rounded-full transition-all duration-300 hover:bg-white/5"
                 aria-label={t('previous')}
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 text-cream/40 group-hover:text-cream transition-colors" />
               </button>
               <button
                 onClick={goToNext}
-                className="absolute right-2 md:right-4 z-10 p-3 rounded-full bg-navy-deep/60 text-cream hover:bg-navy-deep/80 transition-all duration-300 hover:scale-110"
+                className="absolute right-2 md:right-6 lg:right-12 z-20 group p-3 md:p-4 rounded-full transition-all duration-300 hover:bg-white/5"
                 aria-label={t('next')}
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-cream/40 group-hover:text-cream transition-colors" />
               </button>
             </>
           )}
 
-          {/* Photo frame with mat and shadow */}
+          {/* Photo with museum-style presentation */}
           <div
-            className={`relative transition-transform duration-500 ${isZoomed ? 'scale-100' : ''}`}
-            style={{
-              animation: 'frameReveal 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both',
-            }}
+            className={`relative transition-all duration-700 ease-out ${
+              isZoomed ? 'scale-100' : ''
+            }`}
+            style={{ animation: 'photoEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both' }}
           >
-            {/* Outer frame (dark wood effect) */}
+            {/* Subtle spotlight effect behind photo */}
             <div
-              className="p-2 md:p-3 rounded-sm"
+              className="absolute -inset-20 md:-inset-32 pointer-events-none"
               style={{
-                background: 'linear-gradient(145deg, #2c1810 0%, #1a0f0a 50%, #2c1810 100%)',
+                background:
+                  'radial-gradient(ellipse 100% 100% at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%)',
+              }}
+            />
+
+            {/* Premium frame */}
+            <div
+              className="relative"
+              style={{
                 boxShadow: `
-                  0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                  inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-                  inset 0 -1px 0 0 rgba(0, 0, 0, 0.3)
+                  0 0 0 1px rgba(255,255,255,0.03),
+                  0 4px 16px rgba(0,0,0,0.4),
+                  0 12px 40px rgba(0,0,0,0.3),
+                  0 24px 80px rgba(0,0,0,0.2)
                 `,
               }}
             >
-              {/* Inner mat (cream colored) */}
+              {/* Outer frame - thin gold accent */}
               <div
-                className="p-2 md:p-4 lg:p-8"
+                className="p-[2px] md:p-[3px]"
                 style={{
-                  background: 'linear-gradient(180deg, #F5F0E6 0%, #EDE6D9 100%)',
-                  boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.05)',
+                  background:
+                    'linear-gradient(145deg, rgba(184,134,11,0.4) 0%, rgba(184,134,11,0.1) 50%, rgba(184,134,11,0.3) 100%)',
                 }}
               >
-                {/* Image container */}
-                <div className="relative overflow-hidden bg-warm-gray/20">
-                  {currentImage?.url ? (
-                    <img
-                      src={currentImage.url}
-                      alt={currentImage.filename}
-                      className={`block transition-transform duration-500 ${
-                        isZoomed
-                          ? 'max-h-[80vh] max-w-[90vw]'
-                          : 'max-h-[40vh] max-w-[85vw] md:max-h-[50vh] md:max-w-[70vw]'
-                      } w-auto h-auto object-contain`}
-                      style={{
-                        animation: 'imageReveal 0.8s ease-out',
-                      }}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-48 w-64 md:h-64 md:w-96 bg-warm-gray/30 text-navy-deep/50 text-sm md:text-base">
-                      {t('imageNotAvailable')}
+                {/* Inner frame - dark elegant */}
+                <div
+                  className="p-1 md:p-1.5"
+                  style={{
+                    background: 'linear-gradient(145deg, #1a1a1f 0%, #0f0f12 100%)',
+                  }}
+                >
+                  {/* Mat - soft warm tone */}
+                  <div
+                    className="p-3 md:p-6 lg:p-10"
+                    style={{
+                      background: 'linear-gradient(180deg, #FAF8F4 0%, #F5F2EC 100%)',
+                    }}
+                  >
+                    {/* Image container */}
+                    <div className="relative bg-[#0a0a0a]">
+                      {currentImage?.url ? (
+                        <>
+                          {/* Loading placeholder */}
+                          {!isImageLoaded && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0a]">
+                              <div className="w-8 h-8 border-2 border-gold-heritage/30 border-t-gold-heritage rounded-full animate-spin" />
+                            </div>
+                          )}
+                          <img
+                            src={currentImage.url}
+                            alt={currentImage.filename}
+                            onLoad={() => setIsImageLoaded(true)}
+                            className={`block transition-all duration-700 ${
+                              isZoomed
+                                ? 'max-h-[85vh] max-w-[90vw]'
+                                : 'max-h-[45vh] max-w-[80vw] md:max-h-[55vh] md:max-w-[65vw] lg:max-h-[60vh] lg:max-w-[55vw]'
+                            } w-auto h-auto object-contain ${
+                              isImageLoaded ? 'opacity-100' : 'opacity-0'
+                            }`}
+                            style={{
+                              animation: isImageLoaded ? 'imageReveal 0.6s ease-out' : undefined,
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-center h-48 w-64 md:h-72 md:w-96 bg-[#0a0a0a] text-cream/30 text-sm font-light tracking-wide">
+                          {t('imageNotAvailable')}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Caption */}
-            {currentImage?.filename && (
+            {/* Elegant caption */}
+            {currentImage?.filename && !isZoomed && (
               <div
-                className="absolute -bottom-6 md:-bottom-8 left-1/2 -translate-x-1/2 text-cream/60 text-xs md:text-sm font-serif-brand italic truncate max-w-[90%]"
-                style={{ animation: 'fadeIn 0.8s ease-out 0.5s both' }}
+                className="absolute -bottom-10 md:-bottom-12 left-1/2 -translate-x-1/2 text-center"
+                style={{ animation: 'captionFade 0.6s ease-out 0.4s both' }}
               >
-                {currentImage.filename}
+                <p className="text-cream/40 text-xs md:text-sm font-light tracking-widest uppercase">
+                  {currentImage.filename.split('.')[0]}
+                </p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Thumbnail strip for multiple images */}
+        {/* Thumbnail strip - minimal elegant */}
         {hasMultiple && (
           <div
-            className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-2 p-4 md:p-6 bg-gradient-to-t from-navy-deep/80 to-transparent"
-            style={{ animation: 'slideUp 0.6s ease-out 0.3s both' }}
+            className="relative z-20 py-4 md:py-6 px-4"
+            style={{ animation: 'fadeSlideUp 0.5s ease-out 0.3s both' }}
           >
-            <div className="flex items-center gap-2 overflow-x-auto py-2 px-4 max-w-full">
+            <div className="flex items-center justify-center gap-3 md:gap-4">
               {images.map((image, index) => (
                 <button
                   key={image.id}
                   onClick={() => {
-                    setCurrentIndex(index);
-                    setIsZoomed(false);
+                    if (index !== currentIndex) {
+                      setIsImageLoaded(false);
+                      setCurrentIndex(index);
+                      setIsZoomed(false);
+                    }
                   }}
-                  className={`relative flex-shrink-0 w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-sm overflow-hidden transition-all duration-300 ${
+                  className={`relative flex-shrink-0 transition-all duration-500 ${
                     index === currentIndex
-                      ? 'ring-2 ring-gold-heritage ring-offset-2 ring-offset-navy-deep scale-105'
-                      : 'opacity-60 hover:opacity-100'
+                      ? 'w-14 h-14 md:w-16 md:h-16'
+                      : 'w-10 h-10 md:w-12 md:h-12 opacity-40 hover:opacity-70'
                   }`}
                 >
-                  {image.url ? (
-                    <img
-                      src={image.url}
-                      alt={image.filename}
-                      className="w-full h-full object-cover"
+                  {/* Active indicator */}
+                  {index === currentIndex && (
+                    <div
+                      className="absolute -inset-1 rounded-sm"
+                      style={{
+                        background:
+                          'linear-gradient(145deg, rgba(184,134,11,0.5) 0%, rgba(184,134,11,0.2) 100%)',
+                      }}
                     />
-                  ) : (
-                    <div className="w-full h-full bg-warm-gray/30" />
                   )}
+                  <div className="relative w-full h-full overflow-hidden rounded-sm">
+                    {image.url ? (
+                      <img
+                        src={image.url}
+                        alt={image.filename}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-cream/10" />
+                    )}
+                  </div>
                 </button>
               ))}
-            </div>
-            <div className="text-cream/60 text-xs md:text-sm ml-2 md:ml-4">
-              {currentIndex + 1} / {images.length}
+
+              {/* Counter */}
+              <div className="ml-4 md:ml-6 flex items-center gap-2">
+                <span className="text-cream/30 text-xs font-light tracking-widest">
+                  {String(currentIndex + 1).padStart(2, '0')}
+                </span>
+                <span className="w-4 h-px bg-cream/20" />
+                <span className="text-cream/30 text-xs font-light tracking-widest">
+                  {String(images.length).padStart(2, '0')}
+                </span>
+              </div>
             </div>
           </div>
         )}
       </div>
 
       <style jsx global>{`
-        @keyframes fadeIn {
+        @keyframes backdropFade {
           from {
             opacity: 0;
           }
@@ -231,56 +317,66 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
           }
         }
 
-        @keyframes photoReveal {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes frameReveal {
-          0% {
-            opacity: 0;
-            transform: scale(0.9) rotateX(10deg);
-          }
+        @keyframes ambientPulse {
+          0%,
           100% {
             opacity: 1;
-            transform: scale(1) rotateX(0deg);
+          }
+          50% {
+            opacity: 0.7;
+          }
+        }
+
+        @keyframes fadeSlideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeSlideUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes photoEnter {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
           }
         }
 
         @keyframes imageReveal {
           from {
             opacity: 0;
-            filter: blur(10px);
           }
           to {
             opacity: 1;
-            filter: blur(0);
           }
         }
 
-        @keyframes slideDown {
+        @keyframes captionFade {
           from {
             opacity: 0;
-            transform: translateY(-20px);
+            transform: translateX(-50%) translateY(5px);
           }
           to {
             opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
           }
         }
       `}</style>
