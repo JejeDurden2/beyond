@@ -41,9 +41,9 @@ export function LetterVisualization({ title, content, onEdit, onClose }: LetterV
             `,
           }}
         >
-          {/* Left margin line (like ruled paper) */}
+          {/* Left margin line (like ruled paper) - hidden on mobile for more space */}
           <div
-            className="absolute top-0 bottom-0 left-16 md:left-20 w-px bg-red-300/30"
+            className="hidden md:block absolute top-0 bottom-0 left-16 lg:left-20 w-px bg-red-300/30"
             style={{ animation: 'fadeIn 1.5s ease-out 0.5s both' }}
           />
 
@@ -76,10 +76,10 @@ export function LetterVisualization({ title, content, onEdit, onClose }: LetterV
           </div>
 
           {/* Content */}
-          <div className="px-8 pb-16 pt-4 md:px-12 md:pb-20 pl-20 md:pl-24">
+          <div className="px-6 pb-12 pt-4 md:px-8 md:pb-16 md:pl-20 lg:px-12 lg:pb-20 lg:pl-24">
             {/* Date-like header */}
             <div
-              className="text-sm text-navy-deep/50 mb-8 italic"
+              className="text-sm text-navy-deep/50 mb-6 md:mb-8 italic"
               style={{ animation: 'textSlideIn 1.5s ease-out 0.6s both' }}
             >
               {title}
@@ -87,14 +87,14 @@ export function LetterVisualization({ title, content, onEdit, onClose }: LetterV
 
             {/* Letter body in italic serif */}
             <div
-              className="font-serif-brand text-lg md:text-xl text-navy-deep/85 leading-[2.2] whitespace-pre-wrap"
+              className="font-serif-brand text-base md:text-lg lg:text-xl text-navy-deep/85 leading-[1.9] md:leading-[2.2] whitespace-pre-wrap"
               style={{
                 fontStyle: 'italic',
                 animation: 'textSlideIn 1.5s ease-out 0.9s both',
               }}
             >
               {content.split('\n\n').map((paragraph, index) => (
-                <p key={index} className="mb-8 last:mb-0">
+                <p key={index} className="mb-6 md:mb-8 last:mb-0">
                   {paragraph}
                 </p>
               ))}
@@ -102,7 +102,7 @@ export function LetterVisualization({ title, content, onEdit, onClose }: LetterV
 
             {/* Sign-off flourish */}
             <div
-              className="mt-16 flex justify-end"
+              className="mt-10 md:mt-16 flex justify-end"
               style={{ animation: 'textSlideIn 1.5s ease-out 1.2s both' }}
             >
               <div className="text-right">

@@ -315,7 +315,12 @@
     "visualization": {
       "edit": "Edit",
       "close": "Close",
-      "view": "Read"
+      "view": "Read",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "previous": "Previous photo",
+      "next": "Next photo",
+      "imageNotAvailable": "Image not available"
     }
   },
   "settings": {

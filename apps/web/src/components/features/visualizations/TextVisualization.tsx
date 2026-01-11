@@ -66,10 +66,10 @@ export function TextVisualization({ title, content, onEdit, onClose }: TextVisua
           </div>
 
           {/* Content */}
-          <div className="px-12 pb-16 pt-4 md:px-20 md:pb-20">
+          <div className="px-6 pb-12 pt-4 md:px-12 md:pb-16 lg:px-20 lg:pb-20">
             {/* Title */}
             <h1
-              className="font-serif-brand text-2xl md:text-3xl text-navy-deep text-center mb-12 animate-[textFadeIn_2s_ease-out_0.5s_both]"
+              className="font-serif-brand text-xl md:text-2xl lg:text-3xl text-navy-deep text-center mb-8 md:mb-12 animate-[textFadeIn_2s_ease-out_0.5s_both]"
               style={{ letterSpacing: '0.02em' }}
             >
               {title}
@@ -77,7 +77,7 @@ export function TextVisualization({ title, content, onEdit, onClose }: TextVisua
 
             {/* Body text */}
             <div
-              className="font-serif-brand text-lg md:text-xl text-navy-deep/90 leading-[2] whitespace-pre-wrap animate-[textFadeIn_2s_ease-out_0.8s_both]"
+              className="font-serif-brand text-base md:text-lg lg:text-xl text-navy-deep/90 leading-[1.8] md:leading-[2] whitespace-pre-wrap animate-[textFadeIn_2s_ease-out_0.8s_both]"
               style={{
                 textAlign: 'justify',
                 hyphens: 'auto',
@@ -85,7 +85,7 @@ export function TextVisualization({ title, content, onEdit, onClose }: TextVisua
               }}
             >
               {content.split('\n\n').map((paragraph, index) => (
-                <p key={index} className="mb-8 last:mb-0">
+                <p key={index} className="mb-6 md:mb-8 last:mb-0">
                   {paragraph}
                 </p>
               ))}

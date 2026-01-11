@@ -315,7 +315,12 @@
     "visualization": {
       "edit": "Modifier",
       "close": "Fermer",
-      "view": "Lire"
+      "view": "Lire",
+      "zoomIn": "Agrandir",
+      "zoomOut": "Réduire",
+      "previous": "Photo précédente",
+      "next": "Photo suivante",
+      "imageNotAvailable": "Image non disponible"
     }
   },
   "settings": {

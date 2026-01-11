@@ -64,7 +64,7 @@ export function MediaUploader({
       {canAddMore && (
         <button
           type="button"
-          className={`w-full border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
+          className={`w-full border-2 border-dashed rounded-xl p-4 md:p-8 text-center transition-colors ${
             disabled || isUploading
               ? 'border-muted bg-muted/20 cursor-not-allowed'
               : 'border-border hover:border-foreground/30 cursor-pointer'
@@ -96,9 +96,11 @@ export function MediaUploader({
               <div className="text-xs text-muted-foreground">{Math.round(uploadProgress)}%</div>
             </div>
           ) : (
-            <div className="space-y-2">
-              <div className="text-lg font-medium">Drop files here or click to upload</div>
-              <div className="text-sm text-muted-foreground">
+            <div className="space-y-1 md:space-y-2">
+              <div className="text-base md:text-lg font-medium">
+                Drop files here or click to upload
+              </div>
+              <div className="text-xs md:text-sm text-muted-foreground">
                 Images (10MB), Videos (500MB), PDFs (20MB)
               </div>
             </div>
@@ -107,7 +109,7 @@ export function MediaUploader({
       )}
 
       {media.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
           {media.map((item) => (
             <MediaItem key={item.id} media={item} onRemove={() => onRemove(item.id)} />
           ))}
@@ -130,19 +132,22 @@ function MediaItem({ media, onRemove }: MediaItemProps) {
   };
 
   return (
-    <div className="relative group border border-border rounded-lg p-3 bg-background">
+    <div className="relative group border border-border rounded-lg p-2 md:p-3 bg-background">
       <button
         onClick={onRemove}
-        className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute -top-2 -right-2 w-5 h-5 md:w-6 md:h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"
         aria-label="Remove"
       >
         ×
       </button>
 
-      <div className="flex items-center gap-3">
-        <MediaTypeIcon mediaType={media.type} className="w-6 h-6 text-muted-foreground" />
+      <div className="flex items-center gap-2 md:gap-3">
+        <MediaTypeIcon
+          mediaType={media.type}
+          className="w-5 h-5 md:w-6 md:h-6 text-muted-foreground flex-shrink-0"
+        />
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-medium truncate" title={media.filename}>
+          <div className="text-xs md:text-sm font-medium truncate" title={media.filename}>
             {media.filename}
           </div>
           <div className="text-xs text-muted-foreground">{formatFileSize(media.size)}</div>
@@ -150,7 +155,7 @@ function MediaItem({ media, onRemove }: MediaItemProps) {
       </div>
 
       {media.type === 'image' && media.url && (
-        <div className="mt-2 relative h-24 w-full">
+        <div className="mt-2 relative h-20 md:h-24 w-full">
           <Image
             src={media.url}
             alt={media.filename}

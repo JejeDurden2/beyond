@@ -72,10 +72,10 @@ export function WishVisualization({ title, content, onEdit, onClose }: WishVisua
           </div>
 
           {/* Content */}
-          <div className="px-8 pb-16 pt-2 md:px-16 md:pb-20">
+          <div className="px-6 pb-12 pt-2 md:px-8 md:pb-16 lg:px-16 lg:pb-20">
             {/* Decorative seal/emblem */}
             <div
-              className="flex justify-center mb-10"
+              className="flex justify-center mb-8 md:mb-10"
               style={{ animation: 'sealAppear 1.5s ease-out 0.8s both' }}
             >
               <div className="relative">
@@ -123,7 +123,7 @@ export function WishVisualization({ title, content, onEdit, onClose }: WishVisua
 
             {/* Title in formal centered layout */}
             <h1
-              className="font-serif-brand text-xl md:text-2xl text-navy-deep text-center mb-4 tracking-[0.15em] uppercase"
+              className="font-serif-brand text-lg md:text-xl lg:text-2xl text-navy-deep text-center mb-4 tracking-[0.1em] md:tracking-[0.15em] uppercase"
               style={{ animation: 'textFadeUp 1.5s ease-out 1s both' }}
             >
               {title}
@@ -131,7 +131,7 @@ export function WishVisualization({ title, content, onEdit, onClose }: WishVisua
 
             {/* Decorative divider */}
             <div
-              className="flex items-center justify-center gap-4 mb-10"
+              className="flex items-center justify-center gap-3 md:gap-4 mb-8 md:mb-10"
               style={{ animation: 'textFadeUp 1.5s ease-out 1.1s both' }}
             >
               <div className="w-12 h-px bg-navy-deep/20" />
@@ -143,7 +143,7 @@ export function WishVisualization({ title, content, onEdit, onClose }: WishVisua
 
             {/* Body text in formal serif */}
             <div
-              className="font-serif-brand text-base md:text-lg text-navy-deep/90 leading-[2] whitespace-pre-wrap text-center"
+              className="font-serif-brand text-sm md:text-base lg:text-lg text-navy-deep/90 leading-[1.8] md:leading-[2] whitespace-pre-wrap text-center"
               style={{ animation: 'textFadeUp 1.5s ease-out 1.3s both' }}
             >
               {content.split('\n\n').map((paragraph, index) => (
@@ -155,7 +155,7 @@ export function WishVisualization({ title, content, onEdit, onClose }: WishVisua
 
             {/* Bottom signature area */}
             <div
-              className="mt-16 flex flex-col items-center"
+              className="mt-10 md:mt-16 flex flex-col items-center"
               style={{ animation: 'textFadeUp 1.5s ease-out 1.5s both' }}
             >
               <div className="w-32 h-px bg-navy-deep/20 mb-2" />

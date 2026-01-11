@@ -9,14 +9,14 @@ import {
   KeepsakeVisualization,
   useKeepsakeVisualization,
 } from '@/components/features/visualizations';
-import { getKeepsakes, getKeepsake } from '@/lib/api/keepsakes';
+import { getKeepsakes, getKeepsake, getKeepsakeMedia } from '@/lib/api/keepsakes';
 import { KEEPSAKE_TYPES, formatDate } from '@/lib/constants';
-import type { KeepsakeSummary, KeepsakeType, Keepsake } from '@/types';
+import type { KeepsakeSummary, KeepsakeType, Keepsake, KeepsakeMedia } from '@/types';
 
 export default function KeepsakesPage() {
   const router = useRouter();
   const t = useTranslations('keepsakes');
-  const { isTextBased } = useKeepsakeVisualization();
+  const { hasVisualization, isMediaBased } = useKeepsakeVisualization();
 
   const [keepsakes, setKeepsakes] = useState<KeepsakeSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +24,7 @@ export default function KeepsakesPage() {
 
   // Visualization state
   const [selectedKeepsake, setSelectedKeepsake] = useState<Keepsake | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<KeepsakeMedia[]>([]);
   const [isLoadingKeepsake, setIsLoadingKeepsake] = useState(false);
 
   useEffect(() => {
@@ -45,16 +46,25 @@ export default function KeepsakesPage() {
 
   const handleKeepsakeClick = useCallback(
     async (keepsake: KeepsakeSummary) => {
-      // For non-text keepsakes, go directly to edit page
-      if (!isTextBased(keepsake.type)) {
+      // For non-visualizable keepsakes, go directly to edit page
+      if (!hasVisualization(keepsake.type)) {
         router.push(`/keepsakes/${keepsake.id}`);
         return;
       }
 
-      // For text-based keepsakes, load full content and show visualization
+      // Load full content and show visualization
       setIsLoadingKeepsake(true);
       try {
         const fullKeepsake = await getKeepsake(keepsake.id);
+
+        // For media-based keepsakes, also load media
+        if (isMediaBased(keepsake.type)) {
+          const mediaResponse = await getKeepsakeMedia(keepsake.id);
+          setSelectedMedia(mediaResponse.media);
+        } else {
+          setSelectedMedia([]);
+        }
+
         setSelectedKeepsake(fullKeepsake);
       } catch {
         // On error, fallback to edit page
@@ -63,11 +73,12 @@ export default function KeepsakesPage() {
         setIsLoadingKeepsake(false);
       }
     },
-    [isTextBased, router],
+    [hasVisualization, isMediaBased, router],
   );
 
   const handleCloseVisualization = useCallback(() => {
     setSelectedKeepsake(null);
+    setSelectedMedia([]);
   }, []);
 
   const handleEditFromVisualization = useCallback(() => {
@@ -166,6 +177,7 @@ export default function KeepsakesPage() {
           type={selectedKeepsake.type}
           title={selectedKeepsake.title}
           content={selectedKeepsake.content || ''}
+          media={selectedMedia}
           onEdit={handleEditFromVisualization}
           onClose={handleCloseVisualization}
         />
@@ -201,17 +213,17 @@ function EmptyState({ hasKeepsakes }: { hasKeepsakes: boolean }) {
   const t = useTranslations('keepsakes.empty');
 
   return (
-    <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
-      <div className="max-w-sm mx-auto space-y-4">
-        <div className="w-16 h-16 mx-auto bg-muted rounded-2xl flex items-center justify-center">
-          <Plus className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />
+    <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-6 md:p-12 text-center">
+      <div className="max-w-sm mx-auto space-y-3 md:space-y-4">
+        <div className="w-12 h-12 md:w-16 md:h-16 mx-auto bg-muted rounded-2xl flex items-center justify-center">
+          <Plus className="w-6 h-6 md:w-8 md:h-8 text-muted-foreground" strokeWidth={1.5} />
         </div>
-        <h3 className="font-display text-xl text-foreground">{t('title')}</h3>
-        <p className="text-muted-foreground">{t('description')}</p>
+        <h3 className="font-display text-lg md:text-xl text-foreground">{t('title')}</h3>
+        <p className="text-sm md:text-base text-muted-foreground">{t('description')}</p>
         {!hasKeepsakes && (
           <Link
             href="/keepsakes/new"
-            className="inline-block bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
+            className="inline-block bg-foreground text-background hover:bg-foreground/90 rounded-xl px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-base font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
           >
             {t('cta')}
           </Link>
