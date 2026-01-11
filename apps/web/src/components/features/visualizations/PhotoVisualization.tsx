@@ -63,10 +63,12 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop with subtle texture */}
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#0d0d14] to-[#08080c]"
+      <button
+        type="button"
+        className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#0d0d14] to-[#08080c] cursor-default"
         style={{ animation: 'backdropFade 0.6s ease-out' }}
         onClick={onClose}
+        aria-label="Close"
       />
 
       {/* Ambient light effect */}
