@@ -415,7 +415,8 @@
       "title": "Bienvenue sur Beyond",
       "subtitle": "Vous êtes sur le point de créer quelque chose de précieux : un espace pour préserver ce qui compte, pour ceux qui comptent.",
       "cta": "Commencer",
-      "trust": "Vos données sont chiffrées. Personne, pas même nous, ne peut accéder à vos contenus."
+      "trust": "Vos données sont chiffrées. Personne, pas même nous, ne peut accéder à vos contenus.",
+      "disclaimer": "Beyond n'est pas un service notarial. Pour tous documents officiels relatifs à votre succession ou héritage, veuillez consulter un notaire."
     },
     "identity": {
       "title": "Comment vous appelez-vous ?",

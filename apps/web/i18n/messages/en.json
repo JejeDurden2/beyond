@@ -415,7 +415,8 @@
       "title": "Welcome to Beyond",
       "subtitle": "You're about to create something precious: a space to preserve what matters, for those who matter.",
       "cta": "Get Started",
-      "trust": "Your data is encrypted. No one, not even us, can access your content."
+      "trust": "Your data is encrypted. No one, not even us, can access your content.",
+      "disclaimer": "Beyond is not a notary service. For all official documents related to your estate or inheritance, please consult a notary."
     },
     "identity": {
       "title": "What's your name?",

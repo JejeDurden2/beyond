@@ -28,6 +28,12 @@ export function WelcomeStep({ onNext }: WelcomeStepProps) {
         {t('welcome.cta')}
       </button>
 
+      <div className="mt-8 px-4">
+        <p className="text-xs text-muted-foreground/70 leading-relaxed">
+          {t('welcome.disclaimer')}
+        </p>
+      </div>
+
       <style jsx global>{`
         @keyframes fadeIn {
           from {
