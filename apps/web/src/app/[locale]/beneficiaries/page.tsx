@@ -73,7 +73,7 @@ function BeneficiaryCard({ beneficiary }: { beneficiary: Beneficiary }) {
           <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
             <RelationshipIcon
               relationship={beneficiary.relationship}
-              className="w-6 h-6 text-icon-line"
+              className="w-6 h-6 text-muted-foreground"
             />
           </div>
           <div>
@@ -86,7 +86,7 @@ function BeneficiaryCard({ beneficiary }: { beneficiary: Beneficiary }) {
             </p>
           </div>
         </div>
-        <ChevronRight className="w-5 h-5 text-icon-line" />
+        <ChevronRight className="w-5 h-5 text-muted-foreground" />
       </div>
     </Link>
   );
@@ -99,7 +99,7 @@ function EmptyState() {
     <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-12 text-center">
       <div className="max-w-sm mx-auto space-y-4">
         <div className="w-16 h-16 mx-auto bg-muted rounded-2xl flex items-center justify-center">
-          <UserPlus className="w-8 h-8 text-icon-line" strokeWidth={1.5} />
+          <UserPlus className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />
         </div>
         <h3 className="font-display text-xl text-foreground">{t('title')}</h3>
         <p className="text-muted-foreground">{t('description')}</p>
