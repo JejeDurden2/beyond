@@ -10,13 +10,14 @@
     --gold-heritage: 43 86% 38%;    /* #B8860B - accents, CTAs, bordures actives */
     --gold-soft: 43 64% 56%;        /* #D4A84B - hovers, highlights */
     --cream: 43 50% 98%;            /* #FDFBF7 - background principal */
-    --warm-gray: 202 42% 88%;       /* #D1E3ED - cards, sections alternees */
+    --warm-gray: 40 22% 96%;        /* #F7F5F2 - cards, sections alternees */
+    --icon-line: 202 42% 88%;       /* #D1E3ED - icon lines */
     --slate: 215 16% 47%;           /* #64748b - texte body */
 
     /* Semantic mappings */
     --background: 43 50% 98%;       /* cream */
     --foreground: 217 69% 30%;      /* navy-deep */
-    --muted: 202 42% 88%;           /* warm-gray */
+    --muted: 40 22% 96%;            /* warm-gray */
     --muted-foreground: 215 16% 47%; /* slate */
     --accent: 43 86% 38%;           /* gold-heritage */
     --accent-foreground: 43 50% 98%; /* cream */
@@ -25,11 +26,11 @@
     --ring: 43 86% 38%;             /* gold-heritage */
     --primary: 217 69% 30%;         /* navy-deep */
     --primary-foreground: 43 50% 98%; /* cream */
-    --secondary: 202 42% 88%;       /* warm-gray */
+    --secondary: 40 22% 96%;        /* warm-gray */
     --secondary-foreground: 217 69% 30%; /* navy-deep */
     --destructive: 0 84% 60%;
     --destructive-foreground: 43 50% 98%;
-    --card: 202 42% 88%;            /* warm-gray */
+    --card: 40 22% 96%;             /* warm-gray */
     --card-foreground: 217 69% 30%; /* navy-deep */
     --popover: 0 0% 100%;
     --popover-foreground: 217 69% 30%;
@@ -43,7 +44,8 @@
     --gold-heritage: 43 86% 45%;
     --gold-soft: 43 64% 60%;
     --cream: 220 20% 10%;
-    --warm-gray: 202 30% 20%;
+    --warm-gray: 220 15% 15%;
+    --icon-line: 202 30% 35%;
     --slate: 215 16% 60%;
 
     /* Semantic mappings */

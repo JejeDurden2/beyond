@@ -13,6 +13,7 @@ const config: Config = {
         'gold-soft': 'hsl(var(--gold-soft))',
         cream: 'hsl(var(--cream))',
         'warm-gray': 'hsl(var(--warm-gray))',
+        'icon-line': 'hsl(var(--icon-line))',
         slate: 'hsl(var(--slate))',
         // Semantic colors (mapped to brand)
         background: 'hsl(var(--background))',
