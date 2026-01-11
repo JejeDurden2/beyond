@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { KeepsakeAssignmentController } from './infrastructure/controllers/keepsake-assignment.controller';
 import { PrismaKeepsakeAssignmentRepository } from './infrastructure/adapters/prisma-keepsake-assignment.repository';
 import { BulkAssignCommand } from './application/commands/bulk-assign.command';
@@ -11,7 +11,7 @@ import { KeepsakeModule } from '../keepsake/keepsake.module';
 import { BeneficiaryModule } from '../beneficiary/beneficiary.module';
 
 @Module({
-  imports: [VaultModule, KeepsakeModule, BeneficiaryModule],
+  imports: [VaultModule, KeepsakeModule, forwardRef(() => BeneficiaryModule)],
   controllers: [KeepsakeAssignmentController],
   providers: [
     {
