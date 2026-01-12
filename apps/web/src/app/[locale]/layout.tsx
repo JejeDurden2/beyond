@@ -5,6 +5,7 @@ import { Inter, Fraunces } from 'next/font/google';
 import { locales, type Locale } from '../../../i18n.config';
 import { AuthProvider } from '@/hooks/use-auth';
 import { QueryProvider } from '@/providers';
+import '../globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -29,12 +30,12 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
 
   return (
     <html lang={locale}>
       <body className={`${inter.variable} ${fraunces.variable} font-sans antialiased`}>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={messages} locale={locale}>
           <QueryProvider>
             <AuthProvider>{children}</AuthProvider>
           </QueryProvider>
