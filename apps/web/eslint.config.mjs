@@ -18,7 +18,7 @@ const compat = new FlatCompat({
 });
 
 export default [
-  // Base config for all files
+  // Ignored files and directories
   {
     ignores: [
       '**/node_modules/**',
@@ -26,15 +26,17 @@ export default [
       '**/dist/**',
       '**/build/**',
       '**/.turbo/**',
+      '**/*.config.js', // Ignore JS config files
+      '**/*.config.mjs', // Ignore MJS config files
     ],
   },
 
-  // JavaScript/TypeScript files
+  // TypeScript/TSX files in src (with type checking)
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     plugins: {
       '@typescript-eslint': typescriptEslint,
-      'react': reactPlugin,
+      react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'jsx-a11y': jsxA11yPlugin,
       '@next/next': nextPlugin,
@@ -85,21 +87,28 @@ export default [
       // Accessibility rules
       'jsx-a11y/anchor-is-valid': 'off',
 
-      // Next.js rules (from @next/eslint-plugin-next)
+      // Next.js rules
       '@next/next/no-html-link-for-pages': 'error',
       '@next/next/no-img-element': 'warn',
     },
   },
 
-  // Configuration files
+  // TypeScript config files (no type checking)
   {
-    files: ['**/*.config.{js,mjs,ts}'],
+    files: ['**/*.config.ts'],
+    plugins: {
+      '@typescript-eslint': typescriptEslint,
+    },
     languageOptions: {
-      globals: {
-        module: 'readonly',
-        require: 'readonly',
-        __dirname: 'readonly',
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
       },
+    },
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ];

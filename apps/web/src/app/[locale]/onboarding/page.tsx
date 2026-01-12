@@ -62,7 +62,6 @@ export default function OnboardingPage() {
   useEffect(() => {
     if (Object.keys(data).length > 0) {
       // Don't save avatarFile to localStorage (File objects can't be serialized)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { avatarFile: _, ...savableData } = data;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savableData));
     }

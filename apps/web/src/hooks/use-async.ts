@@ -45,7 +45,6 @@ export function useAsync<T>(
     if (immediate) {
       execute();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [execute, immediate]);
 
   return { ...state, refetch: execute };
