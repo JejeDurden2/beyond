@@ -19,6 +19,20 @@
     "resetPassword": {
       "title": "Réinitialiser le mot de passe - Beyond",
       "description": "Créez un nouveau mot de passe pour votre compte Beyond."
+    },
+    "legal": {
+      "terms": {
+        "title": "Conditions d'utilisation - Beyond",
+        "description": "Consultez les conditions d'utilisation de Beyond, notre plateforme d'héritage numérique."
+      },
+      "disclaimer": {
+        "title": "Avertissements légaux - Beyond",
+        "description": "Informations importantes sur les limitations et responsabilités de Beyond."
+      },
+      "privacy": {
+        "title": "Politique de confidentialité - Beyond",
+        "description": "Comment Beyond protège vos données et respecte votre vie privée (RGPD)."
+      }
     }
   },
   "common": {
@@ -96,6 +110,26 @@
     "cta": {
       "title": "Commencez à préserver ce qui compte",
       "description": "Créez votre coffre aujourd'hui. Votre héritage mérite d'être protégé."
+    },
+    "disclaimer": {
+      "title": "Quelques points importants",
+      "subtitle": "Beyond vous aide à préserver vos souvenirs, mais il y a certaines choses à savoir.",
+      "items": {
+        "notLegal": {
+          "title": "Ce n'est pas un testament",
+          "description": "Beyond préserve vos souvenirs et messages, mais n'a aucune valeur légale. Pour un testament officiel, consultez un notaire."
+        },
+        "privacy": {
+          "title": "Vos données sont protégées",
+          "description": "Chiffrement de bout en bout, conformité RGPD. Vous gardez le contrôle total de vos données."
+        },
+        "overseer": {
+          "title": "Choisissez avec soin",
+          "description": "Votre surveillant aura accès à vos contenus. Choisissez quelqu'un de totalement fiable."
+        }
+      },
+      "cta": "En savoir plus",
+      "ctaLink": "/legal/disclaimer"
     },
     "footer": {
       "tagline": "Une plateforme d'héritage numérique sécurisée"
@@ -416,7 +450,12 @@
       "subtitle": "Vous êtes sur le point de créer quelque chose de précieux : un espace pour préserver ce qui compte, pour ceux qui comptent.",
       "cta": "Commencer",
       "trust": "Vos données sont chiffrées. Personne, pas même nous, ne peut accéder à vos contenus.",
-      "disclaimer": "Beyond n'est pas un service notarial. Pour tous documents officiels relatifs à votre succession ou héritage, veuillez consulter un notaire."
+      "disclaimer": "Beyond n'est pas un service notarial. Pour tous documents officiels relatifs à votre succession ou héritage, veuillez consulter un notaire.",
+      "disclaimers": {
+        "security": "Vos données sont chiffrées de bout en bout. Personne, pas même nous, ne peut lire vos contenus.",
+        "notLegal": "Beyond n'est pas un service notarial. Pour des documents officiels d'héritage, consultez un notaire.",
+        "learnMore": "En savoir plus sur nos engagements"
+      }
     },
     "identity": {
       "title": "Comment vous appelez-vous ?",
@@ -496,6 +535,157 @@
       "change": "Changer la photo",
       "remove": "Supprimer",
       "uploading": "Envoi en cours..."
+    }
+  },
+  "legal": {
+    "nav": {
+      "terms": "Conditions d'utilisation",
+      "disclaimer": "Avertissements légaux",
+      "privacy": "Confidentialité"
+    },
+    "footer": {
+      "about": "À propos",
+      "aboutDescription": "Beyond vous aide à préserver vos messages, photos et volontés pour vos proches dans un coffre numérique sécurisé.",
+      "legal": "Légal",
+      "contact": "Contact",
+      "contactEmail": "contact@beyond.fr",
+      "copyright": "© {year} Beyond. Tous droits réservés."
+    },
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "lastUpdated": "Dernière mise à jour : {date}",
+      "sections": {
+        "service": {
+          "title": "À propos du service",
+          "content": "Beyond est une plateforme qui vous permet de préserver et transmettre vos souvenirs, messages et volontés à vos proches. Le service est fourni tel quel, et nous nous efforçons d'assurer sa disponibilité et sa sécurité dans les limites techniques raisonnables."
+        },
+        "account": {
+          "title": "Votre compte",
+          "content": "Vous êtes responsable de la confidentialité de vos identifiants de connexion. Toute activité effectuée depuis votre compte est sous votre responsabilité. Vous devez nous informer immédiatement de toute utilisation non autorisée de votre compte."
+        },
+        "content": {
+          "title": "Votre contenu",
+          "content": "Vous conservez tous les droits sur les contenus que vous ajoutez à Beyond. Vous garantissez avoir les droits nécessaires sur ces contenus et qu'ils ne violent aucune loi. Nous ne revendiquons aucun droit sur vos contenus et ne les utilisons que pour vous fournir le service."
+        },
+        "liability": {
+          "title": "Limitation de responsabilité",
+          "content": "Beyond fait de son mieux pour assurer la sécurité et la disponibilité du service, mais ne peut garantir une disponibilité à 100%. Nous ne sommes pas responsables des pertes de données dues à des événements hors de notre contrôle (catastrophes naturelles, pannes majeures d'infrastructures, etc.)."
+        },
+        "termination": {
+          "title": "Résiliation",
+          "content": "Vous pouvez supprimer votre compte à tout moment depuis vos paramètres. Nous nous réservons le droit de suspendre ou fermer un compte en cas de violation de ces conditions ou d'utilisation abusive du service."
+        }
+      }
+    },
+    "disclaimer": {
+      "title": "Avertissements légaux",
+      "intro": "Il est important de bien comprendre ce qu'est Beyond et ce qu'il n'est pas. Voici quelques points essentiels à connaître avant d'utiliser notre service.",
+      "sections": {
+        "notLegal": {
+          "title": "Beyond n'est pas un service légal",
+          "items": [
+            "Ce n'est pas un testament ni un document juridique officiel",
+            "Beyond ne remplace pas les services d'un notaire ou d'un avocat",
+            "Les contenus que vous créez sur Beyond n'ont aucune valeur juridique pour votre succession",
+            "Pour des documents officiels concernant votre héritage, patrimoine ou succession, consultez un professionnel du droit"
+          ]
+        },
+        "privacy": {
+          "title": "Protection de vos données",
+          "items": [
+            "Vos contenus sont chiffrés de bout en bout — personne, pas même nous, ne peut les lire",
+            "Nous ne vendons jamais vos données à des tiers",
+            "Vous gardez le contrôle total : vous pouvez modifier ou supprimer vos contenus à tout moment",
+            "Nous sommes conformes au RGPD et respectons votre vie privée"
+          ]
+        },
+        "responsibility": {
+          "title": "Votre responsabilité",
+          "items": [
+            "Vous êtes responsable des contenus que vous ajoutez sur Beyond",
+            "Assurez-vous que vos contenus ne violent aucune loi (diffamation, droits d'auteur, etc.)",
+            "Ne partagez pas de contenus illégaux, haineux ou qui pourraient nuire à autrui",
+            "Vérifiez que vous avez les droits sur les photos, vidéos ou documents que vous téléversez"
+          ]
+        },
+        "technical": {
+          "title": "Limitations techniques",
+          "items": [
+            "Beyond est un service en ligne qui nécessite une connexion internet pour y accéder",
+            "Nous faisons de notre mieux pour assurer la disponibilité du service, mais des interruptions peuvent survenir",
+            "Nous recommandons de conserver une copie locale de vos contenus les plus importants",
+            "Les formats de fichiers supportés peuvent évoluer avec le temps"
+          ]
+        },
+        "overseer": {
+          "title": "Choisir un surveillant de confiance",
+          "items": [
+            "Le surveillant que vous désignez aura accès à vos contenus selon les règles que vous aurez définies",
+            "Choisissez quelqu'un en qui vous avez une confiance absolue",
+            "Expliquez-lui clairement son rôle et vos souhaits concernant la transmission de vos contenus",
+            "Vous pouvez changer de surveillant à tout moment depuis vos paramètres"
+          ]
+        }
+      }
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "lastUpdated": "Dernière mise à jour : {date}",
+      "sections": {
+        "dataCollection": {
+          "title": "Données collectées",
+          "items": [
+            "Informations de compte : email, nom, prénom, photo de profil (optionnelle)",
+            "Contenus que vous créez : lettres, messages, photos, vidéos, documents",
+            "Informations techniques : logs de connexion, adresse IP, type de navigateur",
+            "Cookies strictement nécessaires au fonctionnement du service"
+          ]
+        },
+        "dataUse": {
+          "title": "Utilisation des données",
+          "items": [
+            "Fournir et améliorer le service Beyond",
+            "Vous authentifier et sécuriser votre compte",
+            "Vous envoyer des notifications importantes concernant votre compte",
+            "Respecter nos obligations légales"
+          ]
+        },
+        "encryption": {
+          "title": "Chiffrement et sécurité",
+          "items": [
+            "Tous vos contenus sont chiffrés de bout en bout avec des algorithmes standards de l'industrie",
+            "Vos mots de passe sont hachés avec bcrypt — nous ne pouvons pas les lire",
+            "Les communications entre votre navigateur et nos serveurs sont sécurisées par HTTPS",
+            "Nous effectuons des audits de sécurité réguliers"
+          ]
+        },
+        "rights": {
+          "title": "Vos droits (RGPD)",
+          "items": [
+            "Droit d'accès : vous pouvez consulter toutes vos données",
+            "Droit de rectification : vous pouvez modifier vos informations à tout moment",
+            "Droit à l'effacement : vous pouvez supprimer votre compte et toutes vos données",
+            "Droit à la portabilité : vous pouvez exporter vos données dans un format standard"
+          ]
+        },
+        "retention": {
+          "title": "Conservation des données",
+          "items": [
+            "Vos données sont conservées tant que votre compte est actif",
+            "Si vous supprimez votre compte, toutes vos données sont supprimées sous 30 jours",
+            "Les logs techniques sont conservés 12 mois maximum pour des raisons de sécurité",
+            "Les sauvegardes sont automatiquement supprimées après 90 jours"
+          ]
+        },
+        "cookies": {
+          "title": "Cookies",
+          "items": [
+            "Nous utilisons uniquement des cookies essentiels au fonctionnement du service (session, authentification)",
+            "Nous n'utilisons pas de cookies publicitaires ou de tracking",
+            "Vous pouvez configurer votre navigateur pour refuser les cookies, mais certaines fonctionnalités pourraient ne pas fonctionner"
+          ]
+        }
+      }
     }
   }
 }

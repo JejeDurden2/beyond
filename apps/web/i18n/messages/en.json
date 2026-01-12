@@ -19,6 +19,20 @@
     "resetPassword": {
       "title": "Reset Password - Beyond",
       "description": "Create a new password for your Beyond account."
+    },
+    "legal": {
+      "terms": {
+        "title": "Terms of Service - Beyond",
+        "description": "View the terms of service for Beyond, our digital legacy platform."
+      },
+      "disclaimer": {
+        "title": "Legal Disclaimer - Beyond",
+        "description": "Important information about Beyond's limitations and responsibilities."
+      },
+      "privacy": {
+        "title": "Privacy Policy - Beyond",
+        "description": "How Beyond protects your data and respects your privacy (GDPR compliant)."
+      }
     }
   },
   "common": {
@@ -96,6 +110,26 @@
     "cta": {
       "title": "Start preserving what matters",
       "description": "Create your vault today. Your legacy deserves to be protected."
+    },
+    "disclaimer": {
+      "title": "A few important things",
+      "subtitle": "Beyond helps you preserve your memories, but there are some things to know.",
+      "items": {
+        "notLegal": {
+          "title": "This is not a will",
+          "description": "Beyond preserves your memories and messages, but has no legal validity. For an official will, consult a notary."
+        },
+        "privacy": {
+          "title": "Your data is protected",
+          "description": "End-to-end encryption, GDPR compliance. You maintain full control of your data."
+        },
+        "overseer": {
+          "title": "Choose carefully",
+          "description": "Your overseer will have access to your content. Choose someone you trust completely."
+        }
+      },
+      "cta": "Learn more",
+      "ctaLink": "/legal/disclaimer"
     },
     "footer": {
       "tagline": "A secure digital legacy platform"
@@ -416,7 +450,12 @@
       "subtitle": "You're about to create something precious: a space to preserve what matters, for those who matter.",
       "cta": "Get Started",
       "trust": "Your data is encrypted. No one, not even us, can access your content.",
-      "disclaimer": "Beyond is not a notary service. For all official documents related to your estate or inheritance, please consult a notary."
+      "disclaimer": "Beyond is not a notary service. For all official documents related to your estate or inheritance, please consult a notary.",
+      "disclaimers": {
+        "security": "Your data is end-to-end encrypted. No one, not even us, can read your content.",
+        "notLegal": "Beyond is not a notary service. For official estate documents, consult a notary.",
+        "learnMore": "Learn more about our commitments"
+      }
     },
     "identity": {
       "title": "What's your name?",
@@ -496,6 +535,157 @@
       "change": "Change photo",
       "remove": "Remove",
       "uploading": "Uploading..."
+    }
+  },
+  "legal": {
+    "nav": {
+      "terms": "Terms of Service",
+      "disclaimer": "Legal Disclaimer",
+      "privacy": "Privacy"
+    },
+    "footer": {
+      "about": "About",
+      "aboutDescription": "Beyond helps you preserve your messages, photos, and wishes for loved ones in a secure digital vault.",
+      "legal": "Legal",
+      "contact": "Contact",
+      "contactEmail": "contact@beyond.com",
+      "copyright": "© {year} Beyond. All rights reserved."
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated: {date}",
+      "sections": {
+        "service": {
+          "title": "About the Service",
+          "content": "Beyond is a platform that allows you to preserve and transmit your memories, messages, and wishes to your loved ones. The service is provided as is, and we strive to ensure its availability and security within reasonable technical limits."
+        },
+        "account": {
+          "title": "Your Account",
+          "content": "You are responsible for the confidentiality of your login credentials. Any activity from your account is your responsibility. You must notify us immediately of any unauthorized use of your account."
+        },
+        "content": {
+          "title": "Your Content",
+          "content": "You retain all rights to the content you add to Beyond. You warrant that you have the necessary rights to this content and that it does not violate any laws. We claim no rights to your content and use it only to provide you with the service."
+        },
+        "liability": {
+          "title": "Limitation of Liability",
+          "content": "Beyond does its best to ensure service security and availability, but cannot guarantee 100% uptime. We are not responsible for data loss due to events beyond our control (natural disasters, major infrastructure failures, etc.)."
+        },
+        "termination": {
+          "title": "Termination",
+          "content": "You may delete your account at any time from your settings. We reserve the right to suspend or close an account in case of violation of these terms or service abuse."
+        }
+      }
+    },
+    "disclaimer": {
+      "title": "Legal Disclaimer",
+      "intro": "It's important to understand what Beyond is and what it is not. Here are some essential points to know before using our service.",
+      "sections": {
+        "notLegal": {
+          "title": "Beyond is not a legal service",
+          "items": [
+            "This is not a will or official legal document",
+            "Beyond does not replace notary or attorney services",
+            "Content you create on Beyond has no legal value for your estate",
+            "For official documents concerning your inheritance, estate, or succession, consult a legal professional"
+          ]
+        },
+        "privacy": {
+          "title": "Data Protection",
+          "items": [
+            "Your content is end-to-end encrypted — no one, not even us, can read it",
+            "We never sell your data to third parties",
+            "You maintain full control: you can modify or delete your content at any time",
+            "We are GDPR compliant and respect your privacy"
+          ]
+        },
+        "responsibility": {
+          "title": "Your Responsibility",
+          "items": [
+            "You are responsible for the content you add to Beyond",
+            "Ensure your content does not violate any laws (defamation, copyright, etc.)",
+            "Do not share illegal, hateful, or harmful content",
+            "Verify that you have the rights to photos, videos, or documents you upload"
+          ]
+        },
+        "technical": {
+          "title": "Technical Limitations",
+          "items": [
+            "Beyond is an online service that requires an internet connection",
+            "We do our best to ensure service availability, but interruptions may occur",
+            "We recommend keeping a local copy of your most important content",
+            "Supported file formats may evolve over time"
+          ]
+        },
+        "overseer": {
+          "title": "Choosing a Trusted Overseer",
+          "items": [
+            "The overseer you designate will have access to your content according to the rules you define",
+            "Choose someone you trust absolutely",
+            "Clearly explain their role and your wishes regarding content transmission",
+            "You can change your overseer at any time from your settings"
+          ]
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: {date}",
+      "sections": {
+        "dataCollection": {
+          "title": "Data Collected",
+          "items": [
+            "Account information: email, first name, last name, profile photo (optional)",
+            "Content you create: letters, messages, photos, videos, documents",
+            "Technical information: connection logs, IP address, browser type",
+            "Cookies strictly necessary for service operation"
+          ]
+        },
+        "dataUse": {
+          "title": "Data Usage",
+          "items": [
+            "Provide and improve the Beyond service",
+            "Authenticate you and secure your account",
+            "Send you important notifications about your account",
+            "Comply with our legal obligations"
+          ]
+        },
+        "encryption": {
+          "title": "Encryption and Security",
+          "items": [
+            "All your content is end-to-end encrypted with industry-standard algorithms",
+            "Your passwords are hashed with bcrypt — we cannot read them",
+            "Communications between your browser and our servers are secured by HTTPS",
+            "We conduct regular security audits"
+          ]
+        },
+        "rights": {
+          "title": "Your Rights (GDPR)",
+          "items": [
+            "Right of access: you can view all your data",
+            "Right to rectification: you can modify your information at any time",
+            "Right to erasure: you can delete your account and all your data",
+            "Right to portability: you can export your data in a standard format"
+          ]
+        },
+        "retention": {
+          "title": "Data Retention",
+          "items": [
+            "Your data is retained as long as your account is active",
+            "If you delete your account, all your data is deleted within 30 days",
+            "Technical logs are retained for a maximum of 12 months for security reasons",
+            "Backups are automatically deleted after 90 days"
+          ]
+        },
+        "cookies": {
+          "title": "Cookies",
+          "items": [
+            "We only use cookies essential to service operation (session, authentication)",
+            "We do not use advertising or tracking cookies",
+            "You can configure your browser to refuse cookies, but some features may not work"
+          ]
+        }
+      }
     }
   }
 }
