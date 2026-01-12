@@ -3,9 +3,10 @@
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
-import { Header } from '@/components/layout';
-import { Logo, Lock, Globe, ShieldCheck } from '@/components/ui';
+import { Header, Footer } from '@/components/layout';
+import { Lock, Globe, ShieldCheck } from '@/components/ui';
 import { Mail, Camera, Star } from 'lucide-react';
+import { DisclaimerBanner } from '@/components/features/legal';
 
 export function HomePage() {
   const { isAuthenticated } = useAuth();
@@ -118,6 +119,9 @@ export function HomePage() {
           </div>
         </section>
 
+        {/* Disclaimer Section */}
+        <DisclaimerBanner />
+
         {/* CTA Section */}
         <section className="py-24 px-6 bg-warm-gray">
           <div className="max-w-2xl mx-auto text-center space-y-8">
@@ -135,13 +139,7 @@ export function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-warm-gray bg-cream">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate">
-          <Logo variant="text" className="h-6" />
-          <span>{t('footer.tagline')}</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
