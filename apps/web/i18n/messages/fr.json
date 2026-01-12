@@ -125,7 +125,7 @@
         },
         "overseer": {
           "title": "Choisissez avec soin",
-          "description": "Votre surveillant aura accès à vos contenus. Choisissez quelqu'un de totalement fiable."
+          "description": "Votre personne de confiance aura accès à vos contenus. Choisissez quelqu'un de totalement fiable."
         }
       },
       "cta": "En savoir plus",
@@ -618,12 +618,12 @@
           ]
         },
         "overseer": {
-          "title": "Choisir un surveillant de confiance",
+          "title": "Désigner une personne de confiance",
           "items": [
-            "Le surveillant que vous désignez aura accès à vos contenus selon les règles que vous aurez définies",
+            "La personne de confiance que vous désignez aura accès à vos contenus selon les règles que vous aurez définies",
             "Choisissez quelqu'un en qui vous avez une confiance absolue",
             "Expliquez-lui clairement son rôle et vos souhaits concernant la transmission de vos contenus",
-            "Vous pouvez changer de surveillant à tout moment depuis vos paramètres"
+            "Vous pouvez changer de personne de confiance à tout moment depuis vos paramètres"
           ]
         }
       }
