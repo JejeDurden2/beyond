@@ -8,7 +8,7 @@ import { Lock, Globe, ShieldCheck } from '@/components/ui';
 import { Mail, Camera, Star } from 'lucide-react';
 import { DisclaimerBanner } from '@/components/features/legal';
 
-export function HomePage() {
+export function HomePage(): React.ReactElement {
   const { isAuthenticated } = useAuth();
   const t = useTranslations('landing');
 
@@ -144,15 +144,13 @@ export function HomePage() {
   );
 }
 
-function TrustIndicator({
-  icon,
-  title,
-  description,
-}: {
+interface TrustIndicatorProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-}) {
+}
+
+function TrustIndicator({ icon, title, description }: TrustIndicatorProps): React.ReactElement {
   return (
     <div className="text-center space-y-3">
       <div className="w-12 h-12 mx-auto bg-warm-gray rounded-xl flex items-center justify-center text-navy-light">
@@ -164,15 +162,13 @@ function TrustIndicator({
   );
 }
 
-function StepCard({
-  number,
-  title,
-  description,
-}: {
+interface StepCardProps {
   number: string;
   title: string;
   description: string;
-}) {
+}
+
+function StepCard({ number, title, description }: StepCardProps): React.ReactElement {
   return (
     <div className="text-center space-y-4">
       <div className="w-10 h-10 mx-auto bg-gold-heritage text-cream rounded-full flex items-center justify-center font-serif-brand text-lg">
@@ -184,15 +180,13 @@ function StepCard({
   );
 }
 
-function FeatureCard({
-  icon,
-  title,
-  description,
-}: {
+interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-}) {
+}
+
+function FeatureCard({ icon, title, description }: FeatureCardProps): React.ReactElement {
   return (
     <div className="bg-warm-gray rounded-2xl border border-border/50 shadow-soft p-8 transition-shadow duration-200 ease-out hover:shadow-soft-md">
       <div className="text-navy-light mb-4">{icon}</div>

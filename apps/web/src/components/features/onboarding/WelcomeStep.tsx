@@ -9,7 +9,7 @@ interface WelcomeStepProps {
   onNext: () => void;
 }
 
-export function WelcomeStep({ onNext }: WelcomeStepProps) {
+export function WelcomeStep({ onNext }: WelcomeStepProps): React.ReactElement {
   const t = useTranslations('onboarding');
 
   return (

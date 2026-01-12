@@ -1,6 +1,12 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
+const LEGAL_LINKS = [
+  { href: '/legal/terms', labelKey: 'nav.terms' },
+  { href: '/legal/disclaimer', labelKey: 'nav.disclaimer' },
+  { href: '/legal/privacy', labelKey: 'nav.privacy' },
+] as const;
+
 export function Footer(): React.ReactElement {
   const t = useTranslations('legal');
   const currentYear = new Date().getFullYear();
@@ -20,30 +26,16 @@ export function Footer(): React.ReactElement {
             {t('footer.legal')}
           </h3>
           <ul className="space-y-2">
-            <li>
-              <Link
-                href="/legal/terms"
-                className="text-sm text-navy-light transition-colors hover:text-gold-heritage"
-              >
-                {t('nav.terms')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/legal/disclaimer"
-                className="text-sm text-navy-light transition-colors hover:text-gold-heritage"
-              >
-                {t('nav.disclaimer')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/legal/privacy"
-                className="text-sm text-navy-light transition-colors hover:text-gold-heritage"
-              >
-                {t('nav.privacy')}
-              </Link>
-            </li>
+            {LEGAL_LINKS.map(({ href, labelKey }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-sm text-navy-light transition-colors hover:text-gold-heritage"
+                >
+                  {t(labelKey)}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 

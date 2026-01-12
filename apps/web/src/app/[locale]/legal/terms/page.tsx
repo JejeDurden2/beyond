@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { generatePageMetadata } from '@/lib/seo';
-import { LegalLayout } from '@/components/features/legal/LegalLayout';
-import { LegalSection } from '@/components/features/legal/LegalSection';
+import { LegalLayout, LegalSection } from '@/components/features/legal';
 import type { Locale } from '../../../../../i18n.config';
 
 interface TermsPageProps {

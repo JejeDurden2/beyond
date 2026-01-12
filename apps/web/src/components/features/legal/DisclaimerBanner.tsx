@@ -6,21 +6,9 @@ export function DisclaimerBanner(): React.ReactElement {
   const t = useTranslations('landing.disclaimer');
 
   const items = [
-    {
-      icon: ShieldCheck,
-      titleKey: 'items.notLegal.title' as const,
-      descKey: 'items.notLegal.description' as const,
-    },
-    {
-      icon: Lock,
-      titleKey: 'items.privacy.title' as const,
-      descKey: 'items.privacy.description' as const,
-    },
-    {
-      icon: Users,
-      titleKey: 'items.overseer.title' as const,
-      descKey: 'items.overseer.description' as const,
-    },
+    { icon: ShieldCheck, titleKey: 'items.notLegal.title', descKey: 'items.notLegal.description' },
+    { icon: Lock, titleKey: 'items.privacy.title', descKey: 'items.privacy.description' },
+    { icon: Users, titleKey: 'items.overseer.title', descKey: 'items.overseer.description' },
   ];
 
   return (
