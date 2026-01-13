@@ -1,6 +1,17 @@
-import { Controller, Get, Param, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  UseGuards,
+  Request,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '@/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { GetBeneficiaryDashboardQuery } from '../../application/queries/get-beneficiary-dashboard.query';
+import { DeclareDeathCommand } from '@/modules/vault/application/commands/declare-death.command';
 
 interface AuthenticatedRequest {
   user: {
@@ -10,10 +21,17 @@ interface AuthenticatedRequest {
   };
 }
 
+interface DeclareDeathDto {
+  vaultId: string;
+}
+
 @Controller('beneficiary/portal')
 @UseGuards(JwtAuthGuard)
 export class BeneficiaryPortalController {
-  constructor(private readonly getDashboardQuery: GetBeneficiaryDashboardQuery) {}
+  constructor(
+    private readonly getDashboardQuery: GetBeneficiaryDashboardQuery,
+    private readonly declareDeathCommand: DeclareDeathCommand,
+  ) {}
 
   @Get('dashboard')
   async getDashboard(@Request() req: AuthenticatedRequest) {
@@ -63,5 +81,24 @@ export class BeneficiaryPortalController {
 
     // TODO: Could create a BeneficiaryPortalAccess record here for audit trail
     return { success: true };
+  }
+
+  @Post('declare-death')
+  @HttpCode(HttpStatus.OK)
+  async declareDeath(@Body() dto: DeclareDeathDto, @Request() req: AuthenticatedRequest) {
+    const result = await this.declareDeathCommand.execute({
+      userId: req.user.sub,
+      vaultId: dto.vaultId,
+    });
+
+    if (result.isErr()) {
+      return { error: result.error };
+    }
+
+    return {
+      success: true,
+      declarationId: result.value.declarationId,
+      declaredAt: result.value.declaredAt.toISOString(),
+    };
   }
 }

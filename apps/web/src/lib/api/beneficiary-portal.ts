@@ -14,15 +14,26 @@ export interface BeneficiaryKeepsake {
   personalMessage?: string;
 }
 
+export interface LinkedVault {
+  vaultId: string;
+  vaultOwnerName: string;
+  isTrustedPersonFor: boolean;
+  deathDeclared: boolean;
+  deathDeclaredAt?: string;
+}
+
 export interface BeneficiaryDashboard {
   keepsakes: BeneficiaryKeepsake[];
   profile: {
     isTrustedPerson: boolean;
-    linkedVaults: Array<{
-      vaultId: string;
-      vaultOwnerName: string;
-    }>;
+    linkedVaults: LinkedVault[];
   };
+}
+
+export interface DeclareDeathResponse {
+  success: boolean;
+  declarationId: string;
+  declaredAt: string;
 }
 
 export interface PendingBeneficiary {
@@ -118,5 +129,12 @@ export async function getPendingBeneficiaries(vaultId: string): Promise<PendingB
 export async function resendInvitation(invitationId: string): Promise<void> {
   return apiClient<void>(`/beneficiary/invitations/${invitationId}/resend`, {
     method: 'POST',
+  });
+}
+
+export async function declareDeath(vaultId: string): Promise<DeclareDeathResponse> {
+  return apiClient<DeclareDeathResponse>('/beneficiary/portal/declare-death', {
+    method: 'POST',
+    body: JSON.stringify({ vaultId }),
   });
 }

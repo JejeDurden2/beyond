@@ -846,6 +846,29 @@
       "loadFailed": "Unable to load keepsakes",
       "keepsakeNotFound": "This keepsake does not exist or is not intended for you",
       "unauthorized": "You do not have access to this keepsake"
+    },
+    "deathDeclaration": {
+      "panel": {
+        "title": "Death Declaration",
+        "subtitle": "As a trusted person, you can declare the vault owner's death to trigger the delivery of keepsakes.",
+        "vault": {
+          "active": "Active vault",
+          "declared": "Death declared - keepsakes are being delivered",
+          "declaredAt": "Declared on {date}",
+          "declareButton": "Declare death"
+        },
+        "confirm": {
+          "title": "Confirm the death of {name}",
+          "message": "This action is irreversible. Keepsakes will be sent to beneficiaries according to the configured delays.",
+          "confirmButton": "I confirm",
+          "declaring": "Declaring...",
+          "cancel": "Cancel"
+        },
+        "notice": "Beneficiaries will receive their keepsakes after a security delay. The trusted person is notified first, then other beneficiaries."
+      },
+      "errors": {
+        "unknown": "An error occurred. Please try again."
+      }
     }
   }
 }

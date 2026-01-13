@@ -842,6 +842,29 @@
         "empty": "Aucun bénéficiaire en attente"
       }
     },
+    "deathDeclaration": {
+      "panel": {
+        "title": "Déclaration de décès",
+        "subtitle": "En tant que personne de confiance, vous pouvez déclarer le décès du propriétaire du coffre pour déclencher l'envoi des souvenirs.",
+        "vault": {
+          "active": "Coffre actif",
+          "declared": "Décès déclaré - les souvenirs sont en cours d'envoi",
+          "declaredAt": "Déclaré le {date}",
+          "declareButton": "Déclarer le décès"
+        },
+        "confirm": {
+          "title": "Confirmer le décès de {name}",
+          "message": "Cette action est irréversible. Les souvenirs seront envoyés aux bénéficiaires selon les délais configurés.",
+          "confirmButton": "Je confirme",
+          "declaring": "Déclaration...",
+          "cancel": "Annuler"
+        },
+        "notice": "Les bénéficiaires recevront leurs souvenirs après un délai de sécurité. La personne de confiance est notifiée en premier, puis les autres bénéficiaires."
+      },
+      "errors": {
+        "unknown": "Une erreur est survenue. Veuillez réessayer."
+      }
+    },
     "errors": {
       "loadFailed": "Impossible de charger les souvenirs",
       "keepsakeNotFound": "Ce souvenir n'existe pas ou ne vous est pas destiné",

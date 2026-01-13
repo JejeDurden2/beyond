@@ -170,10 +170,11 @@ model Beneficiary {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  assignments   KeepsakeAssignment[]
-  invitations   BeneficiaryInvitation[]
-  portalAccess  BeneficiaryPortalAccess[]
-  notifications NotificationLog[]
+  assignments       KeepsakeAssignment[]
+  invitations       BeneficiaryInvitation[]
+  portalAccess      BeneficiaryPortalAccess[]
+  notifications     NotificationLog[]
+  deathDeclarations DeathDeclaration[]
 
   @@unique([vaultId, email])
   @@index([vaultId])
@@ -222,15 +223,19 @@ model TrustedContact {
 }
 
 model DeathDeclaration {
-  id               String         @id @default(uuid())
-  vaultId          String
-  vault            Vault          @relation(fields: [vaultId], references: [id])
-  trustedContactId String
-  trustedContact   TrustedContact @relation(fields: [trustedContactId], references: [id])
-  declaredAt       DateTime       @default(now())
+  id               String          @id @default(uuid())
+  vaultId          String          @unique
+  vault            Vault           @relation(fields: [vaultId], references: [id])
+  // Declared by a beneficiary who is a trusted person
+  declaredById     String
+  declaredBy       Beneficiary     @relation(fields: [declaredById], references: [id])
+  declaredAt       DateTime        @default(now())
+  // Legacy field for backward compatibility with TrustedContact model
+  trustedContactId String?
+  trustedContact   TrustedContact? @relation(fields: [trustedContactId], references: [id])
 
-  @@unique([vaultId, trustedContactId])
   @@index([vaultId])
+  @@index([declaredById])
 }
 
 model PasswordResetToken {

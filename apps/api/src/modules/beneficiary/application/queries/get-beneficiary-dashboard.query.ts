@@ -38,6 +38,9 @@ export interface BeneficiaryKeepsakeDto {
 export interface LinkedVaultDto {
   vaultId: string;
   vaultOwnerName: string;
+  isTrustedPersonFor: boolean;
+  deathDeclared: boolean;
+  deathDeclaredAt?: string;
 }
 
 export interface BeneficiaryDashboardOutput {
@@ -87,6 +90,13 @@ export class GetBeneficiaryDashboardQuery {
       },
     });
 
+    // Get all death declarations for linked vaults
+    const vaultIds = beneficiaryRecords.map((b) => b.vaultId);
+    const deathDeclarations = await this.prisma.deathDeclaration.findMany({
+      where: { vaultId: { in: vaultIds } },
+    });
+    const deathDeclarationsByVault = new Map(deathDeclarations.map((d) => [d.vaultId, d]));
+
     const keepsakes: BeneficiaryKeepsakeDto[] = [];
     const linkedVaults: LinkedVaultDto[] = [];
     let isTrustedPerson = false;
@@ -106,9 +116,13 @@ export class GetBeneficiaryDashboardQuery {
 
         // Avoid duplicates
         if (!linkedVaults.find((v) => v.vaultId === beneficiary.vaultId)) {
+          const declaration = deathDeclarationsByVault.get(beneficiary.vaultId);
           linkedVaults.push({
             vaultId: beneficiary.vaultId,
             vaultOwnerName,
+            isTrustedPersonFor: beneficiary.isTrustedPerson,
+            deathDeclared: !!declaration,
+            deathDeclaredAt: declaration?.declaredAt.toISOString(),
           });
         }
       }

@@ -1,14 +1,24 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useQuery } from '@tanstack/react-query';
-import { getBeneficiaryDashboard, getPendingBeneficiaries, resendInvitation } from '@/lib/api';
-import { KeepsakeCard, TrustedPersonPanel } from '@/components/features/beneficiary';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  getBeneficiaryDashboard,
+  getPendingBeneficiaries,
+  resendInvitation,
+  declareDeath,
+} from '@/lib/api';
+import {
+  DeathDeclarationPanel,
+  KeepsakeCard,
+  TrustedPersonPanel,
+} from '@/components/features/beneficiary';
 import { Heart, Loader2 } from 'lucide-react';
 
 export function BeneficiaryPortalPage() {
   const t = useTranslations('beneficiary.portal');
   const tErrors = useTranslations('beneficiary.errors');
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['beneficiary-dashboard'],
@@ -24,10 +34,15 @@ export function BeneficiaryPortalPage() {
     enabled: !!data?.profile.isTrustedPerson && !!data?.profile.linkedVaults[0]?.vaultId,
   });
 
-  const handleResendInvitation = async (beneficiaryId: string) => {
+  async function handleResendInvitation(beneficiaryId: string): Promise<void> {
     await resendInvitation(beneficiaryId);
     await refetchPending();
-  };
+  }
+
+  async function handleDeclareDeath(vaultId: string): Promise<void> {
+    await declareDeath(vaultId);
+    await queryClient.invalidateQueries({ queryKey: ['beneficiary-dashboard'] });
+  }
 
   if (isLoading) {
     return (
@@ -72,7 +87,15 @@ export function BeneficiaryPortalPage() {
           )}
         </div>
 
-        {/* Trusted Person Panel */}
+        {/* Death Declaration Panel - shown for trusted persons */}
+        {data?.profile.isTrustedPerson && data?.profile.linkedVaults && (
+          <DeathDeclarationPanel
+            linkedVaults={data.profile.linkedVaults}
+            onDeclareDeath={handleDeclareDeath}
+          />
+        )}
+
+        {/* Trusted Person Panel - for managing invitations */}
         {data?.profile.isTrustedPerson &&
           pendingBeneficiaries &&
           pendingBeneficiaries.length > 0 && (
