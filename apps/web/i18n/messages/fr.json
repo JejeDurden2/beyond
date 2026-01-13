@@ -499,6 +499,35 @@
       "later": "Plus tard",
       "addAndFinish": "Ajouter et terminer"
     },
+    "trustedPerson": {
+      "title": "Votre personne de confiance",
+      "subtitle": "Pour que Beyond fonctionne, vous devez choisir quelqu'un de confiance qui saura quand le moment sera venu.",
+      "points": {
+        "role": {
+          "title": "Un rôle essentiel",
+          "description": "Votre personne de confiance sera la première informée. Elle pourra alors déclencher l'envoi de vos souvenirs à vos bénéficiaires."
+        },
+        "talk": {
+          "title": "Parlez-lui de Beyond",
+          "description": "Expliquez-lui votre démarche et le rôle qu'elle aura. C'est important qu'elle comprenne et accepte cette responsabilité."
+        },
+        "choose": {
+          "title": "Choisissez avec soin",
+          "description": "Cette personne doit être quelqu'un en qui vous avez une confiance absolue. Conjoint(e), enfant, ami(e) proche... à vous de décider."
+        }
+      },
+      "cta": {
+        "title": "Ajouter ma personne de confiance",
+        "subtitle": "Je suis prêt(e) à désigner cette personne"
+      },
+      "skipForNow": "Je ferai ça plus tard",
+      "later": "Plus tard",
+      "addAndFinish": "Ajouter et terminer",
+      "form": {
+        "title": "Qui est votre personne de confiance ?",
+        "subtitle": "Renseignez ses coordonnées. Elle recevra une invitation par email."
+      }
+    },
     "completion": {
       "title": "Votre coffre est prêt, {firstName}.",
       "subtitle": "Vous pouvez maintenant commencer à préserver ce qui compte pour vous.",

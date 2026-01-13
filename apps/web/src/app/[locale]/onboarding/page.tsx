@@ -8,14 +8,14 @@ import {
   WelcomeStep,
   IdentityStep,
   IntentionStep,
-  BeneficiaryStep,
+  TrustedPersonStep,
   CompletionStep,
 } from '@/components/features/onboarding';
 import { updateProfile, completeOnboarding, getAvatarUploadUrl } from '@/lib/api/users';
-import { createBeneficiary } from '@/lib/api/beneficiaries';
+import { createBeneficiary, setTrustedPerson } from '@/lib/api/beneficiaries';
 import type { Relationship } from '@/types';
 
-type Step = 'welcome' | 'identity' | 'intention' | 'beneficiary' | 'completion';
+type Step = 'welcome' | 'identity' | 'intention' | 'trustedPerson' | 'completion';
 type IntentionType = 'letters' | 'photos' | 'videos' | 'wishes' | 'gifts';
 
 interface OnboardingData {
@@ -25,9 +25,16 @@ interface OnboardingData {
   intentions?: IntentionType[];
 }
 
+interface TrustedPersonData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  relationship: Relationship;
+}
+
 const STORAGE_KEY = 'beyond_onboarding_data';
 
-export default function OnboardingPage() {
+export default function OnboardingPage(): React.ReactElement | null {
   const router = useRouter();
   const { user, refreshUser } = useAuth();
   const [step, setStep] = useState<Step>('welcome');
@@ -67,79 +74,8 @@ export default function OnboardingPage() {
     }
   }, [data]);
 
-  const uploadAvatar = useCallback(async (file: File): Promise<void> => {
-    const { uploadUrl } = await getAvatarUploadUrl(file.name, file.type);
-    await fetch(uploadUrl, {
-      method: 'PUT',
-      body: file,
-      headers: {
-        'Content-Type': file.type,
-      },
-    });
-  }, []);
-
-  const handleIdentityComplete = useCallback(
-    async (identityData: { firstName: string; lastName: string; avatarFile?: File }) => {
-      setData((prev) => ({ ...prev, ...identityData }));
-      setStep('intention');
-    },
-    [],
-  );
-
-  const handleIntentionComplete = useCallback((intentions: IntentionType[]) => {
-    setData((prev) => ({ ...prev, intentions }));
-    setStep('beneficiary');
-  }, []);
-
-  const handleIntentionSkip = useCallback(() => {
-    setStep('beneficiary');
-  }, []);
-
-  const handleBeneficiaryComplete = useCallback(
-    async (beneficiary: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      relationship: Relationship;
-    }) => {
-      setIsSubmitting(true);
-      try {
-        // Save profile only if we have data
-        if (data.firstName || data.lastName) {
-          await updateProfile({
-            ...(data.firstName && { firstName: data.firstName }),
-            ...(data.lastName && { lastName: data.lastName }),
-          });
-        }
-
-        // Upload avatar if provided
-        if (data.avatarFile) {
-          await uploadAvatar(data.avatarFile);
-        }
-
-        // Create beneficiary
-        await createBeneficiary(beneficiary);
-
-        // Complete onboarding
-        await completeOnboarding();
-        await refreshUser();
-
-        // Clear localStorage
-        localStorage.removeItem(STORAGE_KEY);
-
-        setStep('completion');
-      } catch (error) {
-        console.error('Failed to complete onboarding:', error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    [data, uploadAvatar, refreshUser],
-  );
-
-  const handleBeneficiarySkip = useCallback(async () => {
-    setIsSubmitting(true);
-    try {
+  const saveProfileAndComplete = useCallback(
+    async (trustedPerson?: TrustedPersonData): Promise<void> => {
       // Save profile only if we have data
       if (data.firstName || data.lastName) {
         await updateProfile({
@@ -150,7 +86,18 @@ export default function OnboardingPage() {
 
       // Upload avatar if provided
       if (data.avatarFile) {
-        await uploadAvatar(data.avatarFile);
+        const { uploadUrl } = await getAvatarUploadUrl(data.avatarFile.name, data.avatarFile.type);
+        await fetch(uploadUrl, {
+          method: 'PUT',
+          body: data.avatarFile,
+          headers: { 'Content-Type': data.avatarFile.type },
+        });
+      }
+
+      // Create beneficiary and set as trusted person if provided
+      if (trustedPerson) {
+        const beneficiary = await createBeneficiary(trustedPerson);
+        await setTrustedPerson(beneficiary.id, true);
       }
 
       // Complete onboarding
@@ -159,22 +106,62 @@ export default function OnboardingPage() {
 
       // Clear localStorage
       localStorage.removeItem(STORAGE_KEY);
+    },
+    [data, refreshUser],
+  );
 
+  function handleIdentityComplete(identityData: {
+    firstName: string;
+    lastName: string;
+    avatarFile?: File;
+  }): void {
+    setData((prev) => ({ ...prev, ...identityData }));
+    setStep('intention');
+  }
+
+  function handleIntentionComplete(intentions: IntentionType[]): void {
+    setData((prev) => ({ ...prev, intentions }));
+    setStep('trustedPerson');
+  }
+
+  function handleIntentionSkip(): void {
+    setStep('trustedPerson');
+  }
+
+  const handleTrustedPersonComplete = useCallback(
+    async (trustedPerson: TrustedPersonData) => {
+      setIsSubmitting(true);
+      try {
+        await saveProfileAndComplete(trustedPerson);
+        setStep('completion');
+      } catch (error) {
+        console.error('Failed to complete onboarding:', error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [saveProfileAndComplete],
+  );
+
+  const handleTrustedPersonSkip = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      await saveProfileAndComplete();
       setStep('completion');
     } catch (error) {
       console.error('Failed to complete onboarding:', error);
     } finally {
       setIsSubmitting(false);
     }
-  }, [data, uploadAvatar, refreshUser]);
+  }, [saveProfileAndComplete]);
 
-  const handleCreateKeepsake = useCallback(() => {
+  function handleCreateKeepsake(): void {
     router.push('/keepsakes/new');
-  }, [router]);
+  }
 
-  const handleExploreDashboard = useCallback(() => {
+  function handleExploreDashboard(): void {
     router.push('/dashboard');
-  }, [router]);
+  }
 
   // Don't render anything if user has already completed onboarding (but allow completion step)
   if (user?.onboardingCompletedAt && step !== 'completion') {
@@ -205,11 +192,11 @@ export default function OnboardingPage() {
         />
       )}
 
-      {step === 'beneficiary' && (
-        <BeneficiaryStep
+      {step === 'trustedPerson' && (
+        <TrustedPersonStep
           onBack={() => setStep('intention')}
-          onNext={handleBeneficiaryComplete}
-          onSkip={handleBeneficiarySkip}
+          onNext={handleTrustedPersonComplete}
+          onSkip={handleTrustedPersonSkip}
         />
       )}
 

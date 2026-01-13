@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { DeliverKeepsakeCommand } from '../../application/commands/deliver-keepsake.command';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class DateTriggerScheduler {
 
   constructor(private readonly deliverCommand: DeliverKeepsakeCommand) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron('0 9 * * *') // Daily at 9:00 AM
   async handleDateTriggers(): Promise<void> {
     this.logger.log('Running scheduled date trigger check');
 

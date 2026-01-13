@@ -499,6 +499,35 @@
       "later": "Later",
       "addAndFinish": "Add and finish"
     },
+    "trustedPerson": {
+      "title": "Your trusted person",
+      "subtitle": "For Beyond to work, you need to choose someone you trust who will know when the time has come.",
+      "points": {
+        "role": {
+          "title": "An essential role",
+          "description": "Your trusted person will be the first to be notified. They can then trigger the delivery of your keepsakes to your beneficiaries."
+        },
+        "talk": {
+          "title": "Talk to them about Beyond",
+          "description": "Explain your approach and the role they will have. It's important that they understand and accept this responsibility."
+        },
+        "choose": {
+          "title": "Choose carefully",
+          "description": "This person must be someone you absolutely trust. Spouse, child, close friend... you decide."
+        }
+      },
+      "cta": {
+        "title": "Add my trusted person",
+        "subtitle": "I'm ready to designate this person"
+      },
+      "skipForNow": "I'll do this later",
+      "later": "Later",
+      "addAndFinish": "Add and finish",
+      "form": {
+        "title": "Who is your trusted person?",
+        "subtitle": "Enter their details. They will receive an email invitation."
+      }
+    },
     "completion": {
       "title": "Your vault is ready, {firstName}.",
       "subtitle": "You can now start preserving what matters to you.",
