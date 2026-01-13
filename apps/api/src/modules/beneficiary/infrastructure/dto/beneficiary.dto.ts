@@ -1,4 +1,4 @@
-import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Relationship, RELATIONSHIPS } from '../../domain/entities/beneficiary.entity';
 
 export class CreateBeneficiaryDto {
@@ -44,6 +44,11 @@ export class UpdateBeneficiaryDto {
   note?: string | null;
 }
 
+export class SetTrustedPersonDto {
+  @IsBoolean()
+  isTrustedPerson!: boolean;
+}
+
 export interface BeneficiaryResponseDto {
   id: string;
   firstName: string;
@@ -52,6 +57,7 @@ export interface BeneficiaryResponseDto {
   email: string;
   relationship: Relationship;
   note: string | null;
+  isTrustedPerson: boolean;
   assignmentCount: number;
   createdAt: string;
 }

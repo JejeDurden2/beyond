@@ -16,12 +16,14 @@ import { AuthenticatedUser } from '@/modules/auth/infrastructure/strategies/jwt.
 import { CreateBeneficiaryCommand } from '../../application/commands/create-beneficiary.command';
 import { UpdateBeneficiaryCommand } from '../../application/commands/update-beneficiary.command';
 import { DeleteBeneficiaryCommand } from '../../application/commands/delete-beneficiary.command';
+import { SetTrustedPersonCommand } from '../../application/commands/set-trusted-person.command';
 import { ListBeneficiariesQuery } from '../../application/queries/list-beneficiaries.query';
 import { GetBeneficiaryQuery } from '../../application/queries/get-beneficiary.query';
 import { GetBeneficiaryKeepsakesQuery } from '@/modules/keepsake-assignment/application/queries/get-beneficiary-keepsakes.query';
 import {
   CreateBeneficiaryDto,
   UpdateBeneficiaryDto,
+  SetTrustedPersonDto,
   BeneficiaryResponseDto,
   BeneficiaryKeepsakeResponseDto,
 } from '../dto/beneficiary.dto';
@@ -35,6 +37,7 @@ interface BeneficiaryData {
   email: string;
   relationship: Relationship;
   note: string | null;
+  isTrustedPerson?: boolean;
   assignmentCount?: number;
   createdAt: Date;
 }
@@ -48,6 +51,7 @@ function toBeneficiaryDto(beneficiary: BeneficiaryData): BeneficiaryResponseDto 
     email: beneficiary.email,
     relationship: beneficiary.relationship,
     note: beneficiary.note,
+    isTrustedPerson: beneficiary.isTrustedPerson ?? false,
     assignmentCount: beneficiary.assignmentCount ?? 0,
     createdAt: beneficiary.createdAt.toISOString(),
   };
@@ -59,6 +63,7 @@ export class BeneficiaryController {
     private readonly createBeneficiaryCommand: CreateBeneficiaryCommand,
     private readonly updateBeneficiaryCommand: UpdateBeneficiaryCommand,
     private readonly deleteBeneficiaryCommand: DeleteBeneficiaryCommand,
+    private readonly setTrustedPersonCommand: SetTrustedPersonCommand,
     private readonly listBeneficiariesQuery: ListBeneficiariesQuery,
     private readonly getBeneficiaryQuery: GetBeneficiaryQuery,
     private readonly getBeneficiaryKeepsakesQuery: GetBeneficiaryKeepsakesQuery,
@@ -171,6 +176,27 @@ export class BeneficiaryController {
     }
 
     return toBeneficiaryDto(result.value);
+  }
+
+  @Patch(':id/trusted-person')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async setTrustedPerson(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() dto: SetTrustedPersonDto,
+  ): Promise<void> {
+    const result = await this.setTrustedPersonCommand.execute({
+      userId: user.id,
+      beneficiaryId: id,
+      isTrustedPerson: dto.isTrustedPerson,
+    });
+
+    if (result.isErr()) {
+      if (result.error === 'Beneficiary not found') {
+        throw new NotFoundException(result.error);
+      }
+      throw new BadRequestException(result.error);
+    }
   }
 
   @Delete(':id')

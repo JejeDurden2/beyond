@@ -4,7 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { RelationshipIcon, ChevronRight } from '@/components/ui';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Shield } from 'lucide-react';
 import { useBeneficiaries } from '@/hooks/use-beneficiaries';
 import type { Beneficiary } from '@/types';
 
@@ -77,7 +77,15 @@ function BeneficiaryCard({ beneficiary }: { beneficiary: Beneficiary }) {
             />
           </div>
           <div>
-            <h3 className="font-medium text-foreground">{beneficiary.fullName}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-medium text-foreground">{beneficiary.fullName}</h3>
+              {beneficiary.isTrustedPerson && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/10 text-accent text-xs font-medium rounded-full">
+                  <Shield className="w-3 h-3" />
+                  {t('trustedPerson.badge')}
+                </span>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground">
               {t(`relationships.${beneficiary.relationship}`)} · {beneficiary.email}
             </p>

@@ -1,12 +1,27 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { use } from 'react';
+import { use, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Pencil } from 'lucide-react';
+import { Pencil, Shield, ShieldOff } from 'lucide-react';
 import { AppShell } from '@/components/layout';
 import { ArrowLeft, RelationshipIcon, KeepsakeTypeIcon, ChevronRight } from '@/components/ui';
-import { useBeneficiary, useBeneficiaryKeepsakes } from '@/hooks/use-beneficiaries';
+import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  useBeneficiary,
+  useBeneficiaryKeepsakes,
+  useSetTrustedPerson,
+} from '@/hooks/use-beneficiaries';
 import { formatDate } from '@/lib/constants';
 import type { BeneficiaryKeepsake, KeepsakeType } from '@/types';
 
@@ -21,9 +36,19 @@ export default function BeneficiaryDetailPage({ params }: PageParams) {
 
   const { data: beneficiary, isLoading: isLoadingBeneficiary } = useBeneficiary(id);
   const { data: keepsakesData, isLoading: isLoadingKeepsakes } = useBeneficiaryKeepsakes(id);
+  const setTrustedPerson = useSetTrustedPerson();
+  const [showTrustedDialog, setShowTrustedDialog] = useState(false);
 
   const keepsakes = keepsakesData?.keepsakes ?? [];
   const isLoading = isLoadingBeneficiary || isLoadingKeepsakes;
+
+  const handleTrustedPersonToggle = () => {
+    if (!beneficiary) return;
+    setTrustedPerson.mutate(
+      { id: beneficiary.id, isTrustedPerson: !beneficiary.isTrustedPerson },
+      { onSuccess: () => setShowTrustedDialog(false) },
+    );
+  };
 
   if (isLoading) {
     return (
@@ -85,7 +110,15 @@ export default function BeneficiaryDetailPage({ params }: PageParams) {
                   />
                 </div>
                 <div>
-                  <h1 className="font-display text-xl text-foreground">{beneficiary.fullName}</h1>
+                  <div className="flex items-center gap-2">
+                    <h1 className="font-display text-xl text-foreground">{beneficiary.fullName}</h1>
+                    {beneficiary.isTrustedPerson && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/10 text-accent text-xs font-medium rounded-full">
+                        <Shield className="w-3 h-3" />
+                        {t('trustedPerson.badge')}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-sm text-muted-foreground">{beneficiary.email}</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {t(`relationships.${beneficiary.relationship}`)}
@@ -105,6 +138,33 @@ export default function BeneficiaryDetailPage({ params }: PageParams) {
                 &ldquo;{beneficiary.note}&rdquo;
               </p>
             )}
+
+            {/* Trusted Person Section */}
+            <div className="mt-4 pt-4 border-t border-border/50">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sm text-muted-foreground flex-1">
+                  {t('trustedPerson.description')}
+                </p>
+                <Button
+                  variant={beneficiary.isTrustedPerson ? 'outline' : 'default'}
+                  size="sm"
+                  onClick={() => setShowTrustedDialog(true)}
+                  disabled={setTrustedPerson.isPending}
+                >
+                  {beneficiary.isTrustedPerson ? (
+                    <>
+                      <ShieldOff className="w-4 h-4" />
+                      {t('trustedPerson.unset')}
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="w-4 h-4" />
+                      {t('trustedPerson.set')}
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Keepsakes section */}
@@ -133,6 +193,37 @@ export default function BeneficiaryDetailPage({ params }: PageParams) {
           </div>
         </div>
       </div>
+
+      {/* Trusted Person Confirmation Dialog */}
+      <AlertDialog open={showTrustedDialog} onOpenChange={setShowTrustedDialog}>
+        <AlertDialogContent className="rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {beneficiary.isTrustedPerson
+                ? t('trustedPerson.confirmUnset.title')
+                : t('trustedPerson.confirmSet.title')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {beneficiary.isTrustedPerson
+                ? t('trustedPerson.confirmUnset.description')
+                : t('trustedPerson.confirmSet.description')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon('cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleTrustedPersonToggle}
+              disabled={setTrustedPerson.isPending}
+            >
+              {setTrustedPerson.isPending
+                ? '...'
+                : beneficiary.isTrustedPerson
+                  ? t('trustedPerson.confirmUnset.confirm')
+                  : t('trustedPerson.confirmSet.confirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppShell>
   );
 }

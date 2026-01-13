@@ -41,6 +41,13 @@ export async function deleteBeneficiary(id: string): Promise<void> {
   });
 }
 
+export async function setTrustedPerson(id: string, isTrustedPerson: boolean): Promise<void> {
+  return apiClient<void>(`/vault/beneficiaries/${id}/trusted-person`, {
+    method: 'PATCH',
+    body: JSON.stringify({ isTrustedPerson }),
+  });
+}
+
 export interface GetBeneficiaryKeepsakesResponse {
   keepsakes: BeneficiaryKeepsake[];
 }

@@ -22,6 +22,7 @@ export interface BeneficiaryListItem {
   email: string;
   relationship: Relationship;
   note: string | null;
+  isTrustedPerson: boolean;
   assignmentCount: number;
   createdAt: Date;
 }
@@ -58,6 +59,7 @@ export class ListBeneficiariesQuery {
           email: b.email,
           relationship: b.relationship,
           note: b.note,
+          isTrustedPerson: b.isTrustedPerson,
           assignmentCount,
           createdAt: b.createdAt,
         };

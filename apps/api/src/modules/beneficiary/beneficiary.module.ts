@@ -4,6 +4,7 @@ import { PrismaBeneficiaryRepository } from './infrastructure/adapters/prisma-be
 import { CreateBeneficiaryCommand } from './application/commands/create-beneficiary.command';
 import { UpdateBeneficiaryCommand } from './application/commands/update-beneficiary.command';
 import { DeleteBeneficiaryCommand } from './application/commands/delete-beneficiary.command';
+import { SetTrustedPersonCommand } from './application/commands/set-trusted-person.command';
 import { ListBeneficiariesQuery } from './application/queries/list-beneficiaries.query';
 import { GetBeneficiaryQuery } from './application/queries/get-beneficiary.query';
 import { BENEFICIARY_REPOSITORY } from './domain/repositories/beneficiary.repository';
@@ -21,6 +22,7 @@ import { KeepsakeAssignmentModule } from '../keepsake-assignment/keepsake-assign
     CreateBeneficiaryCommand,
     UpdateBeneficiaryCommand,
     DeleteBeneficiaryCommand,
+    SetTrustedPersonCommand,
     ListBeneficiariesQuery,
     GetBeneficiaryQuery,
   ],

@@ -7,6 +7,7 @@ import {
   createBeneficiary,
   updateBeneficiary,
   deleteBeneficiary,
+  setTrustedPerson,
   getBeneficiaryKeepsakes,
 } from '@/lib/api/beneficiaries';
 import type { UpdateBeneficiaryInput } from '@/types';
@@ -57,6 +58,19 @@ export function useDeleteBeneficiary() {
     mutationFn: deleteBeneficiary,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
+    },
+  });
+}
+
+export function useSetTrustedPerson() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, isTrustedPerson }: { id: string; isTrustedPerson: boolean }) =>
+      setTrustedPerson(id, isTrustedPerson),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
+      queryClient.invalidateQueries({ queryKey: ['beneficiaries', id] });
     },
   });
 }

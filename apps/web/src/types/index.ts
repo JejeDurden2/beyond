@@ -198,6 +198,7 @@ export interface Beneficiary {
   email: string;
   relationship: Relationship;
   note: string | null;
+  isTrustedPerson: boolean;
   assignmentCount: number;
   createdAt: string;
 }

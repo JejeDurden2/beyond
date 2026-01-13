@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Result, ok, err } from 'neverthrow';
-import { Relationship } from '../../domain/entities/beneficiary.entity';
 import {
   BeneficiaryRepository,
   BENEFICIARY_REPOSITORY,
@@ -10,26 +9,14 @@ import {
   VAULT_REPOSITORY,
 } from '@/modules/vault/domain/repositories/vault.repository';
 
-export interface GetBeneficiaryInput {
+export interface SetTrustedPersonInput {
   userId: string;
   beneficiaryId: string;
-}
-
-export interface GetBeneficiaryResult {
-  id: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  email: string;
-  relationship: Relationship;
-  note: string | null;
   isTrustedPerson: boolean;
-  assignmentCount: number;
-  createdAt: Date;
 }
 
 @Injectable()
-export class GetBeneficiaryQuery {
+export class SetTrustedPersonCommand {
   constructor(
     @Inject(BENEFICIARY_REPOSITORY)
     private readonly beneficiaryRepository: BeneficiaryRepository,
@@ -37,7 +24,7 @@ export class GetBeneficiaryQuery {
     private readonly vaultRepository: VaultRepository,
   ) {}
 
-  async execute(input: GetBeneficiaryInput): Promise<Result<GetBeneficiaryResult, string>> {
+  async execute(input: SetTrustedPersonInput): Promise<Result<void, string>> {
     const vault = await this.vaultRepository.findByUserId(input.userId);
     if (!vault) {
       return err('Vault not found');
@@ -48,19 +35,22 @@ export class GetBeneficiaryQuery {
       return err('Beneficiary not found');
     }
 
-    const assignmentCount = await this.beneficiaryRepository.countAssignments(beneficiary.id);
+    // If setting as trusted person, unmark any existing trusted person first
+    if (input.isTrustedPerson) {
+      const allBeneficiaries = await this.beneficiaryRepository.findByVaultId(vault.id);
+      for (const b of allBeneficiaries) {
+        if (b.isTrustedPerson && b.id !== input.beneficiaryId) {
+          b.unmarkAsTrustedPerson();
+          await this.beneficiaryRepository.save(b);
+        }
+      }
+      beneficiary.markAsTrustedPerson();
+    } else {
+      beneficiary.unmarkAsTrustedPerson();
+    }
 
-    return ok({
-      id: beneficiary.id,
-      firstName: beneficiary.firstName,
-      lastName: beneficiary.lastName,
-      fullName: beneficiary.fullName,
-      email: beneficiary.email,
-      relationship: beneficiary.relationship,
-      note: beneficiary.note,
-      isTrustedPerson: beneficiary.isTrustedPerson,
-      assignmentCount,
-      createdAt: beneficiary.createdAt,
-    });
+    await this.beneficiaryRepository.save(beneficiary);
+
+    return ok(undefined);
   }
 }

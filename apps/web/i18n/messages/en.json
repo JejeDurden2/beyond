@@ -424,6 +424,22 @@
       "keepsakes": "{count, plural, =0 {No keepsakes assigned} =1 {1 keepsake assigned} other {# keepsakes assigned}}",
       "noKeepsakes": "No keepsakes have been assigned to this person yet.",
       "createKeepsake": "Create a keepsake"
+    },
+    "trustedPerson": {
+      "badge": "Trusted person",
+      "set": "Set as trusted person",
+      "unset": "Remove trusted person status",
+      "description": "This person will be notified first and can manage the transmission of your keepsakes.",
+      "confirmSet": {
+        "title": "Set as trusted person?",
+        "description": "This person will be notified first and can resend invitations to other beneficiaries. Only one beneficiary can have this role.",
+        "confirm": "Confirm"
+      },
+      "confirmUnset": {
+        "title": "Remove trusted person status?",
+        "description": "This person will no longer be notified first and won't be able to manage invitations.",
+        "confirm": "Remove"
+      }
     }
   },
   "assignments": {
