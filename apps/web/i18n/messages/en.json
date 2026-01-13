@@ -686,101 +686,103 @@
           ]
         }
       }
-    },
-    "beneficiary": {
-      "welcome": {
-        "title": "Welcome",
-        "subtitle": "{senderName} has entrusted you with something precious.",
-        "message": {
-          "single": "You have received a keepsake to discover.",
-          "multiple": "You have received {count} keepsakes to discover."
-        },
-        "cta": "Discover my keepsakes",
-        "context": {
-          "fromVault": "These keepsakes come from {senderName}'s vault.",
-          "encrypted": "They have been encrypted and carefully preserved, to be revealed at the right time."
-        },
-        "createAccount": "Create your account",
-        "loading": "Loading...",
-        "form": {
-          "email": "Email",
-          "firstName": "First name",
-          "lastName": "Last name",
-          "password": "Password",
-          "confirmPassword": "Confirm password",
-          "submitting": "Creating account..."
-        },
-        "errors": {
-          "invitationNotFound": "This invitation does not exist or has expired.",
-          "acceptFailed": "Unable to create account. Please try again.",
-          "passwordTooShort": "Password must be at least 8 characters.",
-          "passwordMismatch": "Passwords do not match."
-        }
+    }
+  },
+  "beneficiary": {
+    "welcome": {
+      "title": "Welcome",
+      "subtitle": "{senderName} has entrusted you with something precious.",
+      "message": {
+        "single": "You have received a keepsake to discover.",
+        "multiple": "You have received {count} keepsakes to discover."
       },
-      "portal": {
-        "title": "My received keepsakes",
-        "empty": {
-          "title": "No keepsakes yet",
-          "message": "Keepsakes intended for you will appear here when they are revealed."
-        },
-        "stats": {
-          "totalKeepsakes": "{count} keepsake(s) received",
-          "from": "From {senderName}"
-        }
+      "cta": "Discover my keepsakes",
+      "context": {
+        "fromVault": "These keepsakes come from {senderName}'s vault.",
+        "encrypted": "They have been encrypted and carefully preserved, to be revealed at the right time."
       },
-      "keepsakeCard": {
-        "from": "From {senderName}",
-        "deliveredOn": "Revealed on {date}",
-        "hasPersonalMessage": "Contains a personal message",
-        "view": "Discover"
-      },
-      "visualization": {
-        "actions": {
-          "download": "Download",
-          "print": "Print",
-          "back": "Back to my keepsakes"
-        },
-        "deliveryInfo": {
-          "from": "From {senderName}",
-          "deliveredOn": "Revealed on {date}",
-          "trigger": {
-            "on_death": "Delivered following death",
-            "on_date": "Delivered on scheduled date",
-            "manual": "Delivered manually"
-          }
-        }
-      },
-      "personalMessage": {
-        "title": "Personal Message",
-        "from": "Message from {senderName}",
-        "close": "Close",
-        "continue": "Continue to keepsake"
-      },
-      "trustedPerson": {
-        "badge": "Trusted Person",
-        "panel": {
-          "title": "Invitation Management",
-          "subtitle": "As a trusted person, you can manage invitations for other beneficiaries.",
-          "beneficiaries": {
-            "title": "Beneficiaries",
-            "status": {
-              "pending": "Invitation pending",
-              "accepted": "Account created",
-              "expired": "Invitation expired"
-            },
-            "actions": {
-              "resend": "Resend invitation",
-              "resent": "Invitation resent"
-            }
-          },
-          "empty": "No pending beneficiaries"
-        }
+      "createAccount": "Create your account",
+      "loading": "Loading...",
+      "form": {
+        "email": "Email",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "submitting": "Creating account..."
       },
       "errors": {
-        "loadFailed": "Unable to load keepsakes",
-        "keepsakeNotFound": "This keepsake does not exist or is not intended for you",
-        "unauthorized": "You do not have access to this keepsake"
+        "invitationNotFound": "This invitation does not exist or has expired.",
+        "acceptFailed": "Unable to create account. Please try again.",
+        "passwordTooShort": "Password must be at least 8 characters.",
+        "passwordMismatch": "Passwords do not match."
       }
+    },
+    "portal": {
+      "title": "My received keepsakes",
+      "empty": {
+        "title": "No keepsakes yet",
+        "message": "Keepsakes intended for you will appear here when they are revealed."
+      },
+      "stats": {
+        "totalKeepsakes": "{count} keepsake(s) received",
+        "from": "From {senderName}"
+      },
+      "loading": "Loading...",
+      "retry": "Retry"
+    },
+    "keepsakeCard": {
+      "from": "From {senderName}",
+      "deliveredOn": "Revealed on {date}",
+      "hasPersonalMessage": "Contains a personal message",
+      "view": "Discover"
+    },
+    "visualization": {
+      "actions": {
+        "download": "Download",
+        "print": "Print",
+        "back": "Back to my keepsakes"
+      },
+      "deliveryInfo": {
+        "from": "From {senderName}",
+        "deliveredOn": "Revealed on {date}",
+        "trigger": {
+          "on_death": "Delivered following death",
+          "on_date": "Delivered on scheduled date",
+          "manual": "Delivered manually"
+        }
+      }
+    },
+    "personalMessage": {
+      "title": "Personal Message",
+      "from": "Message from {senderName}",
+      "close": "Close",
+      "continue": "Continue to keepsake"
+    },
+    "trustedPerson": {
+      "badge": "Trusted Person",
+      "panel": {
+        "title": "Invitation Management",
+        "subtitle": "As a trusted person, you can manage invitations for other beneficiaries.",
+        "beneficiaries": {
+          "title": "Beneficiaries",
+          "status": {
+            "pending": "Invitation pending",
+            "accepted": "Account created",
+            "expired": "Invitation expired"
+          },
+          "actions": {
+            "resend": "Resend invitation",
+            "resent": "Invitation resent"
+          }
+        },
+        "empty": "No pending beneficiaries"
+      }
+    },
+    "errors": {
+      "loadFailed": "Unable to load keepsakes",
+      "keepsakeNotFound": "This keepsake does not exist or is not intended for you",
+      "unauthorized": "You do not have access to this keepsake"
     }
   }
 }
