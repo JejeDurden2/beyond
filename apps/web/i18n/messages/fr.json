@@ -501,7 +501,7 @@
     },
     "trustedPerson": {
       "title": "Votre personne de confiance",
-      "subtitle": "Pour que Beyond fonctionne, vous devez choisir quelqu'un de confiance qui saura quand le moment sera venu.",
+      "subtitle": "Beyond a besoin d'une personne de confiance pour déclencher l'envoi de vos souvenirs après votre décès.",
       "points": {
         "role": {
           "title": "Un rôle essentiel",
