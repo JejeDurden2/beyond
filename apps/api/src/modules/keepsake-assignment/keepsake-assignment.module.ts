@@ -11,7 +11,7 @@ import { KeepsakeModule } from '../keepsake/keepsake.module';
 import { BeneficiaryModule } from '../beneficiary/beneficiary.module';
 
 @Module({
-  imports: [VaultModule, KeepsakeModule, forwardRef(() => BeneficiaryModule)],
+  imports: [VaultModule, forwardRef(() => KeepsakeModule), forwardRef(() => BeneficiaryModule)],
   controllers: [KeepsakeAssignmentController],
   providers: [
     {
