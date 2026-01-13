@@ -16,6 +16,11 @@ export class BeneficiaryMapper {
       note: raw.note,
       accessToken: raw.accessToken,
       accessedAt: raw.accessedAt,
+      isTrustedPerson: raw.isTrustedPerson,
+      invitationToken: raw.invitationToken,
+      invitationSentAt: raw.invitationSentAt,
+      invitationAcceptedAt: raw.invitationAcceptedAt,
+      beneficiaryProfileId: raw.beneficiaryProfileId,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     });
@@ -38,6 +43,11 @@ export class BeneficiaryMapper {
       note: beneficiary.note,
       accessToken: beneficiary.accessToken,
       accessedAt: beneficiary.accessedAt,
+      isTrustedPerson: beneficiary.isTrustedPerson,
+      invitationToken: beneficiary.invitationToken,
+      invitationSentAt: beneficiary.invitationSentAt,
+      invitationAcceptedAt: beneficiary.invitationAcceptedAt,
+      beneficiaryProfileId: beneficiary.beneficiaryProfileId,
     };
   }
 }

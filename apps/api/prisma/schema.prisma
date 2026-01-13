@@ -10,6 +10,7 @@ model User {
   id                           String    @id @default(uuid())
   email                        String    @unique
   passwordHash                 String
+  role                         UserRole  @default(VAULT_OWNER)
 
   // Profile fields
   firstName                    String?
@@ -29,11 +30,19 @@ model User {
   updatedAt                    DateTime  @updatedAt
   deletedAt                    DateTime?
 
-  vault           Vault?
-  trustedContacts TrustedContact[]
+  vault              Vault?
+  trustedContacts    TrustedContact[]
+  beneficiaryProfile BeneficiaryProfile?
 
   @@index([deletedAt])
   @@index([emailVerificationToken])
+  @@index([role])
+}
+
+enum UserRole {
+  VAULT_OWNER
+  BENEFICIARY
+  BOTH
 }
 
 model Vault {
@@ -46,9 +55,10 @@ model Vault {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  keepsakes         Keepsake[]
-  beneficiaries     Beneficiary[]
-  deathDeclarations DeathDeclaration[]
+  keepsakes          Keepsake[]
+  beneficiaries      Beneficiary[]
+  deathDeclarations  DeathDeclaration[]
+  notificationConfig NotificationConfig?
 }
 
 enum VaultStatus {
@@ -75,8 +85,11 @@ model Keepsake {
   updatedAt        DateTime         @updatedAt
   deletedAt        DateTime?
 
-  assignments KeepsakeAssignment[]
-  media       KeepsakeMedia[]
+  assignments  KeepsakeAssignment[]
+  media        KeepsakeMedia[]
+  invitations  BeneficiaryInvitation[]
+  portalAccess BeneficiaryPortalAccess[]
+  notifications NotificationLog[]
 
   @@index([vaultId])
   @@index([status])
@@ -134,15 +147,34 @@ model Beneficiary {
   email        String
   relationship Relationship
   note         String?
-  accessToken  String?      @unique
-  accessedAt   DateTime?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
 
-  assignments KeepsakeAssignment[]
+  // Account linkage
+  beneficiaryProfileId String?
+  beneficiaryProfile   BeneficiaryProfile? @relation(fields: [beneficiaryProfileId], references: [id])
+  isTrustedPerson      Boolean             @default(false)
+
+  // Invitation tracking
+  invitationToken      String?   @unique
+  invitationSentAt     DateTime?
+  invitationAcceptedAt DateTime?
+
+  // Legacy fields (deprecated but kept for backward compatibility)
+  accessToken String? @unique
+  accessedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignments   KeepsakeAssignment[]
+  invitations   BeneficiaryInvitation[]
+  portalAccess  BeneficiaryPortalAccess[]
+  notifications NotificationLog[]
 
   @@unique([vaultId, email])
   @@index([vaultId])
+  @@index([email])
+  @@index([invitationToken])
+  @@index([beneficiaryProfileId])
 }
 
 enum Relationship {
@@ -223,4 +255,116 @@ model SecureFile {
   updatedAt    DateTime @updatedAt
 
   @@index([ownerId])
+}
+
+// ==================================
+// Beneficiary Account System
+// ==================================
+
+model BeneficiaryProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  beneficiaries Beneficiary[]
+
+  @@index([userId])
+}
+
+model BeneficiaryInvitation {
+  id            String           @id @default(uuid())
+  beneficiaryId String
+  beneficiary   Beneficiary      @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  keepsakeId    String
+  keepsake      Keepsake         @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  token         String           @unique
+  status        InvitationStatus @default(PENDING)
+  sentAt        DateTime         @default(now())
+  viewedAt      DateTime?
+  acceptedAt    DateTime?
+  expiresAt     DateTime
+  resentBy      String?
+  resentAt      DateTime?
+  resentCount   Int              @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([token])
+  @@index([beneficiaryId])
+  @@index([keepsakeId])
+  @@index([status])
+}
+
+enum InvitationStatus {
+  PENDING
+  VIEWED
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+
+model BeneficiaryPortalAccess {
+  id            String      @id @default(uuid())
+  beneficiaryId String
+  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  keepsakeId    String?
+  keepsake      Keepsake?   @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  accessedAt    DateTime    @default(now())
+
+  @@index([beneficiaryId])
+  @@index([keepsakeId])
+  @@index([accessedAt])
+}
+
+// ==================================
+// Notification System
+// ==================================
+
+model NotificationConfig {
+  id                      String   @id @default(uuid())
+  vaultId                 String   @unique
+  vault                   Vault    @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+  trustedPersonDelayHours Int      @default(72)
+  beneficiaryDelayHours   Int      @default(168)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@index([vaultId])
+}
+
+model NotificationLog {
+  id            String             @id @default(uuid())
+  keepsakeId    String
+  keepsake      Keepsake           @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  beneficiaryId String?
+  beneficiary   Beneficiary?       @relation(fields: [beneficiaryId], references: [id], onDelete: SetNull)
+  type          NotificationType
+  status        NotificationStatus @default(pending)
+  scheduledFor  DateTime
+  sentAt        DateTime?
+  failureReason String?
+  retryCount    Int                @default(0)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([keepsakeId])
+  @@index([beneficiaryId])
+  @@index([status, scheduledFor])
+}
+
+enum NotificationType {
+  trusted_person_alert
+  beneficiary_invitation
+  account_creation
+}
+
+enum NotificationStatus {
+  pending
+  scheduled
+  sent
+  failed
+  cancelled
 }

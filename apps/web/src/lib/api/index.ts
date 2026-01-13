@@ -3,3 +3,4 @@ export * from './auth';
 export * from './users';
 export * from './keepsakes';
 export * from './vault';
+export * from './beneficiary-portal';

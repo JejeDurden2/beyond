@@ -1,6 +1,7 @@
 import { AggregateRoot } from '@/shared/domain';
 import { Result, ok, err } from 'neverthrow';
 import { EncryptedContent } from '../value-objects/encrypted-content.value-object';
+import { KeepsakeDeliveredEvent } from '../events';
 
 export enum KeepsakeType {
   DOCUMENT = 'document',
@@ -177,6 +178,12 @@ export class Keepsake extends AggregateRoot<KeepsakeProps> {
     this.props.status = KeepsakeStatus.DELIVERED;
     this.props.deliveredAt = new Date();
     this._updatedAt = new Date();
+
+    // Emit domain event
+    this.addDomainEvent(
+      KeepsakeDeliveredEvent.create(this.id, this.props.vaultId, this.props.triggerCondition),
+    );
+
     return ok(undefined);
   }
 

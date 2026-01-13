@@ -57,6 +57,7 @@ export class CreateBeneficiaryCommand {
       email: input.email.toLowerCase().trim(),
       relationship: input.relationship,
       note: input.note?.trim() || null,
+      isTrustedPerson: false,
     });
 
     if (beneficiaryResult.isErr()) {

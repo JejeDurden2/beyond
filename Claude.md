@@ -19,8 +19,9 @@ Monorepo full-stack application with React frontend and NestJS backend, followin
 - **Framework**: NestJS with TypeScript (strict mode)
 - **ORM**: Prisma
 - **Database**: PostgreSQL (Neon)
+- **Job Queue**: BullMQ with Redis
 - **Deployment**: Railway
-- **Architecture**: DDD + Hexagonal (Ports & Adapters)
+- **Architecture**: DDD + Hexagonal (Ports & Adapters) + Event-Driven
 
 ### Shared (`/packages/shared`)
 
@@ -55,11 +56,29 @@ Monorepo full-stack application with React frontend and NestJS backend, followin
 ### Backend (`apps/api/.env`)
 
 ```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/app_dev"
+# Database
+DATABASE_URL="postgresql://beyond:beyond@localhost:5433/beyond?schema=public"
+
+# JWT
+JWT_SECRET="your-super-secret-jwt-key-change-in-production"
+JWT_EXPIRES_IN="15m"
+JWT_REFRESH_EXPIRES_IN="7d"
+
+# App
 PORT=3001
 NODE_ENV=development
-JWT_SECRET="your-secret-here"
-JWT_EXPIRATION="7d"
+
+# Redis (for BullMQ job queue)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+
+# Email Service
+FRONTEND_URL=http://localhost:3000
+
+# Notification Delays (in hours)
+DEFAULT_TRUSTED_PERSON_DELAY_HOURS=72
+DEFAULT_BENEFICIARY_DELAY_HOURS=168
 ```
 
 ### Frontend (`apps/web/.env.local`)
@@ -75,9 +94,9 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 ```bash
 # Docker (local services)
-docker compose up -d            # Start PostgreSQL, Redis, Jaeger
+docker compose up -d            # Start PostgreSQL and Redis
 docker compose down             # Stop services
-docker compose down -v          # Stop + delete volumes (reset DB)
+docker compose down -v          # Stop + delete volumes (reset DB and Redis)
 
 # Development
 pnpm dev                    # Start all apps
@@ -103,6 +122,71 @@ pnpm db:migrate             # Run migrations (local)
 pnpm db:generate            # Generate Prisma client
 pnpm db:studio              # Open Prisma Studio
 ```
+
+---
+
+## Beneficiary Account System Architecture
+
+### User Roles (Multi-Role Support)
+
+Users can have multiple roles simultaneously:
+
+- **VAULT_OWNER**: Has own vault with keepsakes
+- **BENEFICIARY**: Receives keepsakes from others
+- **BOTH**: Both vault owner AND beneficiary (common case)
+
+**Important**: A user can be a BENEFICIARY in multiple vaults and simultaneously a TRUSTED_PERSON (via `Beneficiary.isTrustedPerson` flag).
+
+### Domain Event Flow
+
+```
+Keepsake.deliver()
+  → emits KeepsakeDeliveredEvent
+  → KeepsakeDeliveredHandler
+  → NotificationOrchestrator schedules notifications
+  → BullMQ stores delayed jobs
+  → NotificationProcessor sends emails when time comes
+```
+
+### Notification System
+
+**Key Components:**
+
+- **NotificationConfig**: Per-vault delay configuration (default: 72h for trusted person, 168h for beneficiaries)
+- **NotificationLog**: Audit trail for all notifications (status, retries, failures)
+- **NotificationOrchestrator**: Schedules notifications with configurable delays
+- **NotificationProcessor**: BullMQ worker that sends emails
+- **BullMQ + Redis**: Persistent job queue with retry logic
+
+**Notification Types:**
+
+1. **TRUSTED_PERSON_ALERT**: Notifies trusted person to manage invitations
+2. **BENEFICIARY_INVITATION**: Sends invitation with token for account creation
+3. **ACCOUNT_CREATION**: Welcomes new beneficiary after registration
+
+### Email Service (Pluggable)
+
+**Port-Adapter Pattern:**
+
+- `IEmailService` interface defines contract
+- `ConsoleEmailAdapter` for development (logs to console)
+- Easy to add production adapters: Resend, SendGrid, Mailgun
+
+### Invitation Lifecycle
+
+1. Keepsake delivered → Event emitted
+2. NotificationOrchestrator creates NotificationLog + schedules BullMQ job
+3. After delay → NotificationProcessor sends invitation email
+4. Beneficiary clicks link → `GET /beneficiary/auth/invitation/:token`
+5. Beneficiary submits form → `POST /beneficiary/auth/accept-invitation`
+6. Account created (or existing account linked) → JWT returned for immediate login
+7. Beneficiary can access portal at `/portal`
+
+### Trusted Person Features
+
+- Can resend invitations to other beneficiaries
+- Receives alerts first (shorter delay)
+- Authorization check: must be marked as `isTrustedPerson` on Beneficiary record
 
 ---
 

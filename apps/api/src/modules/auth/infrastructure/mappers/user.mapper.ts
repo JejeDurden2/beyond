@@ -1,5 +1,5 @@
 import { User as PrismaUser } from '@prisma/client';
-import { User } from '../../domain/entities/user.entity';
+import { User, UserRole } from '../../domain/entities/user.entity';
 import { Email } from '../../domain/value-objects/email.value-object';
 import { Password } from '../../domain/value-objects/password.value-object';
 
@@ -22,6 +22,7 @@ export class UserMapper {
       emailVerificationToken: raw.emailVerificationToken,
       emailVerificationTokenExpiry: raw.emailVerificationTokenExpiry,
       totpSecret: raw.totpSecret,
+      role: raw.role as UserRole,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
       deletedAt: raw.deletedAt,
@@ -41,6 +42,7 @@ export class UserMapper {
       emailVerificationToken: user.emailVerificationToken,
       emailVerificationTokenExpiry: user.emailVerificationTokenExpiry,
       totpSecret: user.totpSecret,
+      role: user.role,
       deletedAt: user.deletedAt,
     };
   }

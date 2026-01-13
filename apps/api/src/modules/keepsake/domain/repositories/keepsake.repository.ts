@@ -1,4 +1,4 @@
-import { Keepsake, KeepsakeStatus } from '../entities/keepsake.entity';
+import { Keepsake, KeepsakeStatus, TriggerCondition } from '../entities/keepsake.entity';
 import { KeepsakeMedia } from '../entities/keepsake-media.entity';
 
 export const KEEPSAKE_REPOSITORY = 'KeepsakeRepository';
@@ -12,6 +12,7 @@ export interface KeepsakeFilters {
 export interface KeepsakeRepository {
   findById(id: string): Promise<Keepsake | null>;
   findByVaultId(vaultId: string, filters?: KeepsakeFilters): Promise<Keepsake[]>;
+  findScheduledByTriggerAndDate(trigger: TriggerCondition, beforeDate: Date): Promise<Keepsake[]>;
   save(keepsake: Keepsake): Promise<void>;
   delete(id: string): Promise<void>;
 }

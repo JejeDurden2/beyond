@@ -29,6 +29,7 @@ import { AuthenticatedUser } from '@/modules/auth/infrastructure/strategies/jwt.
 import { CreateKeepsakeCommand } from '../../application/commands/create-keepsake.command';
 import { UpdateKeepsakeCommand } from '../../application/commands/update-keepsake.command';
 import { DeleteKeepsakeCommand } from '../../application/commands/delete-keepsake.command';
+import { DeliverKeepsakeCommand } from '../../application/commands/deliver-keepsake.command';
 import { GetKeepsakesQuery } from '../../application/queries/get-keepsakes.query';
 import { GetKeepsakeQuery } from '../../application/queries/get-keepsake.query';
 import {
@@ -154,6 +155,7 @@ export class KeepsakeController {
     private readonly createKeepsakeCommand: CreateKeepsakeCommand,
     private readonly updateKeepsakeCommand: UpdateKeepsakeCommand,
     private readonly deleteKeepsakeCommand: DeleteKeepsakeCommand,
+    private readonly deliverKeepsakeCommand: DeliverKeepsakeCommand,
     private readonly getKeepsakesQuery: GetKeepsakesQuery,
     private readonly getKeepsakeQuery: GetKeepsakeQuery,
     @Inject(KEEPSAKE_REPOSITORY)
@@ -257,6 +259,18 @@ export class KeepsakeController {
     }
 
     await this.keepsakeRepository.save(keepsake);
+    return { success: true };
+  }
+
+  @Post(':id/deliver')
+  @HttpCode(HttpStatus.OK)
+  async deliver(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
+    const result = await this.deliverKeepsakeCommand.executeManual(id, user.id);
+
+    if (result.isErr()) {
+      return { error: result.error };
+    }
+
     return { success: true };
   }
 

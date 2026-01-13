@@ -686,6 +686,101 @@
           ]
         }
       }
+    },
+    "beneficiary": {
+      "welcome": {
+        "title": "Bienvenue",
+        "subtitle": "{senderName} vous a confié quelque chose de précieux.",
+        "message": {
+          "single": "Vous avez reçu un souvenir à découvrir.",
+          "multiple": "Vous avez reçu {count} souvenirs à découvrir."
+        },
+        "cta": "Découvrir mes souvenirs",
+        "context": {
+          "fromVault": "Ces souvenirs proviennent du coffre de {senderName}.",
+          "encrypted": "Ils ont été chiffrés et préservés avec soin, pour être révélés au bon moment."
+        },
+        "createAccount": "Créer votre compte",
+        "loading": "Chargement...",
+        "form": {
+          "email": "Email",
+          "firstName": "Prénom",
+          "lastName": "Nom",
+          "password": "Mot de passe",
+          "confirmPassword": "Confirmer le mot de passe",
+          "submitting": "Création en cours..."
+        },
+        "errors": {
+          "invitationNotFound": "Cette invitation n'existe pas ou a expiré.",
+          "acceptFailed": "Impossible de créer le compte. Veuillez réessayer.",
+          "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+          "passwordMismatch": "Les mots de passe ne correspondent pas."
+        }
+      },
+      "portal": {
+        "title": "Mes souvenirs reçus",
+        "empty": {
+          "title": "Aucun souvenir pour le moment",
+          "message": "Les souvenirs qui vous sont destinés apparaîtront ici lorsqu'ils seront révélés."
+        },
+        "stats": {
+          "totalKeepsakes": "{count} souvenir(s) reçu(s)",
+          "from": "De {senderName}"
+        }
+      },
+      "keepsakeCard": {
+        "from": "De {senderName}",
+        "deliveredOn": "Révélé le {date}",
+        "hasPersonalMessage": "Contient un message personnel",
+        "view": "Découvrir"
+      },
+      "visualization": {
+        "actions": {
+          "download": "Télécharger",
+          "print": "Imprimer",
+          "back": "Retour à mes souvenirs"
+        },
+        "deliveryInfo": {
+          "from": "De {senderName}",
+          "deliveredOn": "Révélé le {date}",
+          "trigger": {
+            "on_death": "Transmis suite au décès",
+            "on_date": "Transmis à la date prévue",
+            "manual": "Transmis manuellement"
+          }
+        }
+      },
+      "personalMessage": {
+        "title": "Message personnel",
+        "from": "Message de {senderName}",
+        "close": "Fermer",
+        "continue": "Continuer vers le souvenir"
+      },
+      "trustedPerson": {
+        "badge": "Personne de confiance",
+        "panel": {
+          "title": "Gestion des invitations",
+          "subtitle": "En tant que personne de confiance, vous pouvez gérer les invitations pour les autres bénéficiaires.",
+          "beneficiaries": {
+            "title": "Bénéficiaires",
+            "status": {
+              "pending": "Invitation en attente",
+              "accepted": "Compte créé",
+              "expired": "Invitation expirée"
+            },
+            "actions": {
+              "resend": "Renvoyer l'invitation",
+              "resent": "Invitation renvoyée"
+            }
+          },
+          "empty": "Aucun bénéficiaire en attente"
+        }
+      },
+      "errors": {
+        "loadFailed": "Impossible de charger les souvenirs",
+        "keepsakeNotFound": "Ce souvenir n'existe pas ou ne vous est pas destiné",
+        "unauthorized": "Vous n'avez pas accès à ce souvenir"
+      }
     }
   }
 }

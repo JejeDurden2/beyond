@@ -4,10 +4,17 @@ import { Email } from '../value-objects/email.value-object';
 import { Password } from '../value-objects/password.value-object';
 import { randomBytes } from 'crypto';
 
+export enum UserRole {
+  VAULT_OWNER = 'VAULT_OWNER',
+  BENEFICIARY = 'BENEFICIARY',
+  BOTH = 'BOTH',
+}
+
 export interface UserProps {
   id?: string;
   email: Email;
   password: Password;
+  role: UserRole;
 
   // Profile fields
   firstName?: string | null;
@@ -31,6 +38,7 @@ export interface UserProps {
 export interface CreateUserInput {
   email: string;
   password: string;
+  role?: UserRole;
 }
 
 export class User extends AggregateRoot<UserProps> {
@@ -60,6 +68,7 @@ export class User extends AggregateRoot<UserProps> {
       new User({
         email: emailResult.value,
         password: passwordResult.value,
+        role: input.role ?? UserRole.VAULT_OWNER,
         emailVerified: false,
         emailVerificationToken,
         emailVerificationTokenExpiry,
@@ -181,5 +190,41 @@ export class User extends AggregateRoot<UserProps> {
   async updatePassword(newPassword: Password): Promise<void> {
     this.props.password = newPassword;
     this._updatedAt = new Date();
+  }
+
+  get role(): UserRole {
+    return this.props.role;
+  }
+
+  isVaultOwner(): boolean {
+    return this.props.role === UserRole.VAULT_OWNER || this.props.role === UserRole.BOTH;
+  }
+
+  isBeneficiary(): boolean {
+    return this.props.role === UserRole.BENEFICIARY || this.props.role === UserRole.BOTH;
+  }
+
+  upgradeToVaultOwner(): Result<void, string> {
+    if (this.props.role === UserRole.VAULT_OWNER) {
+      return err('User is already a vault owner');
+    }
+
+    if (this.props.role === UserRole.BOTH) {
+      return err('User already has both roles');
+    }
+
+    this.props.role = UserRole.BOTH;
+    this._updatedAt = new Date();
+    return ok(undefined);
+  }
+
+  linkBeneficiaryProfile(): Result<void, string> {
+    if (this.props.role === UserRole.BENEFICIARY || this.props.role === UserRole.BOTH) {
+      return ok(undefined); // Already has beneficiary role
+    }
+
+    this.props.role = UserRole.BOTH;
+    this._updatedAt = new Date();
+    return ok(undefined);
   }
 }

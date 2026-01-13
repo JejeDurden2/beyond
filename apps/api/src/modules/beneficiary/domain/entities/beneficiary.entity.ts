@@ -1,5 +1,6 @@
 import { AggregateRoot } from '@/shared/domain';
 import { Result, ok, err } from 'neverthrow';
+import { randomBytes } from 'crypto';
 
 export type Relationship =
   | 'SPOUSE'
@@ -32,8 +33,20 @@ export interface BeneficiaryProps {
   email: string;
   relationship: Relationship;
   note?: string | null;
+
+  // Account linkage
+  beneficiaryProfileId?: string | null;
+  isTrustedPerson: boolean;
+
+  // Invitation tracking
+  invitationToken?: string | null;
+  invitationSentAt?: Date | null;
+  invitationAcceptedAt?: Date | null;
+
+  // Legacy fields (deprecated)
   accessToken?: string | null;
   accessedAt?: Date | null;
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -158,6 +171,60 @@ export class Beneficiary extends AggregateRoot<BeneficiaryProps> {
 
   recordAccess(): void {
     this.props.accessedAt = new Date();
+    this._updatedAt = new Date();
+  }
+
+  get beneficiaryProfileId(): string | null {
+    return this.props.beneficiaryProfileId ?? null;
+  }
+
+  get isTrustedPerson(): boolean {
+    return this.props.isTrustedPerson;
+  }
+
+  get invitationToken(): string | null {
+    return this.props.invitationToken ?? null;
+  }
+
+  get invitationSentAt(): Date | null {
+    return this.props.invitationSentAt ?? null;
+  }
+
+  get invitationAcceptedAt(): Date | null {
+    return this.props.invitationAcceptedAt ?? null;
+  }
+
+  linkToProfile(profileId: string): void {
+    this.props.beneficiaryProfileId = profileId;
+    this._updatedAt = new Date();
+  }
+
+  hasAccount(): boolean {
+    return (
+      this.props.beneficiaryProfileId !== null && this.props.beneficiaryProfileId !== undefined
+    );
+  }
+
+  generateInvitationToken(): string {
+    const token = randomBytes(32).toString('base64url');
+    this.props.invitationToken = token;
+    this.props.invitationSentAt = new Date();
+    this._updatedAt = new Date();
+    return token;
+  }
+
+  acceptInvitation(): void {
+    this.props.invitationAcceptedAt = new Date();
+    this._updatedAt = new Date();
+  }
+
+  markAsTrustedPerson(): void {
+    this.props.isTrustedPerson = true;
+    this._updatedAt = new Date();
+  }
+
+  unmarkAsTrustedPerson(): void {
+    this.props.isTrustedPerson = false;
     this._updatedAt = new Date();
   }
 }

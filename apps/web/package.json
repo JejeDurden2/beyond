@@ -17,6 +17,7 @@
     "@beyond/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.16",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.562.0",
     "next": "16.1.1-canary.21",
     "next-intl": "^4.7.0",
