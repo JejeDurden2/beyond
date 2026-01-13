@@ -5,7 +5,10 @@ import {
   KeepsakeAssignmentWithKeepsake,
   KEEPSAKE_ASSIGNMENT_REPOSITORY,
 } from '../../domain/repositories/keepsake-assignment.repository';
-import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
+import {
+  VaultRepository,
+  VAULT_REPOSITORY,
+} from '@/modules/vault/domain/repositories/vault.repository';
 import {
   BENEFICIARY_REPOSITORY,
   BeneficiaryRepository,
@@ -27,7 +30,7 @@ export class GetBeneficiaryKeepsakesQuery {
   constructor(
     @Inject(KEEPSAKE_ASSIGNMENT_REPOSITORY)
     private readonly assignmentRepository: KeepsakeAssignmentRepository,
-    @Inject('VaultRepository')
+    @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
     @Inject(BENEFICIARY_REPOSITORY)
     private readonly beneficiaryRepository: BeneficiaryRepository,

@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { VaultRepository } from '../../domain/repositories/vault.repository';
+import { VaultRepository, VAULT_REPOSITORY } from '../../domain/repositories/vault.repository';
 
 export interface GetVaultQuery {
   userId: string;
@@ -16,7 +16,7 @@ export interface GetVaultResult {
 @Injectable()
 export class GetVaultHandler {
   constructor(
-    @Inject('VaultRepository')
+    @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
   ) {}
 

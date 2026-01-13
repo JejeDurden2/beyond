@@ -44,6 +44,16 @@ apps/api/src/
 
 ## NestJS Patterns
 
+## NestJS Dependency Injection Rules
+
+When creating or modifying NestJS modules:
+
+1. Always check that new providers are added to the `providers` array
+2. Always check that services used in other modules are in `exports` array
+3. When using @Inject() with tokens, verify the token is registered
+4. Run build after any module change to catch DI errors at compile time
+5. For circular dependencies, use `forwardRef(() => ModuleName)`
+
 ### Module Structure
 
 ```typescript

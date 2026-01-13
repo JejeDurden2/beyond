@@ -1,5 +1,5 @@
 import { Injectable, Inject, ConflictException, BadRequestException } from '@nestjs/common';
-import { VaultRepository } from '../../domain/repositories/vault.repository';
+import { VaultRepository, VAULT_REPOSITORY } from '../../domain/repositories/vault.repository';
 import { Vault } from '../../domain/entities/vault.entity';
 
 export interface CreateVaultCommand {
@@ -14,7 +14,7 @@ export interface CreateVaultResult {
 @Injectable()
 export class CreateVaultHandler {
   constructor(
-    @Inject('VaultRepository')
+    @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
   ) {}
 

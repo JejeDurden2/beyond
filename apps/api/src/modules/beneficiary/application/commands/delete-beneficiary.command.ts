@@ -4,7 +4,10 @@ import {
   BeneficiaryRepository,
   BENEFICIARY_REPOSITORY,
 } from '../../domain/repositories/beneficiary.repository';
-import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
+import {
+  VaultRepository,
+  VAULT_REPOSITORY,
+} from '@/modules/vault/domain/repositories/vault.repository';
 
 export interface DeleteBeneficiaryInput {
   userId: string;
@@ -16,7 +19,7 @@ export class DeleteBeneficiaryCommand {
   constructor(
     @Inject(BENEFICIARY_REPOSITORY)
     private readonly beneficiaryRepository: BeneficiaryRepository,
-    @Inject('VaultRepository')
+    @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
   ) {}
 

@@ -46,7 +46,10 @@ import {
   KeepsakeMediaRepository,
 } from '../../domain/repositories/keepsake.repository';
 import { STORAGE_SERVICE, StorageService } from '../../application/ports/storage.port';
-import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
+import {
+  VaultRepository,
+  VAULT_REPOSITORY,
+} from '@/modules/vault/domain/repositories/vault.repository';
 
 class CreateKeepsakeDto {
   @IsEnum(KeepsakeType)
@@ -164,7 +167,7 @@ export class KeepsakeController {
     private readonly mediaRepository: KeepsakeMediaRepository,
     @Inject(STORAGE_SERVICE)
     private readonly storageService: StorageService,
-    @Inject('VaultRepository')
+    @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
   ) {}
 

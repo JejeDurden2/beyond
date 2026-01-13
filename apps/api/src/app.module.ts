@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { SharedModule } from './shared/shared.module';
+import { QueueModule } from './shared/queue/queue.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { VaultModule } from './modules/vault/vault.module';
@@ -22,6 +23,7 @@ import { SecureFileModule } from './modules/secure-file/secure-file.module';
         limit: 100,
       },
     ]),
+    QueueModule,
     SharedModule,
     AuthModule,
     UserModule,

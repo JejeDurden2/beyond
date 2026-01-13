@@ -5,7 +5,10 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { VaultRepository } from '@/modules/vault/domain/repositories/vault.repository';
+import {
+  VaultRepository,
+  VAULT_REPOSITORY,
+} from '@/modules/vault/domain/repositories/vault.repository';
 import {
   KeepsakeRepository,
   KEEPSAKE_REPOSITORY,
@@ -45,7 +48,7 @@ export class UpdateKeepsakeCommand {
   constructor(
     @Inject(KEEPSAKE_REPOSITORY)
     private readonly keepsakeRepository: KeepsakeRepository,
-    @Inject('VaultRepository')
+    @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
   ) {}
 
