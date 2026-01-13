@@ -500,6 +500,7 @@
     "sections": {
       "personal": "Personal information",
       "security": "Security",
+      "data": "My data",
       "danger": "Danger zone"
     },
     "fields": {
@@ -515,7 +516,13 @@
       "enabled": "Enabled",
       "disabled": "Not enabled",
       "logout": "Log out",
-      "deleteAccount": "Delete my account"
+      "deleteAccount": "Delete my account",
+      "exportData": "Export my data",
+      "exporting": "Exporting..."
+    },
+    "exportData": {
+      "description": "Download a copy of all your data in JSON format (GDPR Article 20).",
+      "success": "Data exported successfully"
     },
     "changePassword": {
       "title": "Change password",

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { LogOut } from 'lucide-react';
+import { LogOut, Download } from 'lucide-react';
 import { AppShell } from '@/components/layout';
 import {
   ProfileHeader,
@@ -12,7 +12,7 @@ import {
   DeleteAccountDialog,
 } from '@/components/features/profile';
 import { useAuth } from '@/hooks/use-auth';
-import { updateProfile } from '@/lib/api/users';
+import { updateProfile, exportUserData } from '@/lib/api/users';
 import { formatDate } from '@/lib/constants';
 
 export default function ProfilePage() {
@@ -20,6 +20,7 @@ export default function ProfilePage() {
   const { user, logout, refreshUser } = useAuth();
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const handleUpdateFirstName = useCallback(
     async (value: string) => {
@@ -36,6 +37,24 @@ export default function ProfilePage() {
     },
     [refreshUser],
   );
+
+  const handleExportData = useCallback(async () => {
+    setIsExporting(true);
+    try {
+      const data = await exportUserData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `beyond-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsExporting(false);
+    }
+  }, []);
 
   if (!user) {
     return null;
@@ -89,6 +108,21 @@ export default function ProfilePage() {
               /* TODO: Implement 2FA setup */
             }}
           />
+        </ProfileSection>
+
+        {/* My Data */}
+        <ProfileSection title={t('sections.data')} className="mt-8">
+          <div className="px-6 py-4">
+            <p className="text-sm text-slate mb-4">{t('exportData.description')}</p>
+            <button
+              onClick={handleExportData}
+              disabled={isExporting}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-navy-deep bg-warm-gray hover:bg-warm-gray/80 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Download className="w-4 h-4" />
+              {isExporting ? t('actions.exporting') : t('actions.exportData')}
+            </button>
+          </div>
         </ProfileSection>
 
         {/* Logout */}

@@ -500,6 +500,7 @@
     "sections": {
       "personal": "Informations personnelles",
       "security": "Sécurité",
+      "data": "Mes données",
       "danger": "Zone dangereuse"
     },
     "fields": {
@@ -515,7 +516,13 @@
       "enabled": "Activée",
       "disabled": "Non activée",
       "logout": "Se déconnecter",
-      "deleteAccount": "Supprimer mon compte"
+      "deleteAccount": "Supprimer mon compte",
+      "exportData": "Exporter mes données",
+      "exporting": "Export en cours..."
+    },
+    "exportData": {
+      "description": "Téléchargez une copie de toutes vos données au format JSON (RGPD Article 20).",
+      "success": "Données exportées avec succès"
     },
     "changePassword": {
       "title": "Changer de mot de passe",
