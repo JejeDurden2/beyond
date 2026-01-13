@@ -7,6 +7,7 @@ import {
   Shield,
   MessageCircle,
   UserCheck,
+  Scale,
   ChevronRight,
   type LucideIcon,
 } from 'lucide-react';
@@ -173,6 +174,7 @@ export function TrustedPersonStep({
     { icon: Shield, key: 'role' },
     { icon: MessageCircle, key: 'talk' },
     { icon: UserCheck, key: 'choose' },
+    { icon: Scale, key: 'notary' },
   ] as const;
 
   return (

@@ -514,6 +514,10 @@
         "choose": {
           "title": "Choose carefully",
           "description": "This person must be someone you absolutely trust. Spouse, child, close friend... you decide."
+        },
+        "notary": {
+          "title": "Inform your notary",
+          "description": "We strongly recommend telling your notary about Beyond. They can help ensure your keepsakes reach your beneficiaries when the time comes."
         }
       },
       "cta": {

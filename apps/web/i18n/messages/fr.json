@@ -514,6 +514,10 @@
         "choose": {
           "title": "Choisissez avec soin",
           "description": "Cette personne doit être quelqu'un en qui vous avez une confiance absolue. Conjoint(e), enfant, ami(e) proche... à vous de décider."
+        },
+        "notary": {
+          "title": "Informez votre notaire",
+          "description": "Nous vous recommandons vivement de parler de Beyond à votre notaire. Il pourra ainsi s'assurer que vos souvenirs atteignent bien vos bénéficiaires le moment venu."
         }
       },
       "cta": {
