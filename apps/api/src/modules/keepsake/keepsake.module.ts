@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module, OnModuleInit, forwardRef } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { KeepsakeController } from './infrastructure/controllers/keepsake.controller';
 import { PrismaKeepsakeRepository } from './infrastructure/adapters/prisma-keepsake.repository';
@@ -25,7 +25,7 @@ import { DeathDeclaredEvent } from '@/modules/vault/domain/events/death-declared
 import { NotificationModule } from '@/modules/notification/notification.module';
 
 @Module({
-  imports: [VaultModule, ScheduleModule.forRoot(), NotificationModule],
+  imports: [VaultModule, ScheduleModule.forRoot(), forwardRef(() => NotificationModule)],
   controllers: [KeepsakeController],
   providers: [
     {

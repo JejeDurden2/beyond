@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { NOTIFICATION_QUEUE } from '@/shared/queue/queue.constants';
 import { NotificationOrchestratorService } from './application/services/notification-orchestrator.service';
@@ -19,7 +19,7 @@ import { VaultModule } from '@/modules/vault/vault.module';
     BullModule.registerQueue({
       name: NOTIFICATION_QUEUE,
     }),
-    BeneficiaryModule,
+    forwardRef(() => BeneficiaryModule),
     AuthModule,
     VaultModule,
   ],
