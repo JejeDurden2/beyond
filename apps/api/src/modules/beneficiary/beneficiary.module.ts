@@ -30,7 +30,7 @@ import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
-    VaultModule,
+    forwardRef(() => VaultModule),
     forwardRef(() => KeepsakeModule),
     forwardRef(() => KeepsakeAssignmentModule),
     AuthModule,
