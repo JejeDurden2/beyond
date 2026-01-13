@@ -7,6 +7,7 @@ import { CompleteOnboardingCommand } from './application/commands/complete-onboa
 import { ChangePasswordCommand } from './application/commands/change-password.command';
 import { DeleteAccountCommand } from './application/commands/delete-account.command';
 import { UploadAvatarCommand } from './application/commands/upload-avatar.command';
+import { ExportUserDataQuery } from './application/queries/export-user-data.query';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { AuthModule } from '../auth/auth.module';
     ChangePasswordCommand,
     DeleteAccountCommand,
     UploadAvatarCommand,
+    ExportUserDataQuery,
   ],
 })
 export class UserModule {}

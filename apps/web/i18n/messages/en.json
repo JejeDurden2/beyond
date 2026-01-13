@@ -684,6 +684,16 @@
             "We do not use advertising or tracking cookies",
             "You can configure your browser to refuse cookies, but some features may not work"
           ]
+        },
+        "subProcessors": {
+          "title": "Sub-processors",
+          "intro": "We use trusted sub-processors to operate the service. All are GDPR-compliant and bound by data processing agreements:",
+          "items": [
+            "Neon (neon.tech) — PostgreSQL database hosted in the European Union. Stores your account information (encrypted at rest)",
+            "Cloudflare R2 (cloudflare.com) — File storage with AES-256-GCM encryption. Your media is client-side encrypted before transfer",
+            "Redis/Upstash (upstash.com) — Task queue for notifications. No personal data is permanently stored"
+          ],
+          "dpa": "We have signed Data Processing Agreements (DPAs) with each of these sub-processors in accordance with GDPR Article 28."
         }
       }
     }

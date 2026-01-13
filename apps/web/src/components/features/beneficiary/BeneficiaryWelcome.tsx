@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Lock, Heart } from 'lucide-react';
+import { CARD_SHADOW_STYLE } from '@/lib/constants';
 
 interface BeneficiaryWelcomeProps {
   senderName: string;
@@ -18,12 +19,7 @@ export function BeneficiaryWelcome({ senderName, keepsakeCount }: BeneficiaryWel
         {/* Main card */}
         <div
           className="bg-warm-gray rounded-2xl p-6 md:p-12 shadow-soft"
-          style={{
-            boxShadow: `
-              0 25px 50px -12px rgba(26, 54, 93, 0.1),
-              0 0 0 1px rgba(184, 134, 11, 0.05)
-            `,
-          }}
+          style={{ boxShadow: CARD_SHADOW_STYLE }}
         >
           {/* Icon */}
           <div className="flex justify-center mb-6 md:mb-8">

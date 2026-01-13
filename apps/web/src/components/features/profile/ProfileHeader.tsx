@@ -91,7 +91,8 @@ export function ProfileHeader({
             className="relative w-20 h-20 rounded-full overflow-hidden bg-muted flex items-center justify-center text-2xl font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:opacity-70"
           >
             {displayAvatar ? (
-              // eslint-disable-next-line @next/next/no-img-element
+              /* Using img for blob URL preview - Next.js Image doesn't support blob: protocol */
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img src={displayAvatar} alt={fullName} className="w-full h-full object-cover" />
             ) : (
               <span>{getInitials()}</span>

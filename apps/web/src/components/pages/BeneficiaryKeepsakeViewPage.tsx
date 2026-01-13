@@ -26,7 +26,7 @@ export function BeneficiaryKeepsakeViewPage({ keepsakeId }: BeneficiaryKeepsakeV
     queryFn: () => getBeneficiaryKeepsake(keepsakeId),
   });
 
-  const recordViewMutation = useMutation({
+  const { mutate: recordView } = useMutation({
     mutationFn: () => recordKeepsakeView(keepsakeId),
   });
 
@@ -39,10 +39,9 @@ export function BeneficiaryKeepsakeViewPage({ keepsakeId }: BeneficiaryKeepsakeV
       setShowPersonalMessage(true);
       setHasShownMessage(true);
     } else {
-      recordViewMutation.mutate();
+      recordView();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, hasShownMessage]);
+  }, [data, hasShownMessage, recordView]);
 
   const handleClosePersonalMessage = () => {
     setShowPersonalMessage(false);
@@ -51,7 +50,7 @@ export function BeneficiaryKeepsakeViewPage({ keepsakeId }: BeneficiaryKeepsakeV
 
   const handleContinueFromMessage = () => {
     setShowPersonalMessage(false);
-    recordViewMutation.mutate();
+    recordView();
   };
 
   if (isLoading) {

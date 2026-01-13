@@ -684,6 +684,16 @@
             "Nous n'utilisons pas de cookies publicitaires ou de tracking",
             "Vous pouvez configurer votre navigateur pour refuser les cookies, mais certaines fonctionnalités pourraient ne pas fonctionner"
           ]
+        },
+        "subProcessors": {
+          "title": "Sous-traitants",
+          "intro": "Nous faisons appel à des sous-traitants de confiance pour assurer le fonctionnement du service. Tous sont conformes au RGPD et soumis à des accords de traitement des données :",
+          "items": [
+            "Neon (neon.tech) — Base de données PostgreSQL hébergée dans l'Union Européenne. Stocke vos informations de compte (chiffrées au repos)",
+            "Cloudflare R2 (cloudflare.com) — Stockage de fichiers avec chiffrement AES-256-GCM. Vos médias sont chiffrés côté client avant transfert",
+            "Redis/Upstash (upstash.com) — File d'attente de tâches pour les notifications. Aucune donnée personnelle n'est stockée de manière permanente"
+          ],
+          "dpa": "Nous avons signé des accords de traitement des données (DPA) avec chacun de ces sous-traitants conformément à l'Article 28 du RGPD."
         }
       }
     }

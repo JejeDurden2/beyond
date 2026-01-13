@@ -1,9 +1,20 @@
-import { Controller, Patch, Post, Delete, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Patch,
+  Post,
+  Delete,
+  Get,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Query,
+} from '@nestjs/common';
 import { UpdateProfileCommand } from '../../application/commands/update-profile.command';
 import { CompleteOnboardingCommand } from '../../application/commands/complete-onboarding.command';
 import { ChangePasswordCommand } from '../../application/commands/change-password.command';
 import { DeleteAccountCommand } from '../../application/commands/delete-account.command';
 import { UploadAvatarCommand } from '../../application/commands/upload-avatar.command';
+import { ExportUserDataQuery } from '../../application/queries/export-user-data.query';
 import { UpdateProfileDto, ChangePasswordDto } from '../dto/user.dto';
 import { CurrentUser } from '../../../auth/infrastructure/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../../auth/infrastructure/strategies/jwt.strategy';
@@ -16,6 +27,7 @@ export class UserController {
     private readonly changePasswordCommand: ChangePasswordCommand,
     private readonly deleteAccountCommand: DeleteAccountCommand,
     private readonly uploadAvatarCommand: UploadAvatarCommand,
+    private readonly exportUserDataQuery: ExportUserDataQuery,
   ) {}
 
   @Patch('me')
@@ -56,9 +68,25 @@ export class UserController {
     return { success: true };
   }
 
+  /**
+   * GDPR Article 20 - Right to Data Portability
+   * Export all user data in a machine-readable format (JSON)
+   */
+  @Get('me/export')
+  async exportUserData(@CurrentUser() user: AuthenticatedUser) {
+    return this.exportUserDataQuery.execute({ userId: user.id });
+  }
+
   @Delete('me')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteAccount(@CurrentUser() user: AuthenticatedUser) {
-    await this.deleteAccountCommand.execute({ userId: user.id });
+  async deleteAccount(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query('hardDelete') hardDelete?: string,
+  ) {
+    // GDPR Right to Erasure: ?hardDelete=true permanently removes all data
+    await this.deleteAccountCommand.execute({
+      userId: user.id,
+      hardDelete: hardDelete === 'true',
+    });
   }
 }

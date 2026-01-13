@@ -26,6 +26,11 @@ model User {
   emailVerificationToken       String?   @unique
   emailVerificationTokenExpiry DateTime?
 
+  // GDPR consent tracking
+  termsAcceptedAt              DateTime?
+  privacyPolicyAcceptedAt      DateTime?
+  termsVersion                 String?   // Track which version was accepted
+
   createdAt                    DateTime  @default(now())
   updatedAt                    DateTime  @updatedAt
   deletedAt                    DateTime?

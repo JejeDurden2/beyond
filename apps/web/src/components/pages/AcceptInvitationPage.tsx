@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { getInvitationInfo, acceptInvitation, setToken, ApiError } from '@/lib/api';
 import { BeneficiaryWelcome } from '@/components/features/beneficiary';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { CARD_SHADOW_STYLE } from '@/lib/constants';
 
 const acceptInvitationSchema = z
   .object({
@@ -126,12 +127,7 @@ export function AcceptInvitationPage({ token }: AcceptInvitationPageProps) {
       <div className="w-full max-w-md">
         <div
           className="bg-warm-gray rounded-2xl p-6 md:p-8"
-          style={{
-            boxShadow: `
-              0 25px 50px -12px rgba(26, 54, 93, 0.1),
-              0 0 0 1px rgba(184, 134, 11, 0.05)
-            `,
-          }}
+          style={{ boxShadow: CARD_SHADOW_STYLE }}
         >
           <h1 className="font-serif-brand text-display-sm text-navy-deep text-center mb-6">
             {t('createAccount')}

@@ -14,12 +14,17 @@ import {
   BeneficiaryRepository,
   BENEFICIARY_REPOSITORY,
 } from '@/modules/beneficiary/domain/repositories/beneficiary.repository';
+import { Beneficiary } from '@/modules/beneficiary/domain/entities/beneficiary.entity';
 import {
   VaultRepository,
   VAULT_REPOSITORY,
 } from '@/modules/vault/domain/repositories/vault.repository';
 import { NotificationLog, NotificationType } from '../../domain/entities/notification-log.entity';
 import { NOTIFICATION_QUEUE, NotificationJobType } from '@/shared/queue/queue.constants';
+import {
+  DEFAULT_TRUSTED_PERSON_DELAY_HOURS,
+  DEFAULT_BENEFICIARY_DELAY_HOURS,
+} from '../../notification.constants';
 
 export interface ScheduleNotificationsForKeepsakeInput {
   keepsakeId: string;
@@ -54,8 +59,10 @@ export class NotificationOrchestratorService {
       }
 
       const config = await this.configRepository.findByVaultId(input.vaultId);
-      const trustedPersonDelayHours = config?.trustedPersonDelayHours ?? 72;
-      const beneficiaryDelayHours = config?.beneficiaryDelayHours ?? 168;
+      const trustedPersonDelayHours =
+        config?.trustedPersonDelayHours ?? DEFAULT_TRUSTED_PERSON_DELAY_HOURS;
+      const beneficiaryDelayHours =
+        config?.beneficiaryDelayHours ?? DEFAULT_BENEFICIARY_DELAY_HOURS;
 
       // 2. Get all beneficiaries for this vault
       const beneficiaries = await this.beneficiaryRepository.findByVaultId(input.vaultId);
@@ -68,62 +75,24 @@ export class NotificationOrchestratorService {
       const trustedPeople = beneficiaries.filter((b) => b.isTrustedPerson);
       const regularBeneficiaries = beneficiaries.filter((b) => !b.isTrustedPerson);
 
-      // 3. Schedule trusted person alerts (immediate or with short delay)
-      for (const trustedPerson of trustedPeople) {
-        const scheduledFor = this.calculateScheduledDate(trustedPersonDelayHours);
+      // 3. Schedule trusted person alerts
+      const trustedScheduled = await this.scheduleBeneficiaryNotifications(
+        trustedPeople,
+        input.keepsakeId,
+        NotificationType.TRUSTED_PERSON_ALERT,
+        trustedPersonDelayHours,
+      );
 
-        const logResult = NotificationLog.create({
-          keepsakeId: input.keepsakeId,
-          beneficiaryId: trustedPerson.id,
-          type: NotificationType.TRUSTED_PERSON_ALERT,
-          scheduledFor,
-        });
-
-        if (logResult.isErr()) {
-          this.logger.error(`Failed to create notification log: ${logResult.error}`);
-          continue;
-        }
-
-        const log = logResult.value;
-        await this.logRepository.save(log);
-
-        // Schedule job in BullMQ
-        await this.scheduleNotificationJob(log);
-
-        this.logger.log(
-          `Scheduled trusted person alert for beneficiary ${trustedPerson.id} at ${scheduledFor.toISOString()}`,
-        );
-      }
-
-      // 4. Schedule regular beneficiary invitations (with longer delay)
-      for (const beneficiary of regularBeneficiaries) {
-        const scheduledFor = this.calculateScheduledDate(beneficiaryDelayHours);
-
-        const logResult = NotificationLog.create({
-          keepsakeId: input.keepsakeId,
-          beneficiaryId: beneficiary.id,
-          type: NotificationType.BENEFICIARY_INVITATION,
-          scheduledFor,
-        });
-
-        if (logResult.isErr()) {
-          this.logger.error(`Failed to create notification log: ${logResult.error}`);
-          continue;
-        }
-
-        const log = logResult.value;
-        await this.logRepository.save(log);
-
-        // Schedule job in BullMQ
-        await this.scheduleNotificationJob(log);
-
-        this.logger.log(
-          `Scheduled beneficiary invitation for beneficiary ${beneficiary.id} at ${scheduledFor.toISOString()}`,
-        );
-      }
+      // 4. Schedule regular beneficiary invitations
+      const regularScheduled = await this.scheduleBeneficiaryNotifications(
+        regularBeneficiaries,
+        input.keepsakeId,
+        NotificationType.BENEFICIARY_INVITATION,
+        beneficiaryDelayHours,
+      );
 
       this.logger.log(
-        `Scheduled ${trustedPeople.length} trusted person alerts and ${regularBeneficiaries.length} beneficiary invitations for keepsake ${input.keepsakeId}`,
+        `Scheduled ${trustedScheduled} trusted person alerts and ${regularScheduled} beneficiary invitations for keepsake ${input.keepsakeId}`,
       );
 
       return ok(undefined);
@@ -134,9 +103,45 @@ export class NotificationOrchestratorService {
   }
 
   private calculateScheduledDate(delayHours: number): Date {
-    const now = new Date();
-    const scheduledDate = new Date(now.getTime() + delayHours * 60 * 60 * 1000);
-    return scheduledDate;
+    return new Date(Date.now() + delayHours * 60 * 60 * 1000);
+  }
+
+  private async scheduleBeneficiaryNotifications(
+    beneficiaries: Beneficiary[],
+    keepsakeId: string,
+    type: NotificationType,
+    delayHours: number,
+  ): Promise<number> {
+    let scheduledCount = 0;
+
+    for (const beneficiary of beneficiaries) {
+      const scheduledFor = this.calculateScheduledDate(delayHours);
+
+      const logResult = NotificationLog.create({
+        keepsakeId,
+        beneficiaryId: beneficiary.id,
+        type,
+        scheduledFor,
+      });
+
+      if (logResult.isErr()) {
+        this.logger.error(
+          `Failed to create notification log for beneficiary ${beneficiary.id}: ${logResult.error}`,
+        );
+        continue;
+      }
+
+      const log = logResult.value;
+      await this.logRepository.save(log);
+      await this.scheduleNotificationJob(log);
+
+      this.logger.log(
+        `Scheduled ${type} for beneficiary ${beneficiary.id} at ${scheduledFor.toISOString()}`,
+      );
+      scheduledCount++;
+    }
+
+    return scheduledCount;
   }
 
   private async scheduleNotificationJob(log: NotificationLog): Promise<void> {

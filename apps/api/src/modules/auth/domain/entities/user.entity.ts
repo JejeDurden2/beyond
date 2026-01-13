@@ -30,6 +30,11 @@ export interface UserProps {
   emailVerificationTokenExpiry?: Date | null;
   totpSecret?: string | null;
 
+  // GDPR consent tracking
+  termsAcceptedAt?: Date | null;
+  privacyPolicyAcceptedAt?: Date | null;
+  termsVersion?: string | null;
+
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date | null;
@@ -39,6 +44,8 @@ export interface CreateUserInput {
   email: string;
   password: string;
   role?: UserRole;
+  acceptTerms?: boolean;
+  termsVersion?: string;
 }
 
 export class User extends AggregateRoot<UserProps> {
@@ -64,6 +71,12 @@ export class User extends AggregateRoot<UserProps> {
       Date.now() + this.TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
     );
 
+    // Record GDPR consent if provided
+    const now = new Date();
+    const termsAcceptedAt = input.acceptTerms ? now : null;
+    const privacyPolicyAcceptedAt = input.acceptTerms ? now : null;
+    const termsVersion = input.acceptTerms ? (input.termsVersion ?? '1.0') : null;
+
     return ok(
       new User({
         email: emailResult.value,
@@ -72,6 +85,9 @@ export class User extends AggregateRoot<UserProps> {
         emailVerified: false,
         emailVerificationToken,
         emailVerificationTokenExpiry,
+        termsAcceptedAt,
+        privacyPolicyAcceptedAt,
+        termsVersion,
       }),
     );
   }
@@ -122,6 +138,18 @@ export class User extends AggregateRoot<UserProps> {
 
   get onboardingCompletedAt(): Date | null {
     return this.props.onboardingCompletedAt ?? null;
+  }
+
+  get termsAcceptedAt(): Date | null {
+    return this.props.termsAcceptedAt ?? null;
+  }
+
+  get privacyPolicyAcceptedAt(): Date | null {
+    return this.props.privacyPolicyAcceptedAt ?? null;
+  }
+
+  get termsVersion(): string | null {
+    return this.props.termsVersion ?? null;
   }
 
   async verifyPassword(plainPassword: string): Promise<boolean> {
@@ -226,5 +254,23 @@ export class User extends AggregateRoot<UserProps> {
     this.props.role = UserRole.BOTH;
     this._updatedAt = new Date();
     return ok(undefined);
+  }
+
+  /**
+   * Record GDPR consent acceptance
+   */
+  acceptTerms(version: string): void {
+    const now = new Date();
+    this.props.termsAcceptedAt = now;
+    this.props.privacyPolicyAcceptedAt = now;
+    this.props.termsVersion = version;
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * Check if user has accepted the current terms version
+   */
+  hasAcceptedTerms(currentVersion: string): boolean {
+    return this.props.termsAcceptedAt !== null && this.props.termsVersion === currentVersion;
   }
 }

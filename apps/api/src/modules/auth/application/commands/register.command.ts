@@ -9,6 +9,8 @@ import type { AuthResponse } from '../types';
 export interface RegisterCommandInput {
   email: string;
   password: string;
+  acceptTerms?: boolean;
+  termsVersion?: string;
 }
 
 export type RegisterCommandOutput = AuthResponse;
@@ -38,6 +40,8 @@ export class RegisterCommand {
     const userResult = await User.create({
       email: input.email,
       password: input.password,
+      acceptTerms: input.acceptTerms,
+      termsVersion: input.termsVersion,
     });
 
     if (userResult.isErr()) {

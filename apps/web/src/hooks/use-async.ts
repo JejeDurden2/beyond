@@ -38,6 +38,8 @@ export function useAsync<T>(
         error: error instanceof Error ? error : new Error(String(error)),
       });
     }
+    // Dependencies are intentionally spread from the `deps` parameter.
+    // This is a custom hook pattern where the caller controls dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 

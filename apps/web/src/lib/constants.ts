@@ -41,3 +41,12 @@ export function formatDate(dateStr: string, locale?: string): string {
   const date = new Date(dateStr);
   return date.toLocaleDateString(locale);
 }
+
+/**
+ * Shared shadow styles for premium card components.
+ * Creates a soft shadow with gold accent border.
+ */
+export const CARD_SHADOW_STYLE = `
+  0 25px 50px -12px rgba(26, 54, 93, 0.1),
+  0 0 0 1px rgba(184, 134, 11, 0.05)
+`;

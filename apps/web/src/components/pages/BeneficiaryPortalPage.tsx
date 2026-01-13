@@ -8,6 +8,7 @@ import { Heart, Loader2 } from 'lucide-react';
 
 export function BeneficiaryPortalPage() {
   const t = useTranslations('beneficiary.portal');
+  const tErrors = useTranslations('beneficiary.errors');
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['beneficiary-dashboard'],
@@ -43,7 +44,7 @@ export function BeneficiaryPortalPage() {
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <p className="text-red-600 mb-4">{t('errors.loadFailed')}</p>
+          <p className="text-red-600 mb-4">{tErrors('loadFailed')}</p>
           <button
             onClick={() => window.location.reload()}
             className="text-navy-light hover:text-gold-heritage"

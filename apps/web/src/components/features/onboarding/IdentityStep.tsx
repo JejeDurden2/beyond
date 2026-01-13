@@ -79,7 +79,8 @@ export function IdentityStep({ initialData, onBack, onNext }: IdentityStepProps)
           <label className="relative cursor-pointer group">
             <div className="w-24 h-24 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center overflow-hidden transition-all duration-200 group-hover:border-gold-heritage">
               {avatarPreview ? (
-                // eslint-disable-next-line @next/next/no-img-element
+                /* Using img for blob URL preview - Next.js Image doesn't support blob: protocol */
+                /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   src={avatarPreview}
                   alt="Avatar preview"

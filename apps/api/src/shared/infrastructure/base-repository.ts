@@ -1,8 +1,8 @@
 import { AggregateRoot } from '../domain/aggregate-root.base';
 import { DomainEventPublisher } from '../domain/domain-event-publisher.service';
+import { EntityProps } from '../domain/entity.base';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export abstract class BaseRepository<T extends AggregateRoot<any>> {
+export abstract class BaseRepository<T extends AggregateRoot<EntityProps>> {
   constructor(protected readonly eventPublisher: DomainEventPublisher) {}
 
   protected async publishEvents(aggregate: T): Promise<void> {

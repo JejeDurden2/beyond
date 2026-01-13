@@ -20,6 +20,7 @@ import {
 import { IEmailService, EMAIL_SERVICE } from '@/shared/ports/email.port';
 import { NotificationType } from '../../domain/entities/notification-log.entity';
 import { NOTIFICATION_QUEUE } from '@/shared/queue/queue.constants';
+import { DEFAULT_EMAIL_LOCALE } from '../../notification.constants';
 
 interface NotificationJobData {
   notificationLogId: string;
@@ -133,7 +134,7 @@ export class NotificationProcessor extends WorkerHost {
     await this.emailService.sendTrustedPersonAlert({
       to: beneficiary.email,
       vaultOwnerName,
-      locale: 'fr', // TODO: Get from beneficiary or vault owner preference
+      locale: DEFAULT_EMAIL_LOCALE,
     });
   }
 
@@ -169,7 +170,7 @@ export class NotificationProcessor extends WorkerHost {
       beneficiaryName: beneficiary.fullName,
       senderName,
       invitationToken: beneficiary.invitationToken!,
-      locale: 'fr', // TODO: Get from beneficiary or vault owner preference
+      locale: DEFAULT_EMAIL_LOCALE,
     });
   }
 
@@ -182,7 +183,7 @@ export class NotificationProcessor extends WorkerHost {
     await this.emailService.sendBeneficiaryAccountCreated({
       to: beneficiary.email,
       beneficiaryName: beneficiary.fullName,
-      locale: 'fr', // TODO: Get from beneficiary or vault owner preference
+      locale: DEFAULT_EMAIL_LOCALE,
     });
   }
 }
