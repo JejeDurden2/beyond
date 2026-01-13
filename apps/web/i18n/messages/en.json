@@ -741,7 +741,8 @@
       "actions": {
         "download": "Download",
         "print": "Print",
-        "back": "Back to my keepsakes"
+        "back": "Back to my keepsakes",
+        "close": "Close"
       },
       "deliveryInfo": {
         "from": "From {senderName}",

@@ -4,9 +4,19 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useRouter } from '@/i18n/navigation';
-import { getInvitationInfo, acceptInvitation, setToken } from '@/lib/api';
+import { z } from 'zod';
+import { getInvitationInfo, acceptInvitation, setToken, ApiError } from '@/lib/api';
 import { BeneficiaryWelcome } from '@/components/features/beneficiary';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
+
+const acceptInvitationSchema = z
+  .object({
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+  });
 
 interface AcceptInvitationPageProps {
   token: string;
@@ -39,11 +49,16 @@ export function AcceptInvitationPage({ token }: AcceptInvitationPageProps) {
       router.push('/portal');
     },
     onError: (err: unknown) => {
-      const errorMessage =
-        err instanceof Error && 'data' in err
-          ? (err as Error & { data?: { message?: string } }).data?.message
-          : undefined;
-      setError(errorMessage ?? t('errors.acceptFailed'));
+      if (
+        err instanceof ApiError &&
+        err.data &&
+        typeof err.data === 'object' &&
+        'message' in err.data
+      ) {
+        setError(String((err.data as { message: string }).message));
+      } else {
+        setError(t('errors.acceptFailed'));
+      }
     },
   });
 
@@ -58,13 +73,14 @@ export function AcceptInvitationPage({ token }: AcceptInvitationPageProps) {
     e.preventDefault();
     setError('');
 
-    if (password.length < 8) {
-      setError(t('errors.passwordTooShort'));
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError(t('errors.passwordMismatch'));
+    const result = acceptInvitationSchema.safeParse({ password, confirmPassword });
+    if (!result.success) {
+      const firstIssue = result.error.issues[0];
+      if (firstIssue.path[0] === 'password') {
+        setError(t('errors.passwordTooShort'));
+      } else if (firstIssue.path[0] === 'confirmPassword') {
+        setError(t('errors.passwordMismatch'));
+      }
       return;
     }
 

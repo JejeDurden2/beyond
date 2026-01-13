@@ -62,15 +62,25 @@ export class NotificationProcessor extends WorkerHost {
     try {
       switch (type) {
         case NotificationType.TRUSTED_PERSON_ALERT:
-          await this.sendTrustedPersonAlert(beneficiaryId!);
+        case NotificationType.BENEFICIARY_INVITATION:
+        case NotificationType.ACCOUNT_CREATION:
+          if (!beneficiaryId) {
+            throw new Error(`Beneficiary ID required for notification type ${type}`);
+          }
+          break;
+      }
+
+      switch (type) {
+        case NotificationType.TRUSTED_PERSON_ALERT:
+          await this.sendTrustedPersonAlert(beneficiaryId as string);
           break;
 
         case NotificationType.BENEFICIARY_INVITATION:
-          await this.sendBeneficiaryInvitation(beneficiaryId!);
+          await this.sendBeneficiaryInvitation(beneficiaryId as string);
           break;
 
         case NotificationType.ACCOUNT_CREATION:
-          await this.sendAccountCreationEmail(beneficiaryId!);
+          await this.sendAccountCreationEmail(beneficiaryId as string);
           break;
 
         default:

@@ -162,7 +162,7 @@ export function KeepsakeVisualizationWrapper({
               <button
                 onClick={handleClose}
                 className="p-2 rounded-lg bg-warm-gray hover:bg-red-100 text-navy-deep transition-colors"
-                aria-label="Close"
+                aria-label={t('actions.close')}
               >
                 <X className="w-4 h-4 md:w-5 md:h-5" />
               </button>

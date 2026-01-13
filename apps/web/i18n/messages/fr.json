@@ -741,7 +741,8 @@
       "actions": {
         "download": "Télécharger",
         "print": "Imprimer",
-        "back": "Retour à mes souvenirs"
+        "back": "Retour à mes souvenirs",
+        "close": "Fermer"
       },
       "deliveryInfo": {
         "from": "De {senderName}",
