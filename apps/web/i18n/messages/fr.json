@@ -524,7 +524,7 @@
         "title": "Ajouter ma personne de confiance",
         "subtitle": "Je suis prêt(e) à désigner cette personne"
       },
-      "skipForNow": "Je ferai ça plus tard",
+      "skipForNow": "Passer cette étape pour l'instant",
       "later": "Plus tard",
       "addAndFinish": "Ajouter et terminer",
       "form": {
