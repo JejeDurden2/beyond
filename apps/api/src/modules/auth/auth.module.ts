@@ -8,6 +8,7 @@ import { AuthController } from './infrastructure/controllers/auth.controller';
 import { PrismaUserRepository } from './infrastructure/adapters/prisma-user.repository';
 import { PrismaPasswordResetTokenRepository } from './infrastructure/adapters/prisma-password-reset-token.repository';
 import { ConsoleEmailService } from './infrastructure/adapters/console-email.service';
+import { ResendEmailService } from './infrastructure/adapters/resend-email.service';
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';
 
@@ -47,7 +48,19 @@ import { VaultModule } from '../vault/vault.module';
     },
     {
       provide: EMAIL_SERVICE,
-      useClass: ConsoleEmailService,
+      useFactory: (configService: ConfigService) => {
+        const nodeEnv = configService.get<string>('NODE_ENV');
+        const resendApiKey = configService.get<string>('RESEND_API_KEY');
+
+        // Use Resend in production or if RESEND_API_KEY is set
+        if (nodeEnv === 'production' || resendApiKey) {
+          return new ResendEmailService(configService);
+        }
+
+        // Default to console adapter for development
+        return new ConsoleEmailService();
+      },
+      inject: [ConfigService],
     },
     JwtStrategy,
     {
