@@ -46,7 +46,13 @@ export default function BeneficiaryDetailPage({ params }: PageParams) {
     if (!beneficiary) return;
     setTrustedPerson.mutate(
       { id: beneficiary.id, isTrustedPerson: !beneficiary.isTrustedPerson },
-      { onSuccess: () => setShowTrustedDialog(false) },
+      {
+        onSuccess: () => setShowTrustedDialog(false),
+        onError: (error) => {
+          console.error('Failed to set trusted person:', error);
+          setShowTrustedDialog(false);
+        },
+      },
     );
   };
 
