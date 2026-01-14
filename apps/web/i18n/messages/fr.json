@@ -45,7 +45,8 @@
     "back": "Retour",
     "continue": "Continuer",
     "confirm": "Confirmer",
-    "error": "Une erreur est survenue"
+    "error": "Une erreur est survenue",
+    "next": "Suivant"
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -291,7 +292,9 @@
       "wishPlaceholder": "Mon souhait est...",
       "optional": "optionnel",
       "create": "Créer le souvenir",
-      "creating": "Création..."
+      "creating": "Création...",
+      "selectBeneficiaries": "Sélectionnez les personnes qui recevront ce souvenir",
+      "skipBeneficiaries": "Passer cette étape"
     },
     "edit": {
       "title": "Modifier {type}",

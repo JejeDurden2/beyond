@@ -63,10 +63,10 @@ export function IdentityStep({ initialData, onBack, onNext }: IdentityStepProps)
           <ArrowLeft className="w-5 h-5" />
           {t('back')}
         </button>
-        <span className="text-sm text-muted-foreground">{t('step', { current: 1, total: 3 })}</span>
+        <span className="text-sm text-muted-foreground">{t('step', { current: 1, total: 2 })}</span>
       </div>
 
-      <OnboardingProgress currentStep={1} totalSteps={4} />
+      <OnboardingProgress currentStep={1} totalSteps={3} />
 
       <h1 className="font-serif-brand text-2xl md:text-3xl text-navy-deep mt-8 mb-2 text-center">
         {t('identity.title')}

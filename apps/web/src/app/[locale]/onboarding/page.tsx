@@ -7,7 +7,6 @@ import {
   OnboardingLayout,
   WelcomeStep,
   IdentityStep,
-  IntentionStep,
   TrustedPersonStep,
   CompletionStep,
 } from '@/components/features/onboarding';
@@ -15,14 +14,12 @@ import { updateProfile, completeOnboarding, getAvatarUploadUrl } from '@/lib/api
 import { createBeneficiary, setTrustedPerson } from '@/lib/api/beneficiaries';
 import type { Relationship } from '@/types';
 
-type Step = 'welcome' | 'identity' | 'intention' | 'trustedPerson' | 'completion';
-type IntentionType = 'letters' | 'photos' | 'videos' | 'wishes' | 'gifts';
+type Step = 'welcome' | 'identity' | 'trustedPerson' | 'completion';
 
 interface OnboardingData {
   firstName?: string;
   lastName?: string;
   avatarFile?: File;
-  intentions?: IntentionType[];
 }
 
 interface TrustedPersonData {
@@ -57,7 +54,7 @@ export default function OnboardingPage(): React.ReactElement | null {
         setData(parsed);
         // Resume from last step if we have data
         if (parsed.firstName && parsed.lastName) {
-          setStep('intention');
+          setStep('trustedPerson');
         }
       } catch {
         // Invalid data, start fresh
@@ -116,15 +113,6 @@ export default function OnboardingPage(): React.ReactElement | null {
     avatarFile?: File;
   }): void {
     setData((prev) => ({ ...prev, ...identityData }));
-    setStep('intention');
-  }
-
-  function handleIntentionComplete(intentions: IntentionType[]): void {
-    setData((prev) => ({ ...prev, intentions }));
-    setStep('trustedPerson');
-  }
-
-  function handleIntentionSkip(): void {
     setStep('trustedPerson');
   }
 
@@ -183,18 +171,9 @@ export default function OnboardingPage(): React.ReactElement | null {
         />
       )}
 
-      {step === 'intention' && (
-        <IntentionStep
-          initialData={data.intentions}
-          onBack={() => setStep('identity')}
-          onNext={handleIntentionComplete}
-          onSkip={handleIntentionSkip}
-        />
-      )}
-
       {step === 'trustedPerson' && (
         <TrustedPersonStep
-          onBack={() => setStep('intention')}
+          onBack={() => setStep('identity')}
           onNext={handleTrustedPersonComplete}
           onSkip={handleTrustedPersonSkip}
         />

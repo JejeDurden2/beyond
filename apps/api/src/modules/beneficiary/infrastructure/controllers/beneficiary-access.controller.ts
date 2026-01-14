@@ -9,6 +9,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
+import { Public } from '@/modules/auth/infrastructure/decorators/public.decorator';
 import { GetBeneficiaryAccessInfoQuery } from '../../application/queries/get-beneficiary-access-info.query';
 import { CreateTemporaryAccessCommand } from '../../application/commands/create-temporary-access.command';
 
@@ -19,6 +20,7 @@ export class BeneficiaryAccessController {
     private readonly createTemporaryAccessCommand: CreateTemporaryAccessCommand,
   ) {}
 
+  @Public()
   @Get(':token')
   async getAccessInfo(@Param('token') token: string) {
     const result = await this.getAccessInfoQuery.execute(token);
@@ -38,6 +40,7 @@ export class BeneficiaryAccessController {
     return result.value;
   }
 
+  @Public()
   @Post(':token/view')
   @HttpCode(HttpStatus.OK)
   async createTemporaryAccess(@Param('token') token: string) {

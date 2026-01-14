@@ -45,7 +45,8 @@
     "back": "Back",
     "continue": "Continue",
     "confirm": "Confirm",
-    "error": "An error occurred"
+    "error": "An error occurred",
+    "next": "Next"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -291,7 +292,9 @@
       "wishPlaceholder": "My wish is...",
       "optional": "optional",
       "create": "Create Keepsake",
-      "creating": "Creating..."
+      "creating": "Creating...",
+      "selectBeneficiaries": "Select who will receive this keepsake",
+      "skipBeneficiaries": "Skip this step"
     },
     "edit": {
       "title": "Edit {type}",

@@ -3,11 +3,20 @@
 import { Link, useRouter } from '@/i18n/navigation';
 import { useState, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { Plus } from 'lucide-react';
 import { AppShell } from '@/components/layout';
-import { ErrorAlert, KeepsakeTypeIcon, ArrowLeft, MediaTypeIcon } from '@/components/ui';
+import {
+  ErrorAlert,
+  KeepsakeTypeIcon,
+  ArrowLeft,
+  MediaTypeIcon,
+  RelationshipIcon,
+} from '@/components/ui';
 import { createKeepsake, uploadMedia } from '@/lib/api/keepsakes';
+import { bulkUpdateAssignments } from '@/lib/api/assignments';
 import { KEEPSAKE_TYPES } from '@/lib/constants';
 import { getAllowedMimeTypes } from '@/types';
+import { useBeneficiaries } from '@/hooks/use-beneficiaries';
 import type { KeepsakeType, TriggerCondition } from '@/types';
 
 interface SelectedFile {
@@ -19,6 +28,8 @@ export default function NewKeepsakePage() {
   const router = useRouter();
   const t = useTranslations('keepsakes');
   const tCommon = useTranslations('common');
+  const tBeneficiaries = useTranslations('beneficiaries');
+  const tAssignments = useTranslations('assignments');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<KeepsakeType | null>(null);
@@ -28,9 +39,13 @@ export default function NewKeepsakePage() {
   const [scheduledAt, setScheduledAt] = useState('');
   const [revealDelay, setRevealDelay] = useState<number | ''>('');
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
+  const [selectedBeneficiaryIds, setSelectedBeneficiaryIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  const { data: beneficiariesData } = useBeneficiaries();
+  const beneficiaries = beneficiariesData?.beneficiaries ?? [];
 
   const handleTypeSelect = (type: KeepsakeType) => {
     setSelectedType(type);
@@ -64,8 +79,20 @@ export default function NewKeepsakePage() {
     [handleFileSelect],
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleDetailsNext = (e: React.FormEvent) => {
     e.preventDefault();
+    setStep(3);
+  };
+
+  const toggleBeneficiary = (beneficiaryId: string) => {
+    setSelectedBeneficiaryIds((prev) =>
+      prev.includes(beneficiaryId)
+        ? prev.filter((id) => id !== beneficiaryId)
+        : [...prev, beneficiaryId],
+    );
+  };
+
+  const handleSubmit = async () => {
     if (!selectedType || !title) return;
 
     // For text-based types, content is required
@@ -97,6 +124,11 @@ export default function NewKeepsakePage() {
           files: selectedFiles.map((sf) => sf.file),
           onProgress: setUploadProgress,
         });
+      }
+
+      // If beneficiaries selected, assign them
+      if (selectedBeneficiaryIds.length > 0) {
+        await bulkUpdateAssignments(keepsake.id, selectedBeneficiaryIds);
       }
 
       router.push('/keepsakes');
@@ -144,7 +176,7 @@ export default function NewKeepsakePage() {
 
   const isContentRequired = isTextBased ?? false;
   const isMediaRequired = isMediaBased ?? false;
-  const canSubmit =
+  const canProceedToStep3 =
     title && (!isContentRequired || content) && (!isMediaRequired || selectedFiles.length > 0);
 
   function formatFileSize(bytes: number): string {
@@ -218,6 +250,9 @@ export default function NewKeepsakePage() {
               >
                 <ArrowLeft className="w-4 h-4" /> {tCommon('back')}
               </button>
+              <span className="text-sm text-muted-foreground">
+                {t('form.step', { current: 1, total: 2 })}
+              </span>
             </div>
 
             <div className="text-center space-y-2">
@@ -225,7 +260,7 @@ export default function NewKeepsakePage() {
             </div>
 
             <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleDetailsNext} className="space-y-6">
                 {error && <ErrorAlert message={error} />}
 
                 {/* Title - always shown */}
@@ -434,13 +469,142 @@ export default function NewKeepsakePage() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isLoading || !canSubmit}
+                    disabled={!canProceedToStep3}
                     className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? t('form.creating') : t('form.create')}
+                    {tCommon('next')}
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && selectedType && (
+          <div className="space-y-8 animate-fade-in">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setStep(2)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out inline-flex items-center gap-1"
+              >
+                <ArrowLeft className="w-4 h-4" /> {tCommon('back')}
+              </button>
+              <span className="text-sm text-muted-foreground">
+                {t('form.step', { current: 2, total: 2 })}
+              </span>
+            </div>
+
+            <div className="text-center space-y-2">
+              <h1 className="font-display text-display-sm text-foreground">
+                {tAssignments('whoReceives')}
+              </h1>
+              <p className="text-muted-foreground">{t('form.selectBeneficiaries')}</p>
+            </div>
+
+            <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
+              {error && (
+                <div className="mb-6">
+                  <ErrorAlert message={error} />
+                </div>
+              )}
+
+              {beneficiaries.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground mb-4">{tAssignments('noBeneficiaries')}</p>
+                  <Link
+                    href="/beneficiaries/new"
+                    className="inline-flex items-center gap-2 bg-accent text-accent-foreground hover:bg-accent/90 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    {tAssignments('addBeneficiary')}
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {beneficiaries.map((beneficiary) => {
+                    const isSelected = selectedBeneficiaryIds.includes(beneficiary.id);
+                    return (
+                      <button
+                        key={beneficiary.id}
+                        type="button"
+                        onClick={() => toggleBeneficiary(beneficiary.id)}
+                        className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 ${
+                          isSelected
+                            ? 'border-accent bg-accent/5'
+                            : 'border-border/40 hover:border-border'
+                        }`}
+                      >
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                            isSelected ? 'bg-accent/20' : 'bg-muted'
+                          }`}
+                        >
+                          <RelationshipIcon
+                            relationship={beneficiary.relationship}
+                            className={`w-5 h-5 ${isSelected ? 'text-accent' : 'text-muted-foreground'}`}
+                          />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <p className="font-medium text-foreground">{beneficiary.fullName}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {tBeneficiaries(`relationships.${beneficiary.relationship}`)}
+                          </p>
+                        </div>
+                        <div
+                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                            isSelected
+                              ? 'border-accent bg-accent text-white'
+                              : 'border-border bg-background'
+                          }`}
+                        >
+                          {isSelected && (
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+
+                  <Link
+                    href="/beneficiaries/new"
+                    className="w-full flex items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-border/40 text-muted-foreground hover:border-border hover:text-foreground transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    {tAssignments('createNew')}
+                  </Link>
+                </div>
+              )}
+
+              <div className="flex gap-4 justify-end pt-6 mt-6 border-t border-border/40">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  className="border border-border/60 text-foreground rounded-xl px-6 py-3 font-medium transition-colors duration-200 ease-out hover:bg-muted/50 disabled:opacity-50"
+                >
+                  {t('form.skipBeneficiaries')}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isLoading || selectedBeneficiaryIds.length === 0}
+                  className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? t('form.creating') : t('form.create')}
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -101,11 +101,11 @@ export function TrustedPersonStep({
             {t('back')}
           </button>
           <span className="text-sm text-muted-foreground">
-            {t('step', { current: 3, total: 3 })}
+            {t('step', { current: 2, total: 2 })}
           </span>
         </div>
 
-        <OnboardingProgress currentStep={3} totalSteps={4} />
+        <OnboardingProgress currentStep={2} totalSteps={3} />
 
         <h1 className="font-serif-brand text-2xl md:text-3xl text-navy-deep mt-8 mb-2 text-center">
           {t('trustedPerson.form.title')}
@@ -188,10 +188,10 @@ export function TrustedPersonStep({
           <ArrowLeft className="w-5 h-5" />
           {t('back')}
         </button>
-        <span className="text-sm text-muted-foreground">{t('step', { current: 3, total: 3 })}</span>
+        <span className="text-sm text-muted-foreground">{t('step', { current: 2, total: 2 })}</span>
       </div>
 
-      <OnboardingProgress currentStep={3} totalSteps={4} />
+      <OnboardingProgress currentStep={2} totalSteps={3} />
 
       <h1 className="font-serif-brand text-2xl md:text-3xl text-navy-deep mt-8 mb-2 text-center">
         {t('trustedPerson.title')}
