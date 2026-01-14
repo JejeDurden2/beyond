@@ -288,8 +288,8 @@ model BeneficiaryInvitation {
   id            String           @id @default(uuid())
   beneficiaryId String
   beneficiary   Beneficiary      @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
-  keepsakeId    String
-  keepsake      Keepsake         @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  keepsakeId    String?
+  keepsake      Keepsake?        @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
   token         String           @unique
   status        InvitationStatus @default(PENDING)
   sentAt        DateTime         @default(now())

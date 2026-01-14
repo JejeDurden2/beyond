@@ -5,6 +5,11 @@ import {
   BENEFICIARY_REPOSITORY,
 } from '../../domain/repositories/beneficiary.repository';
 import {
+  IBeneficiaryInvitationRepository,
+  BENEFICIARY_INVITATION_REPOSITORY,
+} from '../../domain/repositories/beneficiary-invitation.repository';
+import { BeneficiaryInvitation } from '../../domain/entities/beneficiary-invitation.entity';
+import {
   VaultRepository,
   VAULT_REPOSITORY,
 } from '@/modules/vault/domain/repositories/vault.repository';
@@ -27,6 +32,8 @@ export class SetTrustedPersonCommand {
   constructor(
     @Inject(BENEFICIARY_REPOSITORY)
     private readonly beneficiaryRepository: BeneficiaryRepository,
+    @Inject(BENEFICIARY_INVITATION_REPOSITORY)
+    private readonly invitationRepository: IBeneficiaryInvitationRepository,
     @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
     @Inject(USER_REPOSITORY)
@@ -56,16 +63,25 @@ export class SetTrustedPersonCommand {
         }
       }
       beneficiary.markAsTrustedPerson();
-
-      // Generate invitation token if not already present
-      if (!beneficiary.invitationToken) {
-        beneficiary.generateInvitationToken();
-      }
-
       await this.beneficiaryRepository.save(beneficiary);
 
+      // Create a BeneficiaryInvitation record (without keepsakeId for trusted person invitations)
+      const invitationResult = BeneficiaryInvitation.create({
+        beneficiaryId: beneficiary.id,
+        keepsakeId: null, // Trusted person invitations don't have a keepsake
+        expiresInDays: 30,
+      });
+
+      if (invitationResult.isErr()) {
+        this.logger.error(`Failed to create invitation: ${invitationResult.error}`);
+        return err(invitationResult.error);
+      }
+
+      const invitation = invitationResult.value;
+      await this.invitationRepository.save(invitation);
+
       // Send invitation email to the trusted person
-      await this.sendTrustedPersonInvitationEmail(input.userId, beneficiary);
+      await this.sendTrustedPersonInvitationEmail(input.userId, beneficiary, invitation.token);
     } else {
       beneficiary.unmarkAsTrustedPerson();
       await this.beneficiaryRepository.save(beneficiary);
@@ -76,7 +92,8 @@ export class SetTrustedPersonCommand {
 
   private async sendTrustedPersonInvitationEmail(
     vaultOwnerId: string,
-    beneficiary: { email: string; fullName: string; invitationToken: string | null },
+    beneficiary: { email: string; fullName: string },
+    invitationToken: string,
   ): Promise<void> {
     try {
       const vaultOwner = await this.userRepository.findById(vaultOwnerId);
@@ -90,16 +107,11 @@ export class SetTrustedPersonCommand {
           ? `${vaultOwner.firstName} ${vaultOwner.lastName}`
           : vaultOwner.email.value;
 
-      if (!beneficiary.invitationToken) {
-        this.logger.error('Beneficiary invitation token is missing');
-        return;
-      }
-
       await this.emailService.sendTrustedPersonInvitation({
         to: beneficiary.email,
         trustedPersonName: beneficiary.fullName,
         vaultOwnerName,
-        invitationToken: beneficiary.invitationToken,
+        invitationToken,
         locale: 'fr', // Default to French, could be made configurable
       });
 

@@ -9,7 +9,7 @@ import {
 interface PrismaBeneficiaryInvitationRecord {
   id: string;
   beneficiaryId: string;
-  keepsakeId: string;
+  keepsakeId: string | null;
   token: string;
   status: string;
   sentAt: Date;

@@ -13,7 +13,7 @@ export enum InvitationStatus {
 export interface BeneficiaryInvitationProps {
   id?: string;
   beneficiaryId: string;
-  keepsakeId: string;
+  keepsakeId?: string | null;
   token: string;
   status: InvitationStatus;
   sentAt: Date;
@@ -29,7 +29,7 @@ export interface BeneficiaryInvitationProps {
 
 export interface CreateBeneficiaryInvitationInput {
   beneficiaryId: string;
-  keepsakeId: string;
+  keepsakeId?: string | null;
   expiresInDays?: number;
 }
 
@@ -46,9 +46,6 @@ export class BeneficiaryInvitation extends AggregateRoot<BeneficiaryInvitationPr
     if (!input.beneficiaryId) {
       return err('Beneficiary ID is required');
     }
-    if (!input.keepsakeId) {
-      return err('Keepsake ID is required');
-    }
 
     const token = this.generateToken();
     const expiryDays = input.expiresInDays ?? this.DEFAULT_EXPIRY_DAYS;
@@ -58,7 +55,7 @@ export class BeneficiaryInvitation extends AggregateRoot<BeneficiaryInvitationPr
     return ok(
       new BeneficiaryInvitation({
         beneficiaryId: input.beneficiaryId,
-        keepsakeId: input.keepsakeId,
+        keepsakeId: input.keepsakeId ?? null,
         token,
         status: InvitationStatus.PENDING,
         sentAt: new Date(),
@@ -183,8 +180,8 @@ export class BeneficiaryInvitation extends AggregateRoot<BeneficiaryInvitationPr
     return this.props.beneficiaryId;
   }
 
-  get keepsakeId(): string {
-    return this.props.keepsakeId;
+  get keepsakeId(): string | null {
+    return this.props.keepsakeId ?? null;
   }
 
   get token(): string {
