@@ -21,6 +21,10 @@ import {
   VaultRepository,
   VAULT_REPOSITORY,
 } from '@/modules/vault/domain/repositories/vault.repository';
+import {
+  KeepsakeAssignmentRepository,
+  KEEPSAKE_ASSIGNMENT_REPOSITORY,
+} from '@/modules/keepsake-assignment/domain/repositories/keepsake-assignment.repository';
 import { IEmailService, EMAIL_SERVICE } from '@/shared/ports';
 
 export interface ResendBeneficiaryInvitationInput {
@@ -49,6 +53,8 @@ export class ResendBeneficiaryInvitationCommand {
     private readonly userRepository: UserRepository,
     @Inject(VAULT_REPOSITORY)
     private readonly vaultRepository: VaultRepository,
+    @Inject(KEEPSAKE_ASSIGNMENT_REPOSITORY)
+    private readonly keepsakeAssignmentRepository: KeepsakeAssignmentRepository,
     @Inject(EMAIL_SERVICE)
     private readonly emailService: IEmailService,
   ) {}
@@ -120,7 +126,7 @@ export class ResendBeneficiaryInvitationCommand {
 
   private async sendInvitationEmail(
     vaultOwnerId: string,
-    beneficiary: { email: string; fullName: string },
+    beneficiary: { id: string; email: string; fullName: string },
     invitationToken: string,
   ): Promise<Result<void, string>> {
     const vaultOwner = await this.userRepository.findById(vaultOwnerId);
@@ -128,23 +134,33 @@ export class ResendBeneficiaryInvitationCommand {
       return err('Vault owner not found');
     }
 
-    const senderName =
-      vaultOwner.firstName && vaultOwner.lastName
-        ? `${vaultOwner.firstName} ${vaultOwner.lastName}`
-        : vaultOwner.email.value;
+    const assignments = await this.keepsakeAssignmentRepository.findByBeneficiaryId(beneficiary.id);
+    const senderName = this.formatUserName(vaultOwner);
 
-    try {
-      await this.emailService.sendBeneficiaryInvitation({
+    return this.emailService
+      .sendBeneficiaryInvitation({
         to: beneficiary.email,
         beneficiaryName: beneficiary.fullName,
         senderName,
         invitationToken,
-        locale: 'fr', // TODO: Get from vault owner or beneficiary preference
+        keepsakeCount: assignments.length,
+        locale: 'fr',
+      })
+      .then(() => ok<void, string>(undefined))
+      .catch((error) => {
+        this.logger.error(`Failed to send invitation email: ${error}`);
+        return err('Failed to send invitation email');
       });
-      return ok(undefined);
-    } catch (error) {
-      this.logger.error(`Failed to send invitation email: ${error}`);
-      return err('Failed to send invitation email');
+  }
+
+  private formatUserName(user: {
+    firstName: string | null;
+    lastName: string | null;
+    email: { value: string };
+  }): string {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName} ${user.lastName}`;
     }
+    return user.email.value;
   }
 }

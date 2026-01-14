@@ -65,10 +65,9 @@ export class SetTrustedPersonCommand {
       beneficiary.markAsTrustedPerson();
       await this.beneficiaryRepository.save(beneficiary);
 
-      // Create a BeneficiaryInvitation record (without keepsakeId for trusted person invitations)
+      // Create a BeneficiaryInvitation record for the trusted person
       const invitationResult = BeneficiaryInvitation.create({
         beneficiaryId: beneficiary.id,
-        keepsakeId: null, // Trusted person invitations don't have a keepsake
         expiresInDays: 30,
       });
 
@@ -95,30 +94,39 @@ export class SetTrustedPersonCommand {
     beneficiary: { email: string; fullName: string },
     invitationToken: string,
   ): Promise<void> {
-    try {
-      const vaultOwner = await this.userRepository.findById(vaultOwnerId);
-      if (!vaultOwner) {
-        this.logger.error(`Vault owner ${vaultOwnerId} not found`);
-        return;
-      }
+    const vaultOwner = await this.userRepository.findById(vaultOwnerId);
+    if (!vaultOwner) {
+      this.logger.error(`Vault owner ${vaultOwnerId} not found`);
+      return;
+    }
 
-      const vaultOwnerName =
-        vaultOwner.firstName && vaultOwner.lastName
-          ? `${vaultOwner.firstName} ${vaultOwner.lastName}`
-          : vaultOwner.email.value;
+    const vaultOwnerName = this.formatUserName(vaultOwner);
 
-      await this.emailService.sendTrustedPersonInvitation({
+    await this.emailService
+      .sendTrustedPersonInvitation({
         to: beneficiary.email,
         trustedPersonName: beneficiary.fullName,
         vaultOwnerName,
         invitationToken,
-        locale: 'fr', // Default to French, could be made configurable
+        locale: 'fr',
+      })
+      .then(() => {
+        this.logger.log(`Trusted person invitation email sent to ${beneficiary.email}`);
+      })
+      .catch((error) => {
+        this.logger.error(`Failed to send trusted person invitation email: ${error}`);
+        // Don't fail the command if email fails - the trusted person is still set
       });
+  }
 
-      this.logger.log(`Trusted person invitation email sent to ${beneficiary.email}`);
-    } catch (error) {
-      this.logger.error(`Failed to send trusted person invitation email: ${error}`);
-      // Don't fail the command if email fails - the trusted person is still set
+  private formatUserName(user: {
+    firstName: string | null;
+    lastName: string | null;
+    email: { value: string };
+  }): string {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName} ${user.lastName}`;
     }
+    return user.email.value;
   }
 }

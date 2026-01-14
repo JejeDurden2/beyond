@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import {
   getBeneficiaryDashboard,
   getPendingBeneficiaries,
@@ -13,12 +14,15 @@ import {
   KeepsakeCard,
   TrustedPersonPanel,
 } from '@/components/features/beneficiary';
-import { Heart, Loader2 } from 'lucide-react';
+import { Heart, Loader2, Clock, UserPlus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function BeneficiaryPortalPage() {
   const t = useTranslations('beneficiary.portal');
+  const tAccess = useTranslations('beneficiary.access');
   const tErrors = useTranslations('beneficiary.errors');
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['beneficiary-dashboard'],
@@ -31,7 +35,7 @@ export function BeneficiaryPortalPage() {
       data?.profile.linkedVaults[0]?.vaultId
         ? getPendingBeneficiaries(data.profile.linkedVaults[0].vaultId)
         : Promise.resolve([]),
-    enabled: !!data?.profile.isTrustedPerson && !!data?.profile.linkedVaults[0]?.vaultId,
+    enabled: !!data?.accessInfo?.canManageInvitations && !!data?.profile.linkedVaults[0]?.vaultId,
   });
 
   async function handleResendInvitation(beneficiaryId: string): Promise<void> {
@@ -73,10 +77,35 @@ export function BeneficiaryPortalPage() {
 
   const keepsakes = data?.keepsakes || [];
   const isEmpty = keepsakes.length === 0;
+  const isTemporaryAccess = data?.accessInfo?.isTemporaryAccess ?? false;
+  const canDeclareDeath = data?.accessInfo?.canDeclareDeath ?? false;
+  const canManageInvitations = data?.accessInfo?.canManageInvitations ?? false;
 
   return (
     <div className="min-h-screen bg-cream">
       <div className="container mx-auto px-4 py-6 md:py-12 max-w-6xl">
+        {/* Temporary Access Banner */}
+        {isTemporaryAccess && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 md:p-6 mb-6 md:mb-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex items-start md:items-center gap-3">
+                <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5 md:mt-0" />
+                <div>
+                  <p className="font-medium text-amber-900">{tAccess('temporaryBanner.title')}</p>
+                  <p className="text-sm text-amber-700">{tAccess('temporaryBanner.description')}</p>
+                </div>
+              </div>
+              <Button
+                onClick={() => router.push('/portal/register')}
+                className="bg-amber-600 hover:bg-amber-700 text-white"
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                {tAccess('temporaryBanner.createAccount')}
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8 md:mb-12">
           <h1 className="font-serif-brand text-display-sm md:text-display text-navy-deep mb-4">
@@ -87,8 +116,8 @@ export function BeneficiaryPortalPage() {
           )}
         </div>
 
-        {/* Death Declaration Panel - shown for trusted persons */}
-        {data?.profile.isTrustedPerson && data?.profile.linkedVaults && (
+        {/* Death Declaration Panel - shown for trusted persons with permission */}
+        {canDeclareDeath && data?.profile.linkedVaults && (
           <DeathDeclarationPanel
             linkedVaults={data.profile.linkedVaults}
             onDeclareDeath={handleDeclareDeath}
@@ -96,20 +125,18 @@ export function BeneficiaryPortalPage() {
         )}
 
         {/* Trusted Person Panel - for managing invitations */}
-        {data?.profile.isTrustedPerson &&
-          pendingBeneficiaries &&
-          pendingBeneficiaries.length > 0 && (
-            <TrustedPersonPanel
-              beneficiaries={pendingBeneficiaries.map((b) => ({
-                id: b.id,
-                name: b.name,
-                email: b.email,
-                invitationStatus: b.invitationStatus,
-                invitationSentAt: new Date(b.invitationSentAt),
-              }))}
-              onResendInvitation={handleResendInvitation}
-            />
-          )}
+        {canManageInvitations && pendingBeneficiaries && pendingBeneficiaries.length > 0 && (
+          <TrustedPersonPanel
+            beneficiaries={pendingBeneficiaries.map((b) => ({
+              id: b.id,
+              name: b.name,
+              email: b.email,
+              invitationStatus: b.invitationStatus,
+              invitationSentAt: new Date(b.invitationSentAt),
+            }))}
+            onResendInvitation={handleResendInvitation}
+          />
+        )}
 
         {/* Empty state */}
         {isEmpty && (

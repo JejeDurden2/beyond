@@ -40,16 +40,38 @@ export class ConsoleEmailAdapter implements IEmailService {
   }
 
   async sendBeneficiaryInvitation(input: BeneficiaryInvitationEmailInput): Promise<void> {
-    const invitationUrl = `${this.frontendUrl}/${input.locale}/beneficiary/accept-invitation/${input.invitationToken}`;
+    // Link to unified access page
+    const accessUrl = `${this.frontendUrl}/${input.locale}/portal/access/${input.invitationToken}`;
+
+    const keepsakeText =
+      input.keepsakeCount === 1
+        ? this.getLocalizedText(input.locale, {
+            fr: 'un souvenir',
+            en: 'a keepsake',
+          })
+        : this.getLocalizedText(input.locale, {
+            fr: `${input.keepsakeCount} souvenirs`,
+            en: `${input.keepsakeCount} keepsakes`,
+          });
 
     const subject = this.getLocalizedText(input.locale, {
-      fr: `${input.senderName} vous a envoye un souvenir sur Beyond`,
-      en: `${input.senderName} has sent you a keepsake on Beyond`,
+      fr: `${input.senderName} vous a laissé des souvenirs sur Beyond`,
+      en: `${input.senderName} has left keepsakes for you on Beyond`,
     });
 
     const html = this.getLocalizedText(input.locale, {
-      fr: this.buildFrenchInvitationEmail(input.beneficiaryName, input.senderName, invitationUrl),
-      en: this.buildEnglishInvitationEmail(input.beneficiaryName, input.senderName, invitationUrl),
+      fr: this.buildFrenchInvitationEmail(
+        input.beneficiaryName,
+        input.senderName,
+        keepsakeText,
+        accessUrl,
+      ),
+      en: this.buildEnglishInvitationEmail(
+        input.beneficiaryName,
+        input.senderName,
+        keepsakeText,
+        accessUrl,
+      ),
     });
 
     await this.sendEmail({ to: input.to, subject, html });
@@ -72,16 +94,38 @@ export class ConsoleEmailAdapter implements IEmailService {
   }
 
   async sendTrustedPersonAlert(input: TrustedPersonAlertEmailInput): Promise<void> {
-    const portalUrl = `${this.frontendUrl}/${input.locale}/portal`;
+    // Link to unified access page for trusted person
+    const accessUrl = `${this.frontendUrl}/${input.locale}/portal/access/${input.invitationToken}`;
+
+    const keepsakeText =
+      input.keepsakeCount === 1
+        ? this.getLocalizedText(input.locale, {
+            fr: 'un souvenir',
+            en: 'a keepsake',
+          })
+        : this.getLocalizedText(input.locale, {
+            fr: `${input.keepsakeCount} souvenirs`,
+            en: `${input.keepsakeCount} keepsakes`,
+          });
 
     const subject = this.getLocalizedText(input.locale, {
-      fr: 'Beyond - Action requise en tant que personne de confiance',
-      en: 'Beyond - Action required as trusted person',
+      fr: `${input.vaultOwnerName} vous a laissé des souvenirs sur Beyond`,
+      en: `${input.vaultOwnerName} has left keepsakes for you on Beyond`,
     });
 
     const html = this.getLocalizedText(input.locale, {
-      fr: this.buildFrenchTrustedPersonAlertEmail(input.vaultOwnerName, portalUrl),
-      en: this.buildEnglishTrustedPersonAlertEmail(input.vaultOwnerName, portalUrl),
+      fr: this.buildFrenchTrustedPersonAlertEmail(
+        input.trustedPersonName,
+        input.vaultOwnerName,
+        keepsakeText,
+        accessUrl,
+      ),
+      en: this.buildEnglishTrustedPersonAlertEmail(
+        input.trustedPersonName,
+        input.vaultOwnerName,
+        keepsakeText,
+        accessUrl,
+      ),
     });
 
     await this.sendEmail({ to: input.to, subject, html });
@@ -94,24 +138,25 @@ export class ConsoleEmailAdapter implements IEmailService {
   private buildFrenchInvitationEmail(
     beneficiaryName: string,
     senderName: string,
-    invitationUrl: string,
+    keepsakeText: string,
+    accessUrl: string,
   ): string {
     return `
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #173C7F;">
-        <h1 style="color: #B8860B; font-size: 28px;">Vous avez reçu un souvenir</h1>
+        <h1 style="color: #B8860B; font-size: 28px;">${senderName} vous a laissé des souvenirs</h1>
         <p style="font-size: 16px; line-height: 1.6;">Bonjour ${beneficiaryName},</p>
         <p style="font-size: 16px; line-height: 1.6;">
-          <strong>${senderName}</strong> vous a confié un souvenir précieux sur Beyond,
+          <strong>${senderName}</strong> vous a confié ${keepsakeText} sur Beyond,
           une plateforme sécurisée pour préserver et partager les souvenirs importants.
         </p>
         <p style="font-size: 16px; line-height: 1.6;">
-          Pour accéder à ce souvenir, veuillez créer votre compte en cliquant sur le lien ci-dessous :
+          Pour découvrir ces souvenirs, cliquez sur le bouton ci-dessous :
         </p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${invitationUrl}"
+          <a href="${accessUrl}"
              style="background-color: #B8860B; color: #FDFBF7; padding: 14px 28px;
                     text-decoration: none; border-radius: 8px; font-weight: 500; display: inline-block;">
-            Créer mon compte et découvrir
+            Voir mes souvenirs
           </a>
         </div>
         <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
@@ -119,7 +164,7 @@ export class ConsoleEmailAdapter implements IEmailService {
         </p>
         <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
           Si vous n'arrivez pas à cliquer sur le bouton, copiez ce lien dans votre navigateur :<br>
-          <span style="word-break: break-all;">${invitationUrl}</span>
+          <span style="word-break: break-all;">${accessUrl}</span>
         </p>
       </div>
     `;
@@ -128,24 +173,25 @@ export class ConsoleEmailAdapter implements IEmailService {
   private buildEnglishInvitationEmail(
     beneficiaryName: string,
     senderName: string,
-    invitationUrl: string,
+    keepsakeText: string,
+    accessUrl: string,
   ): string {
     return `
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #173C7F;">
-        <h1 style="color: #B8860B; font-size: 28px;">You've received a keepsake</h1>
+        <h1 style="color: #B8860B; font-size: 28px;">${senderName} has left keepsakes for you</h1>
         <p style="font-size: 16px; line-height: 1.6;">Hello ${beneficiaryName},</p>
         <p style="font-size: 16px; line-height: 1.6;">
-          <strong>${senderName}</strong> has entrusted you with a precious keepsake on Beyond,
+          <strong>${senderName}</strong> has entrusted you with ${keepsakeText} on Beyond,
           a secure platform for preserving and sharing important memories.
         </p>
         <p style="font-size: 16px; line-height: 1.6;">
-          To access this keepsake, please create your account by clicking the link below:
+          To discover these keepsakes, click the button below:
         </p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${invitationUrl}"
+          <a href="${accessUrl}"
              style="background-color: #B8860B; color: #FDFBF7; padding: 14px 28px;
                     text-decoration: none; border-radius: 8px; font-weight: 500; display: inline-block;">
-            Create my account and discover
+            View my keepsakes
           </a>
         </div>
         <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
@@ -153,7 +199,7 @@ export class ConsoleEmailAdapter implements IEmailService {
         </p>
         <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
           If you can't click the button, copy this link into your browser:<br>
-          <span style="word-break: break-all;">${invitationUrl}</span>
+          <span style="word-break: break-all;">${accessUrl}</span>
         </p>
       </div>
     `;
@@ -199,54 +245,86 @@ export class ConsoleEmailAdapter implements IEmailService {
     `;
   }
 
-  private buildFrenchTrustedPersonAlertEmail(vaultOwnerName: string, portalUrl: string): string {
+  private buildFrenchTrustedPersonAlertEmail(
+    trustedPersonName: string,
+    vaultOwnerName: string,
+    keepsakeText: string,
+    accessUrl: string,
+  ): string {
     return `
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #173C7F;">
-        <h1 style="color: #B8860B; font-size: 28px;">Action requise - Personne de confiance</h1>
+        <h1 style="color: #B8860B; font-size: 28px;">${vaultOwnerName} vous a laissé des souvenirs</h1>
+        <p style="font-size: 16px; line-height: 1.6;">Bonjour ${trustedPersonName},</p>
         <p style="font-size: 16px; line-height: 1.6;">
           En tant que personne de confiance désignée par <strong>${vaultOwnerName}</strong>,
-          vous avez la responsabilité de gérer certaines actions importantes.
+          vous avez ${keepsakeText} qui vous attendent sur Beyond.
         </p>
         <p style="font-size: 16px; line-height: 1.6;">
-          Des souvenirs sont prêts à être partagés avec les bénéficiaires.
-          Veuillez consulter votre tableau de bord pour gérer les invitations.
+          <strong>En tant que personne de confiance, vous avez également des responsabilités :</strong>
         </p>
+        <ul style="font-size: 16px; line-height: 1.8; color: #173C7F;">
+          <li>Gérer la transmission des souvenirs aux autres bénéficiaires</li>
+          <li>Vous connecter pour accéder à votre tableau de bord</li>
+        </ul>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${portalUrl}"
+          <a href="${accessUrl}"
              style="background-color: #B8860B; color: #FDFBF7; padding: 14px 28px;
                     text-decoration: none; border-radius: 8px; font-weight: 500; display: inline-block;">
-            Voir mon tableau de bord
+            Créer mon compte
           </a>
         </div>
+        <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
+          Ce lien est valable pendant 30 jours.
+        </p>
+        <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
+          Si vous n'arrivez pas à cliquer sur le bouton, copiez ce lien dans votre navigateur :<br>
+          <span style="word-break: break-all;">${accessUrl}</span>
+        </p>
       </div>
     `;
   }
 
-  private buildEnglishTrustedPersonAlertEmail(vaultOwnerName: string, portalUrl: string): string {
+  private buildEnglishTrustedPersonAlertEmail(
+    trustedPersonName: string,
+    vaultOwnerName: string,
+    keepsakeText: string,
+    accessUrl: string,
+  ): string {
     return `
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #173C7F;">
-        <h1 style="color: #B8860B; font-size: 28px;">Action Required - Trusted Person</h1>
+        <h1 style="color: #B8860B; font-size: 28px;">${vaultOwnerName} has left keepsakes for you</h1>
+        <p style="font-size: 16px; line-height: 1.6;">Hello ${trustedPersonName},</p>
         <p style="font-size: 16px; line-height: 1.6;">
           As the trusted person designated by <strong>${vaultOwnerName}</strong>,
-          you have the responsibility to manage certain important actions.
+          you have ${keepsakeText} waiting for you on Beyond.
         </p>
         <p style="font-size: 16px; line-height: 1.6;">
-          Keepsakes are ready to be shared with beneficiaries.
-          Please check your dashboard to manage invitations.
+          <strong>As a trusted person, you also have responsibilities:</strong>
         </p>
+        <ul style="font-size: 16px; line-height: 1.8; color: #173C7F;">
+          <li>Manage the transmission of keepsakes to other beneficiaries</li>
+          <li>Log in to access your dashboard</li>
+        </ul>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${portalUrl}"
+          <a href="${accessUrl}"
              style="background-color: #B8860B; color: #FDFBF7; padding: 14px 28px;
                     text-decoration: none; border-radius: 8px; font-weight: 500; display: inline-block;">
-            View my dashboard
+            Create my account
           </a>
         </div>
+        <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
+          This link is valid for 30 days.
+        </p>
+        <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
+          If you can't click the button, copy this link into your browser:<br>
+          <span style="word-break: break-all;">${accessUrl}</span>
+        </p>
       </div>
     `;
   }
 
   async sendTrustedPersonInvitation(input: TrustedPersonInvitationEmailInput): Promise<void> {
-    const invitationUrl = `${this.frontendUrl}/${input.locale}/beneficiary/accept-invitation/${input.invitationToken}`;
+    const invitationUrl = `${this.frontendUrl}/${input.locale}/portal/access/${input.invitationToken}`;
 
     const subject = this.getLocalizedText(input.locale, {
       fr: `${input.vaultOwnerName} vous a désigné comme personne de confiance sur Beyond`,

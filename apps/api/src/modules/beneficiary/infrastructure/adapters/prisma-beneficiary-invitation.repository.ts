@@ -9,7 +9,6 @@ import {
 interface PrismaBeneficiaryInvitationRecord {
   id: string;
   beneficiaryId: string;
-  keepsakeId: string | null;
   token: string;
   status: string;
   sentAt: Date;
@@ -33,7 +32,6 @@ export class PrismaBeneficiaryInvitationRepository implements IBeneficiaryInvita
       create: {
         id: invitation.id,
         beneficiaryId: invitation.beneficiaryId,
-        keepsakeId: invitation.keepsakeId,
         token: invitation.token,
         status: invitation.status,
         sentAt: invitation.sentAt,
@@ -84,15 +82,6 @@ export class PrismaBeneficiaryInvitationRepository implements IBeneficiaryInvita
     return records.map((record: PrismaBeneficiaryInvitationRecord) => this.toDomain(record));
   }
 
-  async findByKeepsakeId(keepsakeId: string): Promise<BeneficiaryInvitation[]> {
-    const records = await this.prisma.beneficiaryInvitation.findMany({
-      where: { keepsakeId },
-      orderBy: { createdAt: 'desc' },
-    });
-
-    return records.map((record: PrismaBeneficiaryInvitationRecord) => this.toDomain(record));
-  }
-
   async findPendingByVaultId(vaultId: string): Promise<BeneficiaryInvitation[]> {
     const records = await this.prisma.beneficiaryInvitation.findMany({
       where: {
@@ -105,7 +94,6 @@ export class PrismaBeneficiaryInvitationRepository implements IBeneficiaryInvita
       },
       include: {
         beneficiary: true,
-        keepsake: true,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -123,7 +111,6 @@ export class PrismaBeneficiaryInvitationRepository implements IBeneficiaryInvita
     return BeneficiaryInvitation.reconstitute({
       id: record.id,
       beneficiaryId: record.beneficiaryId,
-      keepsakeId: record.keepsakeId,
       token: record.token,
       status: record.status as InvitationStatus,
       sentAt: record.sentAt,

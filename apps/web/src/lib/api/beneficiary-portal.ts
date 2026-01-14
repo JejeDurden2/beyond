@@ -22,12 +22,19 @@ export interface LinkedVault {
   deathDeclaredAt?: string;
 }
 
+export interface AccessInfo {
+  isTemporaryAccess: boolean;
+  canDeclareDeath: boolean;
+  canManageInvitations: boolean;
+}
+
 export interface BeneficiaryDashboard {
   keepsakes: BeneficiaryKeepsake[];
   profile: {
     isTrustedPerson: boolean;
     linkedVaults: LinkedVault[];
   };
+  accessInfo: AccessInfo;
 }
 
 export interface DeclareDeathResponse {

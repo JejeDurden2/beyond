@@ -7,6 +7,10 @@ export interface INotificationLogRepository {
   findPendingNotifications(limit?: number): Promise<NotificationLog[]>;
   findScheduledNotificationsDue(now: Date, limit?: number): Promise<NotificationLog[]>;
   findFailedNotifications(limit?: number): Promise<NotificationLog[]>;
+  findPendingByBeneficiaryAndVault(
+    beneficiaryId: string,
+    vaultId: string,
+  ): Promise<NotificationLog | null>;
   delete(id: string): Promise<void>;
 }
 

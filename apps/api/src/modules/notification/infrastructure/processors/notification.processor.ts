@@ -10,6 +10,15 @@ import {
   BENEFICIARY_REPOSITORY,
 } from '@/modules/beneficiary/domain/repositories/beneficiary.repository';
 import {
+  IBeneficiaryInvitationRepository,
+  BENEFICIARY_INVITATION_REPOSITORY,
+} from '@/modules/beneficiary/domain/repositories/beneficiary-invitation.repository';
+import { BeneficiaryInvitation } from '@/modules/beneficiary/domain/entities/beneficiary-invitation.entity';
+import {
+  KeepsakeAssignmentRepository,
+  KEEPSAKE_ASSIGNMENT_REPOSITORY,
+} from '@/modules/keepsake-assignment/domain/repositories/keepsake-assignment.repository';
+import {
   UserRepository,
   USER_REPOSITORY,
 } from '@/modules/auth/domain/repositories/user.repository';
@@ -24,7 +33,7 @@ import { DEFAULT_EMAIL_LOCALE } from '../../notification.constants';
 
 interface NotificationJobData {
   notificationLogId: string;
-  keepsakeId: string;
+  vaultId: string;
   beneficiaryId?: string | null;
   type: NotificationType;
 }
@@ -38,6 +47,10 @@ export class NotificationProcessor extends WorkerHost {
     private readonly logRepository: INotificationLogRepository,
     @Inject(BENEFICIARY_REPOSITORY)
     private readonly beneficiaryRepository: BeneficiaryRepository,
+    @Inject(BENEFICIARY_INVITATION_REPOSITORY)
+    private readonly invitationRepository: IBeneficiaryInvitationRepository,
+    @Inject(KEEPSAKE_ASSIGNMENT_REPOSITORY)
+    private readonly keepsakeAssignmentRepository: KeepsakeAssignmentRepository,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
     @Inject(VAULT_REPOSITORY)
@@ -51,7 +64,7 @@ export class NotificationProcessor extends WorkerHost {
   async process(job: Job<NotificationJobData>): Promise<void> {
     this.logger.log(`Processing notification job ${job.id} (type: ${job.data.type})`);
 
-    const { notificationLogId, beneficiaryId, type } = job.data;
+    const { notificationLogId, vaultId, beneficiaryId, type } = job.data;
 
     // Get notification log
     const log = await this.logRepository.findById(notificationLogId);
@@ -73,11 +86,11 @@ export class NotificationProcessor extends WorkerHost {
 
       switch (type) {
         case NotificationType.TRUSTED_PERSON_ALERT:
-          await this.sendTrustedPersonAlert(beneficiaryId as string);
+          await this.sendTrustedPersonAlert(beneficiaryId as string, vaultId);
           break;
 
         case NotificationType.BENEFICIARY_INVITATION:
-          await this.sendBeneficiaryInvitation(beneficiaryId as string);
+          await this.sendBeneficiaryInvitation(beneficiaryId as string, vaultId);
           break;
 
         case NotificationType.ACCOUNT_CREATION:
@@ -110,21 +123,28 @@ export class NotificationProcessor extends WorkerHost {
     }
   }
 
-  private async sendTrustedPersonAlert(beneficiaryId: string): Promise<void> {
+  private async sendTrustedPersonAlert(beneficiaryId: string, vaultId: string): Promise<void> {
     const beneficiary = await this.beneficiaryRepository.findById(beneficiaryId);
     if (!beneficiary) {
       throw new Error(`Beneficiary ${beneficiaryId} not found`);
     }
 
-    const vault = await this.vaultRepository.findById(beneficiary.vaultId);
+    const vault = await this.vaultRepository.findById(vaultId);
     if (!vault) {
-      throw new Error(`Vault ${beneficiary.vaultId} not found`);
+      throw new Error(`Vault ${vaultId} not found`);
     }
 
     const vaultOwner = await this.userRepository.findById(vault.userId);
     if (!vaultOwner) {
       throw new Error(`Vault owner ${vault.userId} not found`);
     }
+
+    // Get keepsake count for this beneficiary
+    const assignments = await this.keepsakeAssignmentRepository.findByBeneficiaryId(beneficiaryId);
+    const keepsakeCount = assignments.length;
+
+    // Create or get existing invitation
+    const invitation = await this.getOrCreateInvitation(beneficiaryId);
 
     const vaultOwnerName =
       vaultOwner.firstName && vaultOwner.lastName
@@ -133,32 +153,36 @@ export class NotificationProcessor extends WorkerHost {
 
     await this.emailService.sendTrustedPersonAlert({
       to: beneficiary.email,
+      trustedPersonName: beneficiary.fullName,
       vaultOwnerName,
+      invitationToken: invitation.token,
+      keepsakeCount,
       locale: DEFAULT_EMAIL_LOCALE,
     });
   }
 
-  private async sendBeneficiaryInvitation(beneficiaryId: string): Promise<void> {
+  private async sendBeneficiaryInvitation(beneficiaryId: string, vaultId: string): Promise<void> {
     const beneficiary = await this.beneficiaryRepository.findById(beneficiaryId);
     if (!beneficiary) {
       throw new Error(`Beneficiary ${beneficiaryId} not found`);
     }
 
-    // Generate invitation token if not already generated
-    if (!beneficiary.invitationToken) {
-      beneficiary.generateInvitationToken();
-      await this.beneficiaryRepository.save(beneficiary);
-    }
-
-    const vault = await this.vaultRepository.findById(beneficiary.vaultId);
+    const vault = await this.vaultRepository.findById(vaultId);
     if (!vault) {
-      throw new Error(`Vault ${beneficiary.vaultId} not found`);
+      throw new Error(`Vault ${vaultId} not found`);
     }
 
     const vaultOwner = await this.userRepository.findById(vault.userId);
     if (!vaultOwner) {
       throw new Error(`Vault owner ${vault.userId} not found`);
     }
+
+    // Get keepsake count for this beneficiary
+    const assignments = await this.keepsakeAssignmentRepository.findByBeneficiaryId(beneficiaryId);
+    const keepsakeCount = assignments.length;
+
+    // Create or get existing invitation
+    const invitation = await this.getOrCreateInvitation(beneficiaryId);
 
     const senderName =
       vaultOwner.firstName && vaultOwner.lastName
@@ -169,9 +193,37 @@ export class NotificationProcessor extends WorkerHost {
       to: beneficiary.email,
       beneficiaryName: beneficiary.fullName,
       senderName,
-      invitationToken: beneficiary.invitationToken!,
+      invitationToken: invitation.token,
+      keepsakeCount,
       locale: DEFAULT_EMAIL_LOCALE,
     });
+  }
+
+  private async getOrCreateInvitation(beneficiaryId: string): Promise<BeneficiaryInvitation> {
+    // Check for existing pending invitation
+    const existingInvitations = await this.invitationRepository.findByBeneficiaryId(beneficiaryId);
+    const pendingInvitation = existingInvitations.find(
+      (inv) => inv.status === 'PENDING' && !inv.isExpired(),
+    );
+
+    if (pendingInvitation) {
+      return pendingInvitation;
+    }
+
+    // Create new invitation (invitations are per-beneficiary, not per-keepsake)
+    const invitationResult = BeneficiaryInvitation.create({
+      beneficiaryId,
+      expiresInDays: 30,
+    });
+
+    if (invitationResult.isErr()) {
+      throw new Error(`Failed to create invitation: ${invitationResult.error}`);
+    }
+
+    const invitation = invitationResult.value;
+    await this.invitationRepository.save(invitation);
+
+    return invitation;
   }
 
   private async sendAccountCreationEmail(beneficiaryId: string): Promise<void> {

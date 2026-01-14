@@ -17,8 +17,9 @@ export enum NotificationStatus {
 
 export interface NotificationLogProps {
   id?: string;
-  keepsakeId: string;
+  keepsakeId?: string | null;
   beneficiaryId?: string | null;
+  vaultId?: string | null;
   type: NotificationType;
   status: NotificationStatus;
   scheduledFor: Date;
@@ -30,8 +31,9 @@ export interface NotificationLogProps {
 }
 
 export interface CreateNotificationLogInput {
-  keepsakeId: string;
+  keepsakeId?: string | null;
   beneficiaryId?: string | null;
+  vaultId?: string | null;
   type: NotificationType;
   scheduledFor: Date;
 }
@@ -44,10 +46,6 @@ export class NotificationLog extends AggregateRoot<NotificationLogProps> {
   }
 
   static create(input: CreateNotificationLogInput): Result<NotificationLog, string> {
-    if (!input.keepsakeId) {
-      return err('Keepsake ID is required');
-    }
-
     if (!input.type) {
       return err('Notification type is required');
     }
@@ -56,10 +54,16 @@ export class NotificationLog extends AggregateRoot<NotificationLogProps> {
       return err('Scheduled date is required');
     }
 
+    // Either keepsakeId or vaultId must be provided
+    if (!input.keepsakeId && !input.vaultId) {
+      return err('Either keepsakeId or vaultId is required');
+    }
+
     return ok(
       new NotificationLog({
-        keepsakeId: input.keepsakeId,
+        keepsakeId: input.keepsakeId ?? null,
         beneficiaryId: input.beneficiaryId ?? null,
+        vaultId: input.vaultId ?? null,
         type: input.type,
         status: NotificationStatus.PENDING,
         scheduledFor: input.scheduledFor,
@@ -110,12 +114,16 @@ export class NotificationLog extends AggregateRoot<NotificationLogProps> {
     );
   }
 
-  get keepsakeId(): string {
-    return this.props.keepsakeId;
+  get keepsakeId(): string | null {
+    return this.props.keepsakeId ?? null;
   }
 
   get beneficiaryId(): string | null {
     return this.props.beneficiaryId ?? null;
+  }
+
+  get vaultId(): string | null {
+    return this.props.vaultId ?? null;
   }
 
   get type(): NotificationType {

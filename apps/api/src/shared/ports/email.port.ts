@@ -12,6 +12,7 @@ export interface BeneficiaryInvitationEmailInput {
   beneficiaryName: string;
   senderName: string;
   invitationToken: string;
+  keepsakeCount: number;
   locale: SupportedLocale;
 }
 
@@ -23,7 +24,10 @@ export interface BeneficiaryAccountCreatedEmailInput {
 
 export interface TrustedPersonAlertEmailInput {
   to: string;
+  trustedPersonName: string;
   vaultOwnerName: string;
+  invitationToken: string;
+  keepsakeCount: number;
   locale: SupportedLocale;
 }
 

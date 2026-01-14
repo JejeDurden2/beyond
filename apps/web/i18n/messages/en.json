@@ -894,6 +894,46 @@
         },
         "notice": "Beneficiaries will receive their keepsakes after a security delay. The trusted person is notified first, then other beneficiaries."
       },
+      "access": {
+        "pageTitle": "Keepsakes for you - Beyond",
+        "pageDescription": "Access the keepsakes that have been entrusted to you.",
+        "loading": "Loading...",
+        "title": "{name} has left keepsakes for you",
+        "subtitle": "{count, plural, =1 {1 keepsake is waiting for you} other {# keepsakes are waiting for you}}",
+        "trustedPersonNotice": "As a trusted person, you need to create an account to access your keepsakes and manage your responsibilities.",
+        "options": {
+          "title": "How would you like to access your keepsakes?",
+          "createAccount": {
+            "title": "Create an account",
+            "description": "Permanent access to your keepsakes with a personal account",
+            "button": "Create my account"
+          },
+          "temporaryAccess": {
+            "title": "View without account",
+            "description": "Temporary access for 7 days, without creating an account",
+            "button": "View my keepsakes",
+            "loading": "Creating access..."
+          }
+        },
+        "expired": {
+          "title": "Link expired",
+          "message": "This access link has expired. Please contact the vault owner to receive a new invitation."
+        },
+        "notFound": {
+          "title": "Link not found",
+          "message": "This access link is invalid or has already been used."
+        },
+        "error": {
+          "title": "An error occurred",
+          "message": "Unable to load your information. Please try again later.",
+          "retry": "Try again"
+        },
+        "temporaryBanner": {
+          "title": "Temporary access",
+          "description": "Your access expires in 7 days. Create an account to keep permanent access to your keepsakes.",
+          "createAccount": "Create an account"
+        }
+      },
       "errors": {
         "unknown": "An error occurred. Please try again."
       }

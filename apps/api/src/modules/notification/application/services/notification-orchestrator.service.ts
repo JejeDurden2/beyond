@@ -75,24 +75,24 @@ export class NotificationOrchestratorService {
       const trustedPeople = beneficiaries.filter((b) => b.isTrustedPerson);
       const regularBeneficiaries = beneficiaries.filter((b) => !b.isTrustedPerson);
 
-      // 3. Schedule trusted person alerts
+      // 3. Schedule trusted person alerts (one per beneficiary, not per keepsake)
       const trustedScheduled = await this.scheduleBeneficiaryNotifications(
         trustedPeople,
-        input.keepsakeId,
+        input.vaultId,
         NotificationType.TRUSTED_PERSON_ALERT,
         trustedPersonDelayHours,
       );
 
-      // 4. Schedule regular beneficiary invitations
+      // 4. Schedule regular beneficiary invitations (one per beneficiary, not per keepsake)
       const regularScheduled = await this.scheduleBeneficiaryNotifications(
         regularBeneficiaries,
-        input.keepsakeId,
+        input.vaultId,
         NotificationType.BENEFICIARY_INVITATION,
         beneficiaryDelayHours,
       );
 
       this.logger.log(
-        `Scheduled ${trustedScheduled} trusted person alerts and ${regularScheduled} beneficiary invitations for keepsake ${input.keepsakeId}`,
+        `Scheduled ${trustedScheduled} trusted person alerts and ${regularScheduled} beneficiary invitations for vault ${input.vaultId}`,
       );
 
       return ok(undefined);
@@ -108,17 +108,30 @@ export class NotificationOrchestratorService {
 
   private async scheduleBeneficiaryNotifications(
     beneficiaries: Beneficiary[],
-    keepsakeId: string,
+    vaultId: string,
     type: NotificationType,
     delayHours: number,
   ): Promise<number> {
     let scheduledCount = 0;
 
     for (const beneficiary of beneficiaries) {
+      // Check if a pending notification already exists for this beneficiary + vault
+      const existingNotification = await this.logRepository.findPendingByBeneficiaryAndVault(
+        beneficiary.id,
+        vaultId,
+      );
+
+      if (existingNotification) {
+        this.logger.log(
+          `Skipping notification for beneficiary ${beneficiary.id} - pending notification already exists`,
+        );
+        continue;
+      }
+
       const scheduledFor = this.calculateScheduledDate(delayHours);
 
       const logResult = NotificationLog.create({
-        keepsakeId,
+        vaultId,
         beneficiaryId: beneficiary.id,
         type,
         scheduledFor,
@@ -133,7 +146,7 @@ export class NotificationOrchestratorService {
 
       const log = logResult.value;
       await this.logRepository.save(log);
-      await this.scheduleNotificationJob(log);
+      await this.scheduleNotificationJob(log, vaultId);
 
       this.logger.log(
         `Scheduled ${type} for beneficiary ${beneficiary.id} at ${scheduledFor.toISOString()}`,
@@ -144,38 +157,27 @@ export class NotificationOrchestratorService {
     return scheduledCount;
   }
 
-  private async scheduleNotificationJob(log: NotificationLog): Promise<void> {
+  private async scheduleNotificationJob(log: NotificationLog, vaultId: string): Promise<void> {
     const delay = log.scheduledFor.getTime() - Date.now();
+
+    const jobData = {
+      notificationLogId: log.id,
+      vaultId,
+      beneficiaryId: log.beneficiaryId,
+      type: log.type,
+    };
 
     if (delay <= 0) {
       // Send immediately
-      await this.notificationQueue.add(
-        NotificationJobType.SEND_EMAIL,
-        {
-          notificationLogId: log.id,
-          keepsakeId: log.keepsakeId,
-          beneficiaryId: log.beneficiaryId,
-          type: log.type,
-        },
-        {
-          jobId: `notification-${log.id}`,
-        },
-      );
+      await this.notificationQueue.add(NotificationJobType.SEND_EMAIL, jobData, {
+        jobId: `notification-${log.id}`,
+      });
     } else {
       // Schedule with delay
-      await this.notificationQueue.add(
-        NotificationJobType.SEND_EMAIL,
-        {
-          notificationLogId: log.id,
-          keepsakeId: log.keepsakeId,
-          beneficiaryId: log.beneficiaryId,
-          type: log.type,
-        },
-        {
-          jobId: `notification-${log.id}`,
-          delay,
-        },
-      );
+      await this.notificationQueue.add(NotificationJobType.SEND_EMAIL, jobData, {
+        jobId: `notification-${log.id}`,
+        delay,
+      });
     }
 
     log.markAsScheduled();

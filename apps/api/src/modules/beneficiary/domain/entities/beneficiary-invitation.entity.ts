@@ -13,7 +13,6 @@ export enum InvitationStatus {
 export interface BeneficiaryInvitationProps {
   id?: string;
   beneficiaryId: string;
-  keepsakeId?: string | null;
   token: string;
   status: InvitationStatus;
   sentAt: Date;
@@ -29,7 +28,6 @@ export interface BeneficiaryInvitationProps {
 
 export interface CreateBeneficiaryInvitationInput {
   beneficiaryId: string;
-  keepsakeId?: string | null;
   expiresInDays?: number;
 }
 
@@ -55,7 +53,6 @@ export class BeneficiaryInvitation extends AggregateRoot<BeneficiaryInvitationPr
     return ok(
       new BeneficiaryInvitation({
         beneficiaryId: input.beneficiaryId,
-        keepsakeId: input.keepsakeId ?? null,
         token,
         status: InvitationStatus.PENDING,
         sentAt: new Date(),
@@ -178,10 +175,6 @@ export class BeneficiaryInvitation extends AggregateRoot<BeneficiaryInvitationPr
 
   get beneficiaryId(): string {
     return this.props.beneficiaryId;
-  }
-
-  get keepsakeId(): string | null {
-    return this.props.keepsakeId ?? null;
   }
 
   get token(): string {

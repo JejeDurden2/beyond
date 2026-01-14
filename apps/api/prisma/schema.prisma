@@ -92,7 +92,6 @@ model Keepsake {
 
   assignments  KeepsakeAssignment[]
   media        KeepsakeMedia[]
-  invitations  BeneficiaryInvitation[]
   portalAccess BeneficiaryPortalAccess[]
   notifications NotificationLog[]
 
@@ -173,6 +172,7 @@ model Beneficiary {
   assignments       KeepsakeAssignment[]
   invitations       BeneficiaryInvitation[]
   portalAccess      BeneficiaryPortalAccess[]
+  accessTokens      BeneficiaryAccessToken[]
   notifications     NotificationLog[]
   deathDeclarations DeathDeclaration[]
 
@@ -288,8 +288,6 @@ model BeneficiaryInvitation {
   id            String           @id @default(uuid())
   beneficiaryId String
   beneficiary   Beneficiary      @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
-  keepsakeId    String?
-  keepsake      Keepsake?        @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
   token         String           @unique
   status        InvitationStatus @default(PENDING)
   sentAt        DateTime         @default(now())
@@ -304,7 +302,6 @@ model BeneficiaryInvitation {
 
   @@index([token])
   @@index([beneficiaryId])
-  @@index([keepsakeId])
   @@index([status])
 }
 
@@ -329,6 +326,20 @@ model BeneficiaryPortalAccess {
   @@index([accessedAt])
 }
 
+model BeneficiaryAccessToken {
+  id             String      @id @default(uuid())
+  beneficiaryId  String
+  beneficiary    Beneficiary @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  token          String      @unique
+  expiresAt      DateTime
+  lastAccessedAt DateTime?
+  createdAt      DateTime    @default(now())
+
+  @@index([token])
+  @@index([beneficiaryId])
+  @@index([expiresAt])
+}
+
 // ==================================
 // Notification System
 // ==================================
@@ -347,10 +358,11 @@ model NotificationConfig {
 
 model NotificationLog {
   id            String             @id @default(uuid())
-  keepsakeId    String
-  keepsake      Keepsake           @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
+  keepsakeId    String?
+  keepsake      Keepsake?          @relation(fields: [keepsakeId], references: [id], onDelete: Cascade)
   beneficiaryId String?
   beneficiary   Beneficiary?       @relation(fields: [beneficiaryId], references: [id], onDelete: SetNull)
+  vaultId       String?
   type          NotificationType
   status        NotificationStatus @default(pending)
   scheduledFor  DateTime
@@ -362,6 +374,7 @@ model NotificationLog {
 
   @@index([keepsakeId])
   @@index([beneficiaryId])
+  @@index([vaultId])
   @@index([status, scheduledFor])
 }
 

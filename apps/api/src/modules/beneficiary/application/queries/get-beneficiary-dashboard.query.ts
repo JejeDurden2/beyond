@@ -4,22 +4,6 @@ import {
   IBeneficiaryProfileRepository,
   BENEFICIARY_PROFILE_REPOSITORY,
 } from '../../domain/repositories/beneficiary-profile.repository';
-import {
-  BeneficiaryRepository,
-  BENEFICIARY_REPOSITORY,
-} from '../../domain/repositories/beneficiary.repository';
-import {
-  KeepsakeRepository,
-  KEEPSAKE_REPOSITORY,
-} from '@/modules/keepsake/domain/repositories/keepsake.repository';
-import {
-  VaultRepository,
-  VAULT_REPOSITORY,
-} from '@/modules/vault/domain/repositories/vault.repository';
-import {
-  UserRepository,
-  USER_REPOSITORY,
-} from '@/modules/auth/domain/repositories/user.repository';
 import { KeepsakeStatus } from '@/modules/keepsake/domain/entities/keepsake.entity';
 import { PrismaService } from '@/shared/infrastructure/prisma/prisma.service';
 
@@ -56,16 +40,20 @@ export class GetBeneficiaryDashboardQuery {
   constructor(
     @Inject(BENEFICIARY_PROFILE_REPOSITORY)
     private readonly profileRepository: IBeneficiaryProfileRepository,
-    @Inject(BENEFICIARY_REPOSITORY)
-    private readonly beneficiaryRepository: BeneficiaryRepository,
-    @Inject(KEEPSAKE_REPOSITORY)
-    private readonly keepsakeRepository: KeepsakeRepository,
-    @Inject(VAULT_REPOSITORY)
-    private readonly vaultRepository: VaultRepository,
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepository,
     private readonly prisma: PrismaService,
   ) {}
+
+  private formatUserName(
+    user: { firstName: string | null; lastName: string | null; email: string } | null,
+  ): string {
+    if (!user) {
+      return 'Unknown';
+    }
+    if (user.firstName && user.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+    return user.email;
+  }
 
   async execute(userId: string): Promise<Result<BeneficiaryDashboardOutput, string>> {
     const profile = await this.profileRepository.findByUserId(userId);
@@ -90,6 +78,77 @@ export class GetBeneficiaryDashboardQuery {
       },
     });
 
+    return this.buildDashboard(beneficiaryRecords);
+  }
+
+  async executeForBeneficiary(
+    beneficiaryId: string,
+  ): Promise<Result<BeneficiaryDashboardOutput, string>> {
+    // For temporary access, get the specific beneficiary and all related beneficiaries with same email/vaultId
+    const beneficiary = await this.prisma.beneficiary.findUnique({
+      where: { id: beneficiaryId },
+      include: {
+        vault: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (!beneficiary) {
+      return err('Beneficiary not found');
+    }
+
+    // Get all beneficiary records for the same vault (same email might have multiple)
+    const beneficiaryRecords = await this.prisma.beneficiary.findMany({
+      where: {
+        vaultId: beneficiary.vaultId,
+        email: beneficiary.email,
+      },
+      include: {
+        vault: {
+          include: {
+            user: true,
+          },
+        },
+        assignments: {
+          include: {
+            keepsake: true,
+          },
+        },
+      },
+    });
+
+    return this.buildDashboard(beneficiaryRecords);
+  }
+
+  private async buildDashboard(
+    beneficiaryRecords: Array<{
+      id: string;
+      vaultId: string;
+      isTrustedPerson: boolean;
+      vault: {
+        user: {
+          firstName: string | null;
+          lastName: string | null;
+          email: string;
+        } | null;
+      } | null;
+      assignments: Array<{
+        personalMessage: string | null;
+        keepsake: {
+          id: string;
+          type: string;
+          title: string;
+          status: string;
+          vaultId: string;
+          deliveredAt: Date | null;
+          triggerCondition: string;
+        };
+      }>;
+    }>,
+  ): Promise<Result<BeneficiaryDashboardOutput, string>> {
     // Get all death declarations for linked vaults
     const vaultIds = beneficiaryRecords.map((b) => b.vaultId);
     const deathDeclarations = await this.prisma.deathDeclaration.findMany({
@@ -102,50 +161,37 @@ export class GetBeneficiaryDashboardQuery {
     let isTrustedPerson = false;
 
     for (const beneficiary of beneficiaryRecords) {
-      // Check if this beneficiary is a trusted person
       if (beneficiary.isTrustedPerson) {
         isTrustedPerson = true;
       }
 
-      // Add linked vault info
-      if (beneficiary.vault?.user) {
-        const vaultOwnerName =
-          beneficiary.vault.user.firstName && beneficiary.vault.user.lastName
-            ? `${beneficiary.vault.user.firstName} ${beneficiary.vault.user.lastName}`
-            : beneficiary.vault.user.email;
+      const vaultOwnerName = this.formatUserName(beneficiary.vault?.user ?? null);
 
-        // Avoid duplicates
-        if (!linkedVaults.find((v) => v.vaultId === beneficiary.vaultId)) {
-          const declaration = deathDeclarationsByVault.get(beneficiary.vaultId);
-          linkedVaults.push({
-            vaultId: beneficiary.vaultId,
-            vaultOwnerName,
-            isTrustedPersonFor: beneficiary.isTrustedPerson,
-            deathDeclared: !!declaration,
-            deathDeclaredAt: declaration?.declaredAt.toISOString(),
-          });
-        }
+      // Add linked vault info, avoiding duplicates
+      if (!linkedVaults.find((v) => v.vaultId === beneficiary.vaultId)) {
+        const declaration = deathDeclarationsByVault.get(beneficiary.vaultId);
+        linkedVaults.push({
+          vaultId: beneficiary.vaultId,
+          vaultOwnerName,
+          isTrustedPersonFor: beneficiary.isTrustedPerson,
+          deathDeclared: !!declaration,
+          deathDeclaredAt: declaration?.declaredAt.toISOString(),
+        });
       }
 
-      // Get keepsakes assigned to this beneficiary that have been delivered
+      // Get delivered keepsakes assigned to this beneficiary
       for (const assignment of beneficiary.assignments) {
         const keepsake = assignment.keepsake;
 
-        // Only include delivered keepsakes
         if (keepsake.status !== KeepsakeStatus.DELIVERED) {
           continue;
         }
-
-        const senderName =
-          beneficiary.vault?.user?.firstName && beneficiary.vault?.user?.lastName
-            ? `${beneficiary.vault.user.firstName} ${beneficiary.vault.user.lastName}`
-            : (beneficiary.vault?.user?.email ?? 'Unknown');
 
         keepsakes.push({
           id: keepsake.id,
           type: keepsake.type,
           title: keepsake.title,
-          senderName,
+          senderName: vaultOwnerName,
           vaultId: keepsake.vaultId,
           deliveredAt: keepsake.deliveredAt?.toISOString() ?? new Date().toISOString(),
           trigger: keepsake.triggerCondition,

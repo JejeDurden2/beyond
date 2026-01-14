@@ -897,6 +897,43 @@
       "loadFailed": "Impossible de charger les souvenirs",
       "keepsakeNotFound": "Ce souvenir n'existe pas ou ne vous est pas destiné",
       "unauthorized": "Vous n'avez pas accès à ce souvenir"
+    },
+    "access": {
+      "pageTitle": "Souvenirs pour vous - Beyond",
+      "pageDescription": "Accédez aux souvenirs qui vous ont été confiés.",
+      "loading": "Chargement...",
+      "title": "{name} vous a laissé des souvenirs",
+      "subtitle": "Vous avez {keepsakes} qui vous attendent.",
+      "keepsakes": {
+        "singular": "un souvenir",
+        "plural": "{count} souvenirs"
+      },
+      "receivingAs": "Vous recevez ces souvenirs en tant que",
+      "or": "ou",
+      "buttons": {
+        "createAccount": "Créer mon compte",
+        "creatingAccount": "Création en cours...",
+        "justView": "Voir maintenant sans compte",
+        "loading": "Chargement...",
+        "login": "Se connecter"
+      },
+      "viewDisclaimer": "Accès temporaire de 7 jours. Créez un compte pour un accès permanent.",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "trustedPerson": {
+        "title": "Vous êtes personne de confiance",
+        "description": "En tant que personne de confiance, vous devez créer un compte pour gérer les invitations et accéder à vos souvenirs."
+      },
+      "errors": {
+        "title": "Lien invalide",
+        "invalidLink": "Ce lien n'est plus valide ou a expiré.",
+        "generic": "Une erreur est survenue. Veuillez réessayer.",
+        "backToHome": "Retour à l'accueil"
+      },
+      "temporaryBanner": {
+        "title": "Accès temporaire",
+        "description": "Votre accès expire dans 7 jours. Créez un compte pour conserver un accès permanent à vos souvenirs.",
+        "createAccount": "Créer un compte"
+      }
     }
   }
 }

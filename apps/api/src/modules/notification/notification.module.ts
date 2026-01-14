@@ -15,6 +15,7 @@ import { ResendEmailAdapter } from '@/shared/adapters/resend-email.adapter';
 import { BeneficiaryModule } from '@/modules/beneficiary/beneficiary.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { VaultModule } from '@/modules/vault/vault.module';
+import { KeepsakeAssignmentModule } from '@/modules/keepsake-assignment/keepsake-assignment.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { VaultModule } from '@/modules/vault/vault.module';
     forwardRef(() => BeneficiaryModule),
     forwardRef(() => AuthModule),
     forwardRef(() => VaultModule),
+    forwardRef(() => KeepsakeAssignmentModule),
   ],
   providers: [
     {

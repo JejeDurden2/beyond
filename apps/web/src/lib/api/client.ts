@@ -15,9 +15,34 @@ class ApiError extends Error {
   }
 }
 
+const TEMP_ACCESS_KEY = 'beneficiaryTempAccess';
+
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('accessToken');
+
+  // First check for JWT in localStorage (account-based access)
+  const jwtToken = localStorage.getItem('accessToken');
+  if (jwtToken) {
+    return jwtToken;
+  }
+
+  // Fall back to temporary access token from session storage
+  const tempAccessData = sessionStorage.getItem(TEMP_ACCESS_KEY);
+  if (tempAccessData) {
+    try {
+      const data = JSON.parse(tempAccessData) as { accessToken: string; expiresAt: string };
+      const expiresAt = new Date(data.expiresAt);
+      if (expiresAt > new Date()) {
+        return data.accessToken;
+      }
+      // Token expired, clear it
+      sessionStorage.removeItem(TEMP_ACCESS_KEY);
+    } catch {
+      sessionStorage.removeItem(TEMP_ACCESS_KEY);
+    }
+  }
+
+  return null;
 }
 
 export function setToken(token: string): void {

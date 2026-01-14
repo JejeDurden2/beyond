@@ -9,8 +9,9 @@ import {
 
 interface PrismaNotificationLogRecord {
   id: string;
-  keepsakeId: string;
+  keepsakeId: string | null;
   beneficiaryId: string | null;
+  vaultId: string | null;
   type: string;
   status: string;
   scheduledFor: Date;
@@ -32,6 +33,7 @@ export class PrismaNotificationLogRepository implements INotificationLogReposito
         id: log.id,
         keepsakeId: log.keepsakeId,
         beneficiaryId: log.beneficiaryId,
+        vaultId: log.vaultId,
         type: log.type,
         status: log.status,
         scheduledFor: log.scheduledFor,
@@ -113,11 +115,30 @@ export class PrismaNotificationLogRepository implements INotificationLogReposito
     });
   }
 
+  async findPendingByBeneficiaryAndVault(
+    beneficiaryId: string,
+    vaultId: string,
+  ): Promise<NotificationLog | null> {
+    const record = await this.prisma.notificationLog.findFirst({
+      where: {
+        beneficiaryId,
+        vaultId,
+        status: {
+          in: [NotificationStatus.PENDING, NotificationStatus.SCHEDULED],
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return record ? this.toDomain(record) : null;
+  }
+
   private toDomain(record: PrismaNotificationLogRecord): NotificationLog {
     return NotificationLog.reconstitute({
       id: record.id,
       keepsakeId: record.keepsakeId,
       beneficiaryId: record.beneficiaryId,
+      vaultId: record.vaultId,
       type: record.type as NotificationType,
       status: record.status as NotificationStatus,
       scheduledFor: record.scheduledFor,
