@@ -9,7 +9,7 @@ import { RoleSwitcher } from '@/components/features/navigation';
 import { Logo } from '@/components/ui';
 
 export function Header() {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const pathname = usePathname();
   const t = useTranslations('nav');
   const tLanding = useTranslations('landing.hero');
@@ -98,25 +98,17 @@ export function Header() {
             <LanguageSwitcher />
           </div>
           {isAuthenticated ? (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/settings/profile"
-                className={`p-2 rounded-lg transition-colors ${
-                  pathname.includes('/settings')
-                    ? 'text-navy-deep bg-warm-gray/50'
-                    : 'text-navy-light hover:text-navy-deep hover:bg-warm-gray/50'
-                }`}
-                title={t('settings')}
-              >
-                <User className="w-5 h-5" />
-              </Link>
-              <button
-                onClick={logout}
-                className="text-sm font-medium text-navy-light hover:text-gold-heritage transition-colors duration-200 ease-out"
-              >
-                {t('logout')}
-              </button>
-            </div>
+            <Link
+              href="/settings/profile"
+              className={`p-2 rounded-lg transition-colors ${
+                pathname.includes('/settings')
+                  ? 'text-navy-deep bg-warm-gray/50'
+                  : 'text-navy-light hover:text-navy-deep hover:bg-warm-gray/50'
+              }`}
+              title={t('settings')}
+            >
+              <User className="w-5 h-5" />
+            </Link>
           ) : (
             <div className="flex items-center gap-3">
               <Link
