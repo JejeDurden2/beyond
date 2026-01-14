@@ -12,6 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           host: configService.get<string>('REDIS_HOST', 'localhost'),
           port: configService.get<number>('REDIS_PORT', 6379),
           password: configService.get<string>('REDIS_PASSWORD'),
+          family: 0, // Enable dual-stack lookup (IPv4 + IPv6) for Railway compatibility
         },
         defaultJobOptions: {
           attempts: 3,
