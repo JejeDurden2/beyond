@@ -46,7 +46,12 @@
     "continue": "Continuer",
     "confirm": "Confirmer",
     "error": "Une erreur est survenue",
-    "next": "Suivant"
+    "next": "Suivant",
+    "pagination": {
+      "label": "Navigation des pages",
+      "previous": "Page précédente",
+      "next": "Page suivante"
+    }
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -905,26 +910,39 @@
       "pageTitle": "Souvenirs pour vous - Beyond",
       "pageDescription": "Accédez aux souvenirs qui vous ont été confiés.",
       "loading": "Chargement...",
-      "title": "{name} vous a laissé des souvenirs",
-      "subtitle": "Vous avez {keepsakes} qui vous attendent.",
+      "title": "{name} vous a confié des souvenirs précieux",
+      "subtitle": "Des moments et des mots préservés pour vous.",
       "keepsakes": {
         "singular": "un souvenir",
-        "plural": "{count} souvenirs"
+        "plural": "{count} souvenirs",
+        "more": "+{count} autres"
       },
-      "receivingAs": "Vous recevez ces souvenirs en tant que",
-      "or": "ou",
-      "buttons": {
-        "createAccount": "Créer mon compte",
-        "creatingAccount": "Création en cours...",
-        "justView": "Voir maintenant sans compte",
-        "loading": "Chargement...",
-        "login": "Se connecter"
+      "receivingAs": "Pour vous",
+      "options": {
+        "account": {
+          "recommended": "Recommandé",
+          "title": "Créer mon compte Beyond",
+          "benefits": {
+            "permanent": "Accès permanent à vos souvenirs",
+            "notifications": "Recevez de futurs messages",
+            "multiDevice": "Accessible depuis tous vos appareils"
+          },
+          "button": "Créer mon compte",
+          "loading": "Création en cours..."
+        },
+        "temporary": {
+          "title": "Voir maintenant",
+          "description": "Accès temporaire de 7 jours, sans mot de passe",
+          "button": "Voir les souvenirs",
+          "loading": "Chargement..."
+        }
       },
-      "viewDisclaimer": "Accès temporaire de 7 jours. Créez un compte pour un accès permanent.",
       "hasAccount": "Vous avez déjà un compte ?",
+      "login": "Se connecter",
       "trustedPerson": {
-        "title": "Vous êtes personne de confiance",
-        "description": "En tant que personne de confiance, vous devez créer un compte pour gérer les invitations et accéder à vos souvenirs."
+        "badge": "Personne de confiance",
+        "title": "Vous êtes la personne de confiance de {name}",
+        "description": "Ce rôle vous confère la responsabilité de gérer la transmission des souvenirs. Un compte est nécessaire."
       },
       "errors": {
         "title": "Lien invalide",

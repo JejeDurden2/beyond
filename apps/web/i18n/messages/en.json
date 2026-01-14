@@ -46,7 +46,12 @@
     "continue": "Continue",
     "confirm": "Confirm",
     "error": "An error occurred",
-    "next": "Next"
+    "next": "Next",
+    "pagination": {
+      "label": "Page navigation",
+      "previous": "Previous page",
+      "next": "Next page"
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -901,35 +906,45 @@
         "pageTitle": "Keepsakes for you - Beyond",
         "pageDescription": "Access the keepsakes that have been entrusted to you.",
         "loading": "Loading...",
-        "title": "{name} has left keepsakes for you",
-        "subtitle": "{count, plural, =1 {1 keepsake is waiting for you} other {# keepsakes are waiting for you}}",
-        "trustedPersonNotice": "As a trusted person, you need to create an account to access your keepsakes and manage your responsibilities.",
+        "title": "{name} has entrusted you with precious keepsakes",
+        "subtitle": "Moments and words preserved just for you.",
+        "keepsakes": {
+          "singular": "one keepsake",
+          "plural": "{count} keepsakes",
+          "more": "+{count} more"
+        },
+        "receivingAs": "For you",
         "options": {
-          "title": "How would you like to access your keepsakes?",
-          "createAccount": {
-            "title": "Create an account",
-            "description": "Permanent access to your keepsakes with a personal account",
-            "button": "Create my account"
+          "account": {
+            "recommended": "Recommended",
+            "title": "Create my Beyond account",
+            "benefits": {
+              "permanent": "Permanent access to your keepsakes",
+              "notifications": "Receive future messages",
+              "multiDevice": "Accessible from all your devices"
+            },
+            "button": "Create my account",
+            "loading": "Creating..."
           },
-          "temporaryAccess": {
-            "title": "View without account",
-            "description": "Temporary access for 7 days, without creating an account",
-            "button": "View my keepsakes",
-            "loading": "Creating access..."
+          "temporary": {
+            "title": "View now",
+            "description": "7-day temporary access, no password needed",
+            "button": "View keepsakes",
+            "loading": "Loading..."
           }
         },
-        "expired": {
-          "title": "Link expired",
-          "message": "This access link has expired. Please contact the vault owner to receive a new invitation."
+        "hasAccount": "Already have an account?",
+        "login": "Sign in",
+        "trustedPerson": {
+          "badge": "Trusted Person",
+          "title": "You are {name}'s trusted person",
+          "description": "This role gives you the responsibility of managing keepsake delivery. An account is required."
         },
-        "notFound": {
-          "title": "Link not found",
-          "message": "This access link is invalid or has already been used."
-        },
-        "error": {
-          "title": "An error occurred",
-          "message": "Unable to load your information. Please try again later.",
-          "retry": "Try again"
+        "errors": {
+          "title": "Invalid link",
+          "invalidLink": "This link is no longer valid or has expired.",
+          "generic": "An error occurred. Please try again.",
+          "backToHome": "Back to home"
         },
         "temporaryBanner": {
           "title": "Temporary access",

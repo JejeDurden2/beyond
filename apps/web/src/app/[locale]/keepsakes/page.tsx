@@ -1,17 +1,20 @@
 'use client';
 
 import { Link, useRouter } from '@/i18n/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
-import { KeepsakeTypeIcon, ChevronRight, Plus } from '@/components/ui';
+import { KeepsakeTypeIcon, Plus, Pagination } from '@/components/ui';
+import { KeepsakeCard } from '@/components/features/keepsakes';
 import {
   KeepsakeVisualization,
   useKeepsakeVisualization,
 } from '@/components/features/visualizations';
 import { getKeepsakes, getKeepsake, getKeepsakeMedia } from '@/lib/api/keepsakes';
-import { KEEPSAKE_TYPES, formatDate } from '@/lib/constants';
+import { KEEPSAKE_TYPES } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeType, Keepsake, KeepsakeMedia } from '@/types';
+
+const ITEMS_PER_PAGE = 12;
 
 export default function KeepsakesPage() {
   const router = useRouter();
@@ -21,6 +24,7 @@ export default function KeepsakesPage() {
   const [keepsakes, setKeepsakes] = useState<KeepsakeSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterType, setFilterType] = useState<KeepsakeType | 'all'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Visualization state
   const [selectedKeepsake, setSelectedKeepsake] = useState<Keepsake | null>(null);
@@ -41,8 +45,22 @@ export default function KeepsakesPage() {
     loadData();
   }, []);
 
-  const filteredKeepsakes =
-    filterType === 'all' ? keepsakes : keepsakes.filter((k) => k.type === filterType);
+  const filteredKeepsakes = useMemo(
+    () => (filterType === 'all' ? keepsakes : keepsakes.filter((k) => k.type === filterType)),
+    [keepsakes, filterType],
+  );
+
+  const totalPages = Math.ceil(filteredKeepsakes.length / ITEMS_PER_PAGE);
+
+  const paginatedKeepsakes = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredKeepsakes.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredKeepsakes, currentPage]);
+
+  // Reset to page 1 when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterType]);
 
   const handleKeepsakeClick = useCallback(
     async (keepsake: KeepsakeSummary) => {
@@ -90,19 +108,22 @@ export default function KeepsakesPage() {
   return (
     <AppShell requireAuth>
       <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="flex items-center justify-between mb-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-display-sm text-foreground">{t('title')}</h1>
             <p className="text-muted-foreground mt-1">{t('count', { count: keepsakes.length })}</p>
           </div>
           <Link
             href="/keepsakes/new"
-            className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-5 py-2.5 text-sm font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
+            className="inline-flex items-center justify-center gap-2 bg-gold-heritage text-cream hover:bg-gold-soft rounded-xl px-5 py-2.5 text-sm font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
           >
-            + {t('new')}
+            <Plus className="w-4 h-4" />
+            {t('new')}
           </Link>
         </div>
 
+        {/* Filters */}
         <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-4 mb-8">
           <div className="flex items-center gap-2 flex-wrap">
             <FilterButton active={filterType === 'all'} onClick={() => setFilterType('all')}>
@@ -121,19 +142,18 @@ export default function KeepsakesPage() {
           </div>
         </div>
 
+        {/* Content */}
         {isLoading ? (
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <div
                 key={i}
-                className="bg-card rounded-2xl border border-border/50 p-6 animate-pulse"
+                className="bg-card rounded-2xl border border-border/50 overflow-hidden animate-pulse"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-muted rounded-xl" />
-                  <div className="flex-1">
-                    <div className="h-5 w-48 bg-muted rounded" />
-                    <div className="h-4 w-32 bg-muted rounded mt-2" />
-                  </div>
+                <div className="h-24 bg-muted" />
+                <div className="p-4 space-y-2">
+                  <div className="h-5 w-3/4 bg-muted rounded" />
+                  <div className="h-4 w-1/2 bg-muted rounded" />
                 </div>
               </div>
             ))}
@@ -141,33 +161,29 @@ export default function KeepsakesPage() {
         ) : filteredKeepsakes.length === 0 ? (
           <EmptyState hasKeepsakes={keepsakes.length > 0} />
         ) : (
-          <div className="space-y-4">
-            {filteredKeepsakes.map((keepsake) => (
-              <button
-                key={keepsake.id}
-                onClick={() => handleKeepsakeClick(keepsake)}
-                disabled={isLoadingKeepsake}
-                className="block w-full text-left bg-card rounded-2xl border border-border/50 shadow-soft p-6 transition-shadow duration-200 ease-out hover:shadow-soft-md disabled:opacity-70"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <KeepsakeTypeIcon
-                      type={keepsake.type}
-                      className="w-6 h-6 text-muted-foreground"
-                    />
-                    <div>
-                      <h3 className="font-medium text-foreground">{keepsake.title}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {t(`types.${keepsake.type}`)} ·{' '}
-                        {t('card.updatedAt', { date: formatDate(keepsake.updatedAt) })}
-                      </p>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                </div>
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {paginatedKeepsakes.map((keepsake) => (
+                <KeepsakeCard
+                  key={keepsake.id}
+                  keepsake={keepsake}
+                  onClick={() => handleKeepsakeClick(keepsake)}
+                  disabled={isLoadingKeepsake}
+                />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -186,30 +202,31 @@ export default function KeepsakesPage() {
   );
 }
 
-function FilterButton({
-  children,
-  active,
-  onClick,
-}: {
+interface FilterButtonProps {
   children: React.ReactNode;
   active: boolean;
   onClick: () => void;
-}) {
+}
+
+function FilterButton({ children, active, onClick }: FilterButtonProps): React.ReactElement {
+  const baseStyles =
+    'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 ease-out';
+  const activeStyles = active
+    ? 'bg-foreground text-background'
+    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50';
+
   return (
-    <button
-      onClick={onClick}
-      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 ease-out ${
-        active
-          ? 'bg-foreground text-background'
-          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-      }`}
-    >
+    <button onClick={onClick} className={`${baseStyles} ${activeStyles}`}>
       {children}
     </button>
   );
 }
 
-function EmptyState({ hasKeepsakes }: { hasKeepsakes: boolean }) {
+interface EmptyStateProps {
+  hasKeepsakes: boolean;
+}
+
+function EmptyState({ hasKeepsakes }: EmptyStateProps): React.ReactElement {
   const t = useTranslations('keepsakes.empty');
 
   return (
@@ -223,7 +240,7 @@ function EmptyState({ hasKeepsakes }: { hasKeepsakes: boolean }) {
         {!hasKeepsakes && (
           <Link
             href="/keepsakes/new"
-            className="inline-block bg-foreground text-background hover:bg-foreground/90 rounded-xl px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-base font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
+            className="inline-block bg-gold-heritage text-cream hover:bg-gold-soft rounded-xl px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-base font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md"
           >
             {t('cta')}
           </Link>
