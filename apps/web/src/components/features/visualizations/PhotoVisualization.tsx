@@ -206,6 +206,7 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
                               <div className="w-8 h-8 border-2 border-gold-heritage/30 border-t-gold-heritage rounded-full animate-spin" />
                             </div>
                           )}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={currentImage.url}
                             alt={currentImage.filename}
@@ -282,6 +283,7 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
                   )}
                   <div className="relative w-full h-full overflow-hidden rounded-sm">
                     {image.url ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         src={image.url}
                         alt={image.filename}
