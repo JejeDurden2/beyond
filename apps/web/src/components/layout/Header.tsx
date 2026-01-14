@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { User } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { LanguageSwitcher } from '@/components/features/settings';
+import { RoleSwitcher } from '@/components/features/navigation';
 import { Logo } from '@/components/ui';
 
 export function Header() {
@@ -88,6 +89,11 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
+          {isAuthenticated && user?.role === 'BOTH' && (
+            <div className="hidden md:block">
+              <RoleSwitcher />
+            </div>
+          )}
           <div className="hidden md:block">
             <LanguageSwitcher />
           </div>
