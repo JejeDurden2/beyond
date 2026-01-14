@@ -9,16 +9,25 @@ import { RoleSwitcher } from '@/components/features/navigation';
 import { Logo } from '@/components/ui';
 
 export function Header() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const pathname = usePathname();
   const t = useTranslations('nav');
   const tLanding = useTranslations('landing.hero');
 
   const isActive = (path: string) => pathname === path || pathname.endsWith(path);
 
-  // Role-based navigation access
+  // During loading, check if we had a token to prevent menu flickering
+  // If we had a token, assume authenticated until proven otherwise
+  const hadToken = typeof window !== 'undefined' && localStorage.getItem('accessToken') !== null;
+  const showAuthenticatedUI = isLoading ? hadToken : isAuthenticated;
+
+  // Role-based navigation access (only when user is loaded)
   const canAccessVault = user?.role === 'VAULT_OWNER' || user?.role === 'BOTH';
   const canAccessPortal = user?.role === 'BENEFICIARY' || user?.role === 'BOTH';
+
+  // During loading with token, show vault menu by default (most common case)
+  const showVaultMenu = isLoading ? hadToken : canAccessVault;
+  const showPortalMenu = isLoading ? false : canAccessPortal;
 
   // Determine home link based on role
   const getHomeLink = () => {
@@ -36,9 +45,9 @@ export function Header() {
             <Logo variant="full" className="hidden md:block h-10" />
           </Link>
 
-          {isAuthenticated && (
+          {showAuthenticatedUI && (
             <nav className="hidden md:flex items-center gap-6">
-              {canAccessVault && (
+              {showVaultMenu && (
                 <>
                   <Link
                     href="/dashboard"
@@ -72,7 +81,7 @@ export function Header() {
                   </Link>
                 </>
               )}
-              {canAccessPortal && (
+              {showPortalMenu && (
                 <Link
                   href="/portal"
                   className={`text-sm font-medium transition-colors duration-200 ease-out ${
@@ -89,7 +98,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          {isAuthenticated && user?.role === 'BOTH' && (
+          {!isLoading && isAuthenticated && user?.role === 'BOTH' && (
             <div className="hidden md:block">
               <RoleSwitcher />
             </div>
@@ -97,7 +106,7 @@ export function Header() {
           <div className="hidden md:block">
             <LanguageSwitcher />
           </div>
-          {isAuthenticated ? (
+          {showAuthenticatedUI ? (
             <Link
               href="/settings/profile"
               className={`p-2 rounded-lg transition-colors ${
