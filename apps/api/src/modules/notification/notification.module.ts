@@ -22,8 +22,8 @@ import { VaultModule } from '@/modules/vault/vault.module';
       name: NOTIFICATION_QUEUE,
     }),
     forwardRef(() => BeneficiaryModule),
-    AuthModule,
-    VaultModule,
+    forwardRef(() => AuthModule),
+    forwardRef(() => VaultModule),
   ],
   providers: [
     {

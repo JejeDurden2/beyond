@@ -51,6 +51,9 @@
     "dashboard": "Tableau de bord",
     "keepsakes": "Souvenirs",
     "beneficiaries": "Bénéficiaires",
+    "portal": "Mes souvenirs reçus",
+    "myVault": "Mon coffre",
+    "myInheritance": "Mes héritages",
     "settings": "Paramètres",
     "logout": "Déconnexion",
     "login": "Connexion",
@@ -541,7 +544,27 @@
     },
     "step": "Étape {current} sur {total}",
     "back": "Retour",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "beneficiaryOnboarding": {
+      "welcome": {
+        "title": "Bienvenue sur Beyond",
+        "subtitle": "Vous avez été invité à recevoir des souvenirs précieux",
+        "description": "Beyond est une plateforme sécurisée qui permet à vos proches de vous transmettre des messages, photos et souvenirs importants au moment opportun.",
+        "cta": "Commencer"
+      },
+      "profile": {
+        "title": "Présentez-vous",
+        "subtitle": "Ces informations aideront vos proches à vous reconnaître.",
+        "firstName": "Prénom",
+        "lastName": "Nom"
+      },
+      "complete": {
+        "title": "Vous êtes prêt !",
+        "subtitle": "Accédez à vos souvenirs reçus",
+        "description": "Votre espace personnel est maintenant configuré. Vous recevrez une notification chaque fois qu'un nouveau souvenir vous sera adressé.",
+        "cta": "Voir mes souvenirs"
+      }
+    }
   },
   "profile": {
     "title": "Profil",

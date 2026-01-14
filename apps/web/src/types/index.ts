@@ -1,3 +1,5 @@
+export type UserRole = 'VAULT_OWNER' | 'BENEFICIARY' | 'BOTH';
+
 export interface User {
   id: string;
   email: string;
@@ -7,6 +9,8 @@ export interface User {
   onboardingCompletedAt: string | null;
   emailVerified: boolean;
   hasTotpEnabled: boolean;
+  role: UserRole;
+  hasBeneficiaryProfile: boolean;
   createdAt: string;
 }
 

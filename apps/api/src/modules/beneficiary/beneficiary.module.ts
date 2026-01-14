@@ -33,7 +33,7 @@ import { AuthModule } from '../auth/auth.module';
     forwardRef(() => VaultModule),
     forwardRef(() => KeepsakeModule),
     forwardRef(() => KeepsakeAssignmentModule),
-    AuthModule,
+    forwardRef(() => AuthModule),
   ],
   controllers: [
     BeneficiaryController,

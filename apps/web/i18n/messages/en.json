@@ -51,6 +51,9 @@
     "dashboard": "Dashboard",
     "keepsakes": "Keepsakes",
     "beneficiaries": "Beneficiaries",
+    "portal": "My Received Keepsakes",
+    "myVault": "My Vault",
+    "myInheritance": "My Inheritances",
     "settings": "Settings",
     "logout": "Log out",
     "login": "Sign in",
@@ -501,7 +504,7 @@
     },
     "trustedPerson": {
       "title": "Your trusted person",
-      "subtitle": "For Beyond to work, you need to choose someone you trust who will know when the time has come.",
+      "subtitle": "Beyond needs a trusted person to trigger the delivery of your keepsakes after your passing.",
       "points": {
         "role": {
           "title": "An essential role",
@@ -524,7 +527,7 @@
         "title": "Add my trusted person",
         "subtitle": "I'm ready to designate this person"
       },
-      "skipForNow": "I'll do this later",
+      "skipForNow": "Skip this step for now",
       "later": "Later",
       "addAndFinish": "Add and finish",
       "form": {
@@ -541,7 +544,27 @@
     },
     "step": "Step {current} of {total}",
     "back": "Back",
-    "continue": "Continue"
+    "continue": "Continue",
+    "beneficiaryOnboarding": {
+      "welcome": {
+        "title": "Welcome to Beyond",
+        "subtitle": "You've been invited to receive precious keepsakes",
+        "description": "Beyond is a secure platform that allows your loved ones to share messages, photos, and important memories with you at the right time.",
+        "cta": "Get Started"
+      },
+      "profile": {
+        "title": "Introduce yourself",
+        "subtitle": "This information will help your loved ones recognize you.",
+        "firstName": "First name",
+        "lastName": "Last name"
+      },
+      "complete": {
+        "title": "You're all set!",
+        "subtitle": "Access your received keepsakes",
+        "description": "Your personal space is now set up. You'll receive a notification each time a new keepsake is addressed to you.",
+        "cta": "View my keepsakes"
+      }
+    }
   },
   "profile": {
     "title": "Profile",

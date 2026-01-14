@@ -8,54 +8,81 @@ import { LanguageSwitcher } from '@/components/features/settings';
 import { Logo } from '@/components/ui';
 
 export function Header() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const pathname = usePathname();
   const t = useTranslations('nav');
   const tLanding = useTranslations('landing.hero');
 
   const isActive = (path: string) => pathname === path || pathname.endsWith(path);
 
+  // Role-based navigation access
+  const canAccessVault = user?.role === 'VAULT_OWNER' || user?.role === 'BOTH';
+  const canAccessPortal = user?.role === 'BENEFICIARY' || user?.role === 'BOTH';
+
+  // Determine home link based on role
+  const getHomeLink = () => {
+    if (!isAuthenticated) return '/';
+    if (user?.role === 'BENEFICIARY') return '/portal';
+    return '/dashboard';
+  };
+
   return (
     <header className="border-b border-warm-gray bg-cream/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href={isAuthenticated ? '/dashboard' : '/'} className="flex items-center">
+          <Link href={getHomeLink()} className="flex items-center">
             <Logo variant="symbol" className="h-8 md:hidden" />
             <Logo variant="full" className="hidden md:block h-10" />
           </Link>
 
           {isAuthenticated && (
             <nav className="hidden md:flex items-center gap-6">
-              <Link
-                href="/dashboard"
-                className={`text-sm font-medium transition-colors duration-200 ease-out ${
-                  isActive('/dashboard')
-                    ? 'text-navy-deep'
-                    : 'text-navy-light hover:text-gold-heritage'
-                }`}
-              >
-                {t('dashboard')}
-              </Link>
-              <Link
-                href="/keepsakes"
-                className={`text-sm font-medium transition-colors duration-200 ease-out ${
-                  pathname.includes('/keepsakes')
-                    ? 'text-navy-deep'
-                    : 'text-navy-light hover:text-gold-heritage'
-                }`}
-              >
-                {t('keepsakes')}
-              </Link>
-              <Link
-                href="/beneficiaries"
-                className={`text-sm font-medium transition-colors duration-200 ease-out ${
-                  pathname.includes('/beneficiaries')
-                    ? 'text-navy-deep'
-                    : 'text-navy-light hover:text-gold-heritage'
-                }`}
-              >
-                {t('beneficiaries')}
-              </Link>
+              {canAccessVault && (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className={`text-sm font-medium transition-colors duration-200 ease-out ${
+                      isActive('/dashboard')
+                        ? 'text-navy-deep'
+                        : 'text-navy-light hover:text-gold-heritage'
+                    }`}
+                  >
+                    {t('dashboard')}
+                  </Link>
+                  <Link
+                    href="/keepsakes"
+                    className={`text-sm font-medium transition-colors duration-200 ease-out ${
+                      pathname.includes('/keepsakes')
+                        ? 'text-navy-deep'
+                        : 'text-navy-light hover:text-gold-heritage'
+                    }`}
+                  >
+                    {t('keepsakes')}
+                  </Link>
+                  <Link
+                    href="/beneficiaries"
+                    className={`text-sm font-medium transition-colors duration-200 ease-out ${
+                      pathname.includes('/beneficiaries')
+                        ? 'text-navy-deep'
+                        : 'text-navy-light hover:text-gold-heritage'
+                    }`}
+                  >
+                    {t('beneficiaries')}
+                  </Link>
+                </>
+              )}
+              {canAccessPortal && (
+                <Link
+                  href="/portal"
+                  className={`text-sm font-medium transition-colors duration-200 ease-out ${
+                    pathname.includes('/portal')
+                      ? 'text-navy-deep'
+                      : 'text-navy-light hover:text-gold-heritage'
+                  }`}
+                >
+                  {t('portal')}
+                </Link>
+              )}
             </nav>
           )}
         </div>

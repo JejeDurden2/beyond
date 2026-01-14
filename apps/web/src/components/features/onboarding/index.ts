@@ -6,3 +6,6 @@ export { IntentionStep } from './IntentionStep';
 export { BeneficiaryStep } from './BeneficiaryStep';
 export { TrustedPersonStep } from './TrustedPersonStep';
 export { CompletionStep } from './CompletionStep';
+export { BeneficiaryWelcomeStep } from './BeneficiaryWelcomeStep';
+export { BeneficiaryProfileStep } from './BeneficiaryProfileStep';
+export { BeneficiaryCompleteStep } from './BeneficiaryCompleteStep';

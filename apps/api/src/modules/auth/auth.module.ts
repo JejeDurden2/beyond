@@ -23,6 +23,7 @@ import { USER_REPOSITORY } from './domain/repositories/user.repository';
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from './domain/repositories/password-reset-token.repository';
 import { EMAIL_SERVICE } from './domain/ports/email.service';
 import { VaultModule } from '../vault/vault.module';
+import { BeneficiaryModule } from '../beneficiary/beneficiary.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { VaultModule } from '../vault/vault.module';
       }),
     }),
     forwardRef(() => VaultModule),
+    forwardRef(() => BeneficiaryModule),
   ],
   controllers: [AuthController],
   providers: [

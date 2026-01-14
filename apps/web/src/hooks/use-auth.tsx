@@ -46,10 +46,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string) => {
       const response = await authApi.login({ email, password });
       setUser(response.user);
-      // Redirect to onboarding if not completed
+
+      // Redirect based on onboarding status and role
       if (!response.user.onboardingCompletedAt) {
-        router.push('/onboarding');
+        // Different onboarding routes by role
+        if (response.user.role === 'BENEFICIARY') {
+          router.push('/onboarding/beneficiary');
+        } else {
+          router.push('/onboarding');
+        }
+      } else if (response.user.role === 'BENEFICIARY') {
+        // Pure beneficiaries go to portal
+        router.push('/portal');
       } else {
+        // Vault owners and BOTH go to dashboard
         router.push('/dashboard');
       }
     },
@@ -60,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string) => {
       const response = await authApi.register({ email, password });
       setUser(response.user);
-      // Always redirect to onboarding after registration
+      // Vault owner registration always goes to standard onboarding
       router.push('/onboarding');
     },
     [router],

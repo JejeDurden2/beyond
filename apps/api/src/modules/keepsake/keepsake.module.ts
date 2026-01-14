@@ -25,7 +25,11 @@ import { DeathDeclaredEvent } from '@/modules/vault/domain/events/death-declared
 import { NotificationModule } from '@/modules/notification/notification.module';
 
 @Module({
-  imports: [VaultModule, ScheduleModule.forRoot(), forwardRef(() => NotificationModule)],
+  imports: [
+    forwardRef(() => VaultModule),
+    ScheduleModule.forRoot(),
+    forwardRef(() => NotificationModule),
+  ],
   controllers: [KeepsakeController],
   providers: [
     {
