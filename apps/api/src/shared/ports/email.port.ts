@@ -27,11 +27,20 @@ export interface TrustedPersonAlertEmailInput {
   locale: SupportedLocale;
 }
 
+export interface TrustedPersonInvitationEmailInput {
+  to: string;
+  trustedPersonName: string;
+  vaultOwnerName: string;
+  invitationToken: string;
+  locale: SupportedLocale;
+}
+
 export interface IEmailService {
   sendEmail(input: SendEmailInput): Promise<void>;
   sendBeneficiaryInvitation(input: BeneficiaryInvitationEmailInput): Promise<void>;
   sendBeneficiaryAccountCreated(input: BeneficiaryAccountCreatedEmailInput): Promise<void>;
   sendTrustedPersonAlert(input: TrustedPersonAlertEmailInput): Promise<void>;
+  sendTrustedPersonInvitation(input: TrustedPersonInvitationEmailInput): Promise<void>;
 }
 
 export const EMAIL_SERVICE = Symbol('EMAIL_SERVICE');

@@ -436,7 +436,7 @@
       "description": "This person will be notified first and can manage the transmission of your keepsakes.",
       "confirmSet": {
         "title": "Set as trusted person?",
-        "description": "This person will be notified first and can resend invitations to other beneficiaries. Only one beneficiary can have this role.",
+        "description": "This person will receive an invitation email to create their Beyond account. They will be notified first and can resend invitations to other beneficiaries. Only one beneficiary can have this role.",
         "confirm": "Confirm"
       },
       "confirmUnset": {

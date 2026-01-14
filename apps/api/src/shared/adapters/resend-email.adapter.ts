@@ -8,6 +8,7 @@ import {
   SendEmailInput,
   SupportedLocale,
   TrustedPersonAlertEmailInput,
+  TrustedPersonInvitationEmailInput,
 } from '../ports';
 
 @Injectable()
@@ -323,6 +324,140 @@ export class ResendEmailAdapter implements IEmailService {
         View my dashboard
       </a>
     </div>
+    <hr style="border: none; border-top: 1px solid #E8E4DC; margin: 32px 0;" />
+    <p style="font-size: 12px; color: #64748B; text-align: center;">
+      Beyond - Preserve your memories for future generations
+    </p>
+  </div>
+</body>
+</html>
+    `.trim();
+  }
+
+  async sendTrustedPersonInvitation(input: TrustedPersonInvitationEmailInput): Promise<void> {
+    const invitationUrl = `${this.frontendUrl}/${input.locale}/beneficiary/accept-invitation/${input.invitationToken}`;
+
+    const subject = this.getLocalizedText(input.locale, {
+      fr: `${input.vaultOwnerName} vous a désigné comme personne de confiance sur Beyond`,
+      en: `${input.vaultOwnerName} has designated you as their trusted person on Beyond`,
+    });
+
+    const html = this.getLocalizedText(input.locale, {
+      fr: this.buildFrenchTrustedPersonInvitationEmail(
+        input.trustedPersonName,
+        input.vaultOwnerName,
+        invitationUrl,
+      ),
+      en: this.buildEnglishTrustedPersonInvitationEmail(
+        input.trustedPersonName,
+        input.vaultOwnerName,
+        invitationUrl,
+      ),
+    });
+
+    await this.sendEmail({ to: input.to, subject, html });
+  }
+
+  private buildFrenchTrustedPersonInvitationEmail(
+    trustedPersonName: string,
+    vaultOwnerName: string,
+    invitationUrl: string,
+  ): string {
+    return `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #FDFBF7;">
+  <div style="font-family: Georgia, 'Times New Roman', serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #173C7F;">
+    <h1 style="color: #B8860B; font-size: 28px; margin-bottom: 24px;">Vous êtes désigné(e) comme personne de confiance</h1>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">Bonjour ${trustedPersonName},</p>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">
+      <strong>${vaultOwnerName}</strong> vous a désigné(e) comme sa personne de confiance sur Beyond,
+      une plateforme sécurisée pour préserver et transmettre les souvenirs importants.
+    </p>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 8px;">
+      <strong>Ce que cela signifie :</strong>
+    </p>
+    <ul style="font-size: 16px; line-height: 1.8; color: #173C7F; margin-bottom: 24px;">
+      <li>Vous pourrez déclarer le décès de ${vaultOwnerName} le moment venu</li>
+      <li>Vous aiderez à transmettre ses souvenirs aux bénéficiaires qu'il/elle a choisis</li>
+      <li>C'est un rôle de confiance important</li>
+    </ul>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+      Pour accepter ce rôle et créer votre compte, cliquez sur le bouton ci-dessous :
+    </p>
+    <div style="text-align: center; margin: 32px 0;">
+      <a href="${invitationUrl}"
+         style="background-color: #B8860B; color: #FDFBF7; padding: 14px 28px;
+                text-decoration: none; border-radius: 8px; font-weight: 500; display: inline-block;">
+        Créer mon compte
+      </a>
+    </div>
+    <p style="font-size: 14px; color: #64748B; line-height: 1.6; margin-top: 32px;">
+      Ce lien est valable pendant 30 jours.
+    </p>
+    <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
+      Si vous n'arrivez pas à cliquer sur le bouton, copiez ce lien dans votre navigateur :<br>
+      <span style="word-break: break-all;">${invitationUrl}</span>
+    </p>
+    <hr style="border: none; border-top: 1px solid #E8E4DC; margin: 32px 0;" />
+    <p style="font-size: 12px; color: #64748B; text-align: center;">
+      Beyond - Préservez vos souvenirs pour les générations futures
+    </p>
+  </div>
+</body>
+</html>
+    `.trim();
+  }
+
+  private buildEnglishTrustedPersonInvitationEmail(
+    trustedPersonName: string,
+    vaultOwnerName: string,
+    invitationUrl: string,
+  ): string {
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #FDFBF7;">
+  <div style="font-family: Georgia, 'Times New Roman', serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #173C7F;">
+    <h1 style="color: #B8860B; font-size: 28px; margin-bottom: 24px;">You've been designated as a trusted person</h1>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">Hello ${trustedPersonName},</p>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">
+      <strong>${vaultOwnerName}</strong> has designated you as their trusted person on Beyond,
+      a secure platform for preserving and passing on important memories.
+    </p>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 8px;">
+      <strong>What this means:</strong>
+    </p>
+    <ul style="font-size: 16px; line-height: 1.8; color: #173C7F; margin-bottom: 24px;">
+      <li>You will be able to declare ${vaultOwnerName}'s passing when the time comes</li>
+      <li>You will help transmit their keepsakes to the beneficiaries they've chosen</li>
+      <li>This is an important role of trust</li>
+    </ul>
+    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+      To accept this role and create your account, click the button below:
+    </p>
+    <div style="text-align: center; margin: 32px 0;">
+      <a href="${invitationUrl}"
+         style="background-color: #B8860B; color: #FDFBF7; padding: 14px 28px;
+                text-decoration: none; border-radius: 8px; font-weight: 500; display: inline-block;">
+        Create my account
+      </a>
+    </div>
+    <p style="font-size: 14px; color: #64748B; line-height: 1.6; margin-top: 32px;">
+      This link is valid for 30 days.
+    </p>
+    <p style="font-size: 14px; color: #64748B; line-height: 1.6;">
+      If you can't click the button, copy this link into your browser:<br>
+      <span style="word-break: break-all;">${invitationUrl}</span>
+    </p>
     <hr style="border: none; border-top: 1px solid #E8E4DC; margin: 32px 0;" />
     <p style="font-size: 12px; color: #64748B; text-align: center;">
       Beyond - Preserve your memories for future generations

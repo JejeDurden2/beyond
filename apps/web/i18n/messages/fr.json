@@ -436,7 +436,7 @@
       "description": "Cette personne sera notifiée en premier et pourra gérer la transmission de vos souvenirs.",
       "confirmSet": {
         "title": "Définir comme personne de confiance ?",
-        "description": "Cette personne sera notifiée en priorité et pourra renvoyer les invitations aux autres bénéficiaires. Un seul bénéficiaire peut avoir ce rôle.",
+        "description": "Cette personne recevra un e-mail d'invitation pour créer son compte Beyond. Elle sera notifiée en priorité et pourra renvoyer les invitations aux autres bénéficiaires. Un seul bénéficiaire peut avoir ce rôle.",
         "confirm": "Confirmer"
       },
       "confirmUnset": {
