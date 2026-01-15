@@ -9,7 +9,10 @@ import { AppShell } from '@/components/layout';
 import { ArrowLeft } from '@/components/ui';
 import { MediaUploader } from '@/components/features/media';
 import { AssignmentSection } from '@/components/features/assignments';
-import { KeepsakePreviewModal } from '@/components/features/keepsakes';
+import {
+  KeepsakeVisualization,
+  useKeepsakeVisualization,
+} from '@/components/features/visualizations';
 import { useKeepsakeAssignments } from '@/hooks/use-assignments';
 import {
   getKeepsake,
@@ -49,6 +52,7 @@ export default function KeepsakeDetailPage(): React.ReactElement {
 
   // Fetch assignments for preview
   const { data: assignmentsData } = useKeepsakeAssignments(id);
+  const { hasVisualization } = useKeepsakeVisualization();
 
   useEffect(() => {
     async function loadKeepsake() {
@@ -246,19 +250,17 @@ export default function KeepsakeDetailPage(): React.ReactElement {
               </p>
             </div>
 
-            {/* Preview button - only for text-based keepsakes with assignments */}
-            {['letter', 'wish'].includes(keepsake.type) &&
-              assignmentsData?.assignments &&
-              assignmentsData.assignments.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setShowPreview(true)}
-                  className="inline-flex items-center gap-2 border border-border/60 text-foreground rounded-xl px-4 py-2.5 text-sm font-medium transition-colors duration-200 ease-out hover:bg-muted/50"
-                >
-                  <Eye className="w-4 h-4" />
-                  {t('form.preview')}
-                </button>
-              )}
+            {/* View as recipient button - for all visualizable keepsakes */}
+            {keepsake && hasVisualization(keepsake.type) && (
+              <button
+                type="button"
+                onClick={() => setShowPreview(true)}
+                className="inline-flex items-center gap-2 border border-border/60 text-foreground rounded-xl px-4 py-2.5 text-sm font-medium transition-colors duration-200 ease-out hover:bg-muted/50"
+              >
+                <Eye className="w-4 h-4" />
+                {t('edit.viewAsRecipient')}
+              </button>
+            )}
           </div>
 
           <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
@@ -440,15 +442,15 @@ export default function KeepsakeDetailPage(): React.ReactElement {
           </div>
         )}
 
-        {/* Preview modal */}
-        {assignmentsData?.assignments && assignmentsData.assignments.length > 0 && (
-          <KeepsakePreviewModal
-            isOpen={showPreview}
+        {/* View as recipient visualization */}
+        {showPreview && keepsake && hasVisualization(keepsake.type) && (
+          <KeepsakeVisualization
             type={keepsake.type}
             title={title}
             content={content}
-            recipientName={assignmentsData.assignments[0].beneficiaryFullName}
-            personalMessage={assignmentsData.assignments[0].personalMessage ?? undefined}
+            media={media}
+            recipientName={assignmentsData?.assignments?.[0]?.beneficiaryFullName}
+            personalMessage={assignmentsData?.assignments?.[0]?.personalMessage ?? undefined}
             onClose={() => setShowPreview(false)}
           />
         )}

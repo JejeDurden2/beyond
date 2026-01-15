@@ -1,38 +1,28 @@
 'use client';
 
 import { Link, useRouter } from '@/i18n/navigation';
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppShell } from '@/components/layout';
 import { KeepsakeTypeIcon, Plus, Pagination } from '@/components/ui';
 import { KeepsakeCard } from '@/components/features/keepsakes';
-import {
-  KeepsakeVisualization,
-  useKeepsakeVisualization,
-} from '@/components/features/visualizations';
-import { getKeepsakes, getKeepsake, getKeepsakeMedia } from '@/lib/api/keepsakes';
+import { getKeepsakes } from '@/lib/api/keepsakes';
 import { KEEPSAKE_TYPES } from '@/lib/constants';
-import type { KeepsakeSummary, KeepsakeType, Keepsake, KeepsakeMedia } from '@/types';
+import type { KeepsakeSummary, KeepsakeType } from '@/types';
 
 const ITEMS_PER_PAGE = 12;
 
-export default function KeepsakesPage() {
+export default function KeepsakesPage(): React.ReactElement {
   const router = useRouter();
   const t = useTranslations('keepsakes');
-  const { hasVisualization, isMediaBased } = useKeepsakeVisualization();
 
   const [keepsakes, setKeepsakes] = useState<KeepsakeSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterType, setFilterType] = useState<KeepsakeType | 'all'>('all');
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Visualization state
-  const [selectedKeepsake, setSelectedKeepsake] = useState<Keepsake | null>(null);
-  const [selectedMedia, setSelectedMedia] = useState<KeepsakeMedia[]>([]);
-  const [isLoadingKeepsake, setIsLoadingKeepsake] = useState(false);
-
   useEffect(() => {
-    async function loadData() {
+    async function loadData(): Promise<void> {
       try {
         const data = await getKeepsakes();
         setKeepsakes(data.keepsakes);
@@ -62,48 +52,10 @@ export default function KeepsakesPage() {
     setCurrentPage(1);
   }, [filterType]);
 
-  const handleKeepsakeClick = useCallback(
-    async (keepsake: KeepsakeSummary) => {
-      // For non-visualizable keepsakes, go directly to edit page
-      if (!hasVisualization(keepsake.type)) {
-        router.push(`/keepsakes/${keepsake.id}`);
-        return;
-      }
-
-      // Load full content and show visualization
-      setIsLoadingKeepsake(true);
-      try {
-        const fullKeepsake = await getKeepsake(keepsake.id);
-
-        // For media-based keepsakes, also load media
-        if (isMediaBased(keepsake.type)) {
-          const mediaResponse = await getKeepsakeMedia(keepsake.id);
-          setSelectedMedia(mediaResponse.media);
-        } else {
-          setSelectedMedia([]);
-        }
-
-        setSelectedKeepsake(fullKeepsake);
-      } catch {
-        // On error, fallback to edit page
-        router.push(`/keepsakes/${keepsake.id}`);
-      } finally {
-        setIsLoadingKeepsake(false);
-      }
-    },
-    [hasVisualization, isMediaBased, router],
-  );
-
-  const handleCloseVisualization = useCallback(() => {
-    setSelectedKeepsake(null);
-    setSelectedMedia([]);
-  }, []);
-
-  const handleEditFromVisualization = useCallback(() => {
-    if (selectedKeepsake) {
-      router.push(`/keepsakes/${selectedKeepsake.id}`);
-    }
-  }, [selectedKeepsake, router]);
+  // Click goes directly to edit page
+  const handleKeepsakeClick = (keepsake: KeepsakeSummary): void => {
+    router.push(`/keepsakes/${keepsake.id}`);
+  };
 
   return (
     <AppShell requireAuth>
@@ -168,7 +120,6 @@ export default function KeepsakesPage() {
                   key={keepsake.id}
                   keepsake={keepsake}
                   onClick={() => handleKeepsakeClick(keepsake)}
-                  disabled={isLoadingKeepsake}
                 />
               ))}
             </div>
@@ -186,18 +137,6 @@ export default function KeepsakesPage() {
           </>
         )}
       </div>
-
-      {/* Visualization Modal */}
-      {selectedKeepsake && (
-        <KeepsakeVisualization
-          type={selectedKeepsake.type}
-          title={selectedKeepsake.title}
-          content={selectedKeepsake.content || ''}
-          media={selectedMedia}
-          onEdit={handleEditFromVisualization}
-          onClose={handleCloseVisualization}
-        />
-      )}
     </AppShell>
   );
 }

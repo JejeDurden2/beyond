@@ -8,7 +8,7 @@ import type { KeepsakeMedia } from '@/types';
 interface PhotoVisualizationProps {
   title: string;
   media: KeepsakeMedia[];
-  onEdit: () => void;
+  onEdit?: () => void;
   onClose: () => void;
 }
 
@@ -56,7 +56,7 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
   }, [hasMultiple, goToPrevious, goToNext]);
 
   if (images.length === 0) {
-    onEdit();
+    onEdit?.();
     return null;
   }
 
@@ -107,13 +107,15 @@ export function PhotoVisualization({ title, media, onEdit, onClose }: PhotoVisua
                 <ZoomIn className="w-4 h-4 md:w-5 md:h-5 text-cream/60 group-hover:text-cream transition-colors" />
               )}
             </button>
-            <button
-              onClick={onEdit}
-              className="group relative p-2.5 md:p-3 rounded-full transition-all duration-300 hover:bg-white/5"
-              aria-label={t('edit')}
-            >
-              <Pencil className="w-4 h-4 md:w-5 md:h-5 text-cream/60 group-hover:text-gold-heritage transition-colors" />
-            </button>
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="group relative p-2.5 md:p-3 rounded-full transition-all duration-300 hover:bg-white/5"
+                aria-label={t('edit')}
+              >
+                <Pencil className="w-4 h-4 md:w-5 md:h-5 text-cream/60 group-hover:text-gold-heritage transition-colors" />
+              </button>
+            )}
             <button
               onClick={onClose}
               className="group relative p-2.5 md:p-3 rounded-full transition-all duration-300 hover:bg-white/5"

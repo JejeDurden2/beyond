@@ -12,7 +12,9 @@ interface KeepsakeVisualizationProps {
   title: string;
   content: string;
   media?: KeepsakeMedia[];
-  onEdit: () => void;
+  recipientName?: string;
+  personalMessage?: string;
+  onEdit?: () => void;
   onClose: () => void;
 }
 
@@ -21,12 +23,14 @@ export function KeepsakeVisualization({
   title,
   content,
   media = [],
+  recipientName,
+  personalMessage,
   onEdit,
   onClose,
-}: KeepsakeVisualizationProps) {
+}: KeepsakeVisualizationProps): React.ReactElement | null {
   // Handle escape key to close
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         onClose();
       }
@@ -49,17 +53,31 @@ export function KeepsakeVisualization({
       );
     case 'letter':
       return (
-        <LetterVisualization title={title} content={content} onEdit={onEdit} onClose={onClose} />
+        <LetterVisualization
+          title={title}
+          content={content}
+          recipientName={recipientName}
+          personalMessage={personalMessage}
+          onEdit={onEdit}
+          onClose={onClose}
+        />
       );
     case 'wish':
       return (
-        <WishVisualization title={title} content={content} onEdit={onEdit} onClose={onClose} />
+        <WishVisualization
+          title={title}
+          content={content}
+          recipientName={recipientName}
+          personalMessage={personalMessage}
+          onEdit={onEdit}
+          onClose={onClose}
+        />
       );
     case 'photo':
       return <PhotoVisualization title={title} media={media} onEdit={onEdit} onClose={onClose} />;
     default:
-      // For non-visualizable keepsakes (video, scheduled_action), go directly to edit
-      onEdit();
+      // For non-visualizable keepsakes (video, scheduled_action), close
+      onClose();
       return null;
   }
 }

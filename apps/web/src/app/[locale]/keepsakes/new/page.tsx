@@ -6,11 +6,8 @@ import { useTranslations } from 'next-intl';
 import { Eye } from 'lucide-react';
 import { AppShell } from '@/components/layout';
 import { ErrorAlert, KeepsakeTypeIcon, ArrowLeft, MediaTypeIcon } from '@/components/ui';
-import {
-  RecipientSelector,
-  KeepsakePreviewModal,
-  type RecipientWithMessage,
-} from '@/components/features/keepsakes';
+import { RecipientSelector, type RecipientWithMessage } from '@/components/features/keepsakes';
+import { KeepsakeVisualization } from '@/components/features/visualizations';
 import { createKeepsake, uploadMedia } from '@/lib/api/keepsakes';
 import { bulkUpdateAssignments, updatePersonalMessage } from '@/lib/api/assignments';
 import { KEEPSAKE_TYPES } from '@/lib/constants';
@@ -530,20 +527,36 @@ export default function NewKeepsakePage(): React.ReactElement {
         )}
       </div>
 
-      {/* Preview modal */}
-      {selectedType && previewRecipient && (
-        <KeepsakePreviewModal
-          isOpen={showPreview}
-          type={selectedType}
-          title={title}
-          content={content}
-          recipientName={previewRecipient.beneficiary.fullName}
-          personalMessage={previewRecipient.personalMessage}
-          onClose={() => setShowPreview(false)}
-          onConfirm={handleSubmit}
-          confirmLabel={t('form.confirmAndCreate')}
-          isLoading={isLoading}
-        />
+      {/* Preview visualization with confirm action */}
+      {showPreview && selectedType && previewRecipient && (
+        <>
+          <KeepsakeVisualization
+            type={selectedType}
+            title={title}
+            content={content}
+            recipientName={previewRecipient.beneficiary.fullName}
+            personalMessage={previewRecipient.personalMessage}
+            onClose={() => setShowPreview(false)}
+          />
+          {/* Confirm action overlay */}
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex gap-3 animate-slide-up">
+            <button
+              type="button"
+              onClick={() => setShowPreview(false)}
+              className="px-5 py-2.5 rounded-xl bg-white/10 backdrop-blur-md text-white hover:bg-white/20 font-medium transition-colors duration-200 ease-out border border-white/20"
+            >
+              {tCommon('back')}
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className="px-5 py-2.5 rounded-xl bg-gold-heritage text-cream hover:bg-gold-soft font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? tCommon('loading') : t('form.confirmAndCreate')}
+            </button>
+          </div>
+        </>
       )}
 
       {/* No recipients warning modal */}

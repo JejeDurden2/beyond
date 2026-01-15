@@ -18,7 +18,7 @@ import type { KeepsakeMedia } from '@/types';
 interface DocumentVisualizationProps {
   title: string;
   media: KeepsakeMedia[];
-  onEdit: () => void;
+  onEdit?: () => void;
   onClose: () => void;
 }
 
@@ -88,7 +88,7 @@ export function DocumentVisualization({
   };
 
   if (documents.length === 0) {
-    onEdit();
+    onEdit?.();
     return null;
   }
 
@@ -181,13 +181,15 @@ export function DocumentVisualization({
             >
               <Download className="w-4 h-4 md:w-5 md:h-5" />
             </button>
-            <button
-              onClick={onEdit}
-              className="p-2 rounded-full bg-cream/10 text-cream hover:bg-gold-soft/30 transition-colors duration-300"
-              aria-label={t('edit')}
-            >
-              <Pencil className="w-4 h-4 md:w-5 md:h-5" />
-            </button>
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="p-2 rounded-full bg-cream/10 text-cream hover:bg-gold-soft/30 transition-colors duration-300"
+                aria-label={t('edit')}
+              >
+                <Pencil className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+            )}
             <button
               onClick={onClose}
               className="p-2 rounded-full bg-cream/10 text-cream hover:bg-red-500/30 transition-colors duration-300"

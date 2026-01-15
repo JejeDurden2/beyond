@@ -319,7 +319,8 @@
       "createdAt": "Créé le {date}",
       "updatedAt": "Dernière modification le {date}",
       "save": "Enregistrer",
-      "saving": "Enregistrement..."
+      "saving": "Enregistrement...",
+      "viewAsRecipient": "Voir comme un destinataire"
     },
     "delete": {
       "button": "Supprimer ce souvenir",

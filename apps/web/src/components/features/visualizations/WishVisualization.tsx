@@ -1,17 +1,78 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Pencil, X } from 'lucide-react';
+import { Pencil, X, Eye, ChevronRight } from 'lucide-react';
 
 interface WishVisualizationProps {
   title: string;
   content: string;
-  onEdit: () => void;
+  recipientName?: string;
+  personalMessage?: string;
+  onEdit?: () => void;
   onClose: () => void;
 }
 
-export function WishVisualization({ title, content, onEdit, onClose }: WishVisualizationProps) {
+export function WishVisualization({
+  title,
+  content,
+  recipientName,
+  personalMessage,
+  onEdit,
+  onClose,
+}: WishVisualizationProps): React.ReactElement {
   const t = useTranslations('keepsakes.visualization');
+  const tForm = useTranslations('keepsakes.form');
+
+  const [showPersonalMessage, setShowPersonalMessage] = useState(!!personalMessage);
+
+  // Show personal message overlay first if available
+  if (personalMessage && showPersonalMessage) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+        {/* Backdrop */}
+        <button
+          type="button"
+          className="absolute inset-0 bg-navy-deep/30 backdrop-blur-sm cursor-default animate-fade-in"
+          onClick={onClose}
+          aria-label={t('close')}
+        />
+
+        {/* Personal message card */}
+        <div className="relative z-10 w-full max-w-lg animate-slide-up">
+          <div className="bg-card rounded-2xl border border-border/50 shadow-soft-lg p-6">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                <Eye className="w-5 h-5 text-accent" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-muted-foreground mb-2">
+                  {tForm('previewSubtitle', { name: recipientName || '' })}
+                </p>
+                <p className="text-foreground italic">&ldquo;{personalMessage}&rdquo;</p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                aria-label={t('close')}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPersonalMessage(false)}
+              className="mt-4 w-full flex items-center justify-center gap-2 py-2 text-sm text-accent hover:text-accent/80 transition-colors duration-200 ease-out"
+            >
+              {t('view')}
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
@@ -55,14 +116,18 @@ export function WishVisualization({ title, content, onEdit, onClose }: WishVisua
 
           {/* Actions */}
           <div className="sticky top-0 z-10 flex justify-end gap-2 p-4 bg-gradient-to-b from-[#F5EFE0] to-transparent">
+            {onEdit && (
+              <button
+                type="button"
+                onClick={onEdit}
+                className="p-2 rounded-full bg-[#E8DCC8]/80 text-navy-deep hover:bg-gold-soft/40 transition-colors duration-300"
+                aria-label={t('edit')}
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+            )}
             <button
-              onClick={onEdit}
-              className="p-2 rounded-full bg-[#E8DCC8]/80 text-navy-deep hover:bg-gold-soft/40 transition-colors duration-300"
-              aria-label={t('edit')}
-            >
-              <Pencil className="w-4 h-4" />
-            </button>
-            <button
+              type="button"
               onClick={onClose}
               className="p-2 rounded-full bg-[#E8DCC8]/80 text-navy-deep hover:bg-red-200/50 transition-colors duration-300"
               aria-label={t('close')}
