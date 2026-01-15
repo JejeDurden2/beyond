@@ -13,7 +13,6 @@ import {
   BeneficiaryStatsCard,
   RecentKeepsakesCard,
   TrustedPersonCard,
-  QuickActionsCard,
   DashboardSkeleton,
 } from '@/components/features/dashboard';
 import { getKeepsakes, getKeepsake } from '@/lib/api/keepsakes';
@@ -86,7 +85,7 @@ export default function DashboardPage(): React.ReactElement {
           <DashboardSkeleton />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            {/* Row 1: Welcome + Stats */}
+            {/* Row 1: Welcome (2 cols) + Stats (1 col each) */}
             <WelcomeCard />
             <KeepsakeStatsCard keepsakes={keepsakes} />
             <BeneficiaryStatsCard beneficiaries={beneficiaries} />
@@ -94,9 +93,10 @@ export default function DashboardPage(): React.ReactElement {
             {/* Row 2: Recent Keepsakes (full width) */}
             <RecentKeepsakesCard keepsakes={keepsakes} onKeepsakeClick={handleKeepsakeClick} />
 
-            {/* Row 3: Trusted Person + Quick Actions */}
-            <TrustedPersonCard beneficiaries={beneficiaries} />
-            <QuickActionsCard />
+            {/* Row 3: Trusted Person (spans remaining width) */}
+            <div className="lg:col-span-4">
+              <TrustedPersonCard beneficiaries={beneficiaries} />
+            </div>
           </div>
         )}
       </div>

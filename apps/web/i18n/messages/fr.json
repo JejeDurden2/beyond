@@ -250,8 +250,10 @@
     "grid": {
       "welcome": {
         "greeting": "Bonjour{name, select, other { {name}}}",
-        "subtitle": "Votre espace pour préserver ce qui compte",
-        "security": "Chiffré et protégé"
+        "subtitle": "Votre espace pour préserver ce qui compte pour vos proches",
+        "security": "Sécurisé",
+        "encrypted": "Chiffré",
+        "cta": "Créer un souvenir"
       },
       "keepsakeStats": {
         "title": "Vos souvenirs",
@@ -269,11 +271,10 @@
       },
       "recentKeepsakes": {
         "title": "Souvenirs récents",
-        "new": "Nouveau",
+        "viewAll": "Voir tout",
         "empty": {
           "title": "Votre coffre est vide",
-          "description": "Commencez à préserver ce qui compte pour vos proches",
-          "cta": "Créer mon premier souvenir"
+          "description": "Commencez à préserver ce qui compte pour vos proches"
         }
       },
       "trustedPerson": {
@@ -281,10 +282,6 @@
         "configured": "Configuré",
         "notConfigured": "Non configuré",
         "configure": "Configurer"
-      },
-      "quickActions": {
-        "createKeepsake": "Créer un souvenir",
-        "addBeneficiary": "Ajouter un bénéficiaire"
       }
     }
   },

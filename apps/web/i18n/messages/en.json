@@ -250,8 +250,10 @@
     "grid": {
       "welcome": {
         "greeting": "Hello{name, select, other { {name}}}",
-        "subtitle": "Your space to preserve what matters",
-        "security": "Encrypted and protected"
+        "subtitle": "Your space to preserve what matters for your loved ones",
+        "security": "Secure",
+        "encrypted": "Encrypted",
+        "cta": "Create a keepsake"
       },
       "keepsakeStats": {
         "title": "Your keepsakes",
@@ -269,11 +271,10 @@
       },
       "recentKeepsakes": {
         "title": "Recent keepsakes",
-        "new": "New",
+        "viewAll": "View all",
         "empty": {
           "title": "Your vault is empty",
-          "description": "Start preserving what matters for your loved ones",
-          "cta": "Create my first keepsake"
+          "description": "Start preserving what matters for your loved ones"
         }
       },
       "trustedPerson": {
@@ -281,10 +282,6 @@
         "configured": "Configured",
         "notConfigured": "Not configured",
         "configure": "Configure"
-      },
-      "quickActions": {
-        "createKeepsake": "Create a keepsake",
-        "addBeneficiary": "Add a beneficiary"
       }
     }
   },

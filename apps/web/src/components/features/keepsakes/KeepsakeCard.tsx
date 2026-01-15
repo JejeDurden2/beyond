@@ -111,15 +111,33 @@ export function KeepsakeCard({
       disabled={disabled}
       className="group relative w-full text-left bg-card rounded-2xl border border-border/50 shadow-soft overflow-hidden transition-all duration-200 ease-out hover:shadow-soft-md hover:border-border hover:-translate-y-0.5 disabled:opacity-70"
     >
-      {/* Card Header with Type Icon */}
-      <div className="relative h-24 bg-gradient-to-br from-warm-gray to-cream flex items-center justify-center">
-        <KeepsakeTypeIcon
-          type={keepsake.type}
-          className="w-10 h-10 text-navy-light/40 group-hover:text-gold-heritage/60 transition-colors duration-200"
-        />
+      {/* Card Header with Type Icon and decorative pattern */}
+      <div className="relative h-28 bg-gradient-to-br from-warm-gray via-cream to-warm-gray overflow-hidden">
+        {/* Decorative circles pattern */}
+        <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full border border-navy-deep/5" />
+        <div className="absolute -right-2 top-2 w-16 h-16 rounded-full border border-navy-deep/5" />
+        <div className="absolute right-6 top-8 w-8 h-8 rounded-full bg-navy-deep/[0.02]" />
+
+        {/* Type icon container */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-2xl bg-white/60 backdrop-blur-sm shadow-soft flex items-center justify-center group-hover:bg-white/80 transition-colors duration-200">
+            <KeepsakeTypeIcon
+              type={keepsake.type}
+              className="w-7 h-7 text-navy-light group-hover:text-gold-heritage transition-colors duration-200"
+            />
+          </div>
+        </div>
+
         {/* Status Badge */}
         <div className="absolute top-3 right-3">
           <StatusBadge status={keepsake.status} />
+        </div>
+
+        {/* Type label */}
+        <div className="absolute bottom-3 left-3">
+          <span className="text-xs font-medium text-navy-deep/50 uppercase tracking-wide">
+            {t(`types.${keepsake.type}`)}
+          </span>
         </div>
       </div>
 
@@ -131,9 +149,8 @@ export function KeepsakeCard({
 
         {recipients && recipients.length > 0 && <RecipientInitials recipients={recipients} />}
 
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>{t(`types.${keepsake.type}`)}</span>
-          <span>{formatDate(keepsake.updatedAt, locale)}</span>
+        <div className="text-xs text-muted-foreground">
+          {formatDate(keepsake.updatedAt, locale)}
         </div>
       </div>
     </button>
