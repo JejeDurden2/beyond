@@ -12,30 +12,30 @@ const typeThemes: Record<KeepsakeType, { gradient: string; accent: string; iconB
     accent: 'text-amber-600',
     iconBg: 'bg-amber-100/80',
   },
-  story: {
-    gradient: 'from-violet-50 via-purple-50/50 to-violet-50',
-    accent: 'text-violet-600',
-    iconBg: 'bg-violet-100/80',
+  document: {
+    gradient: 'from-slate-50 via-gray-50/50 to-slate-50',
+    accent: 'text-slate-600',
+    iconBg: 'bg-slate-100/80',
   },
-  advice: {
-    gradient: 'from-emerald-50 via-teal-50/50 to-emerald-50',
-    accent: 'text-emerald-600',
-    iconBg: 'bg-emerald-100/80',
-  },
-  memory: {
+  photo: {
     gradient: 'from-sky-50 via-blue-50/50 to-sky-50',
     accent: 'text-sky-600',
     iconBg: 'bg-sky-100/80',
+  },
+  video: {
+    gradient: 'from-violet-50 via-purple-50/50 to-violet-50',
+    accent: 'text-violet-600',
+    iconBg: 'bg-violet-100/80',
   },
   wish: {
     gradient: 'from-rose-50 via-pink-50/50 to-rose-50',
     accent: 'text-rose-600',
     iconBg: 'bg-rose-100/80',
   },
-  legacy: {
-    gradient: 'from-gold-heritage/10 via-amber-50/50 to-gold-heritage/10',
-    accent: 'text-gold-heritage',
-    iconBg: 'bg-gold-heritage/20',
+  scheduled_action: {
+    gradient: 'from-emerald-50 via-teal-50/50 to-emerald-50',
+    accent: 'text-emerald-600',
+    iconBg: 'bg-emerald-100/80',
   },
 };
 
