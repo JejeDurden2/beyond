@@ -5,39 +5,189 @@ import { KeepsakeTypeIcon } from '@/components/ui';
 import { formatDate } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeStatus, KeepsakeType } from '@/types';
 
-// Color themes per keepsake type for visual distinction
-const typeThemes: Record<KeepsakeType, { gradient: string; accent: string; iconBg: string }> = {
+// Subtle, premium color themes per keepsake type
+const typeThemes: Record<
+  KeepsakeType,
+  {
+    gradient: string;
+    accent: string;
+    iconBg: string;
+    pattern: 'lines' | 'dots' | 'waves' | 'grid' | 'arcs' | 'rings';
+  }
+> = {
   letter: {
-    gradient: 'from-amber-50 via-orange-50/50 to-amber-50',
-    accent: 'text-amber-600',
-    iconBg: 'bg-amber-100/80',
+    gradient: 'from-stone-50 to-warm-gray-50',
+    accent: 'text-stone-600',
+    iconBg: 'bg-stone-100/60',
+    pattern: 'lines', // Elegant parallel lines like writing
   },
   document: {
-    gradient: 'from-slate-50 via-gray-50/50 to-slate-50',
-    accent: 'text-slate-600',
-    iconBg: 'bg-slate-100/80',
+    gradient: 'from-slate-50 to-gray-50',
+    accent: 'text-slate-500',
+    iconBg: 'bg-slate-100/60',
+    pattern: 'grid', // Structured grid pattern
   },
   photo: {
-    gradient: 'from-sky-50 via-blue-50/50 to-sky-50',
-    accent: 'text-sky-600',
-    iconBg: 'bg-sky-100/80',
+    gradient: 'from-zinc-50 to-neutral-50',
+    accent: 'text-zinc-500',
+    iconBg: 'bg-zinc-100/60',
+    pattern: 'dots', // Subtle halftone dots
   },
   video: {
-    gradient: 'from-violet-50 via-purple-50/50 to-violet-50',
-    accent: 'text-violet-600',
-    iconBg: 'bg-violet-100/80',
+    gradient: 'from-neutral-50 to-stone-50',
+    accent: 'text-neutral-500',
+    iconBg: 'bg-neutral-100/60',
+    pattern: 'waves', // Flowing wave lines
   },
   wish: {
-    gradient: 'from-rose-50 via-pink-50/50 to-rose-50',
-    accent: 'text-rose-600',
-    iconBg: 'bg-rose-100/80',
+    gradient: 'from-amber-50/30 to-stone-50',
+    accent: 'text-amber-700/70',
+    iconBg: 'bg-amber-50/60',
+    pattern: 'arcs', // Graceful arcs
   },
   scheduled_action: {
-    gradient: 'from-emerald-50 via-teal-50/50 to-emerald-50',
-    accent: 'text-emerald-600',
-    iconBg: 'bg-emerald-100/80',
+    gradient: 'from-slate-50 to-zinc-50',
+    accent: 'text-slate-500',
+    iconBg: 'bg-slate-100/60',
+    pattern: 'rings', // Concentric rings like a clock
   },
 };
+
+// Premium decorative patterns for each type
+function CardPattern({ pattern }: { pattern: string }): React.ReactElement {
+  const baseClass = 'absolute inset-0 overflow-hidden pointer-events-none';
+
+  switch (pattern) {
+    case 'lines':
+      // Elegant diagonal lines - like writing paper
+      return (
+        <div className={baseClass}>
+          <div className="absolute inset-0 opacity-[0.04]">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute h-px bg-navy-deep"
+                style={{
+                  left: '-10%',
+                  right: '-10%',
+                  top: `${15 + i * 12}%`,
+                  transform: 'rotate(-3deg)',
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      );
+
+    case 'grid':
+      // Structured grid - documents/organization
+      return (
+        <div className={baseClass}>
+          <div className="absolute inset-0 opacity-[0.03]">
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `
+                  linear-gradient(to right, currentColor 1px, transparent 1px),
+                  linear-gradient(to bottom, currentColor 1px, transparent 1px)
+                `,
+                backgroundSize: '24px 24px',
+              }}
+            />
+          </div>
+        </div>
+      );
+
+    case 'dots':
+      // Halftone dots - photography feel
+      return (
+        <div className={baseClass}>
+          <div className="absolute inset-0 opacity-[0.04]">
+            {[...Array(6)].map((_, row) =>
+              [...Array(8)].map((_, col) => (
+                <div
+                  key={`${row}-${col}`}
+                  className="absolute w-1 h-1 rounded-full bg-navy-deep"
+                  style={{
+                    left: `${8 + col * 12}%`,
+                    top: `${12 + row * 16}%`,
+                  }}
+                />
+              )),
+            )}
+          </div>
+        </div>
+      );
+
+    case 'waves':
+      // Flowing waves - motion/video
+      return (
+        <div className={baseClass}>
+          <svg className="absolute inset-0 w-full h-full opacity-[0.04]" preserveAspectRatio="none">
+            <path
+              d="M0,40 Q50,20 100,40 T200,40 T300,40"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              className="text-navy-deep"
+            />
+            <path
+              d="M0,60 Q50,40 100,60 T200,60 T300,60"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              className="text-navy-deep"
+            />
+            <path
+              d="M0,80 Q50,60 100,80 T200,80 T300,80"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              className="text-navy-deep"
+            />
+          </svg>
+        </div>
+      );
+
+    case 'arcs':
+      // Graceful arcs - wishes/aspirations
+      return (
+        <div className={baseClass}>
+          <svg className="absolute inset-0 w-full h-full opacity-[0.04]" preserveAspectRatio="none">
+            <path
+              d="M-20,120 Q80,20 180,120"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              className="text-navy-deep"
+            />
+            <path
+              d="M20,140 Q120,40 220,140"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              className="text-navy-deep"
+            />
+          </svg>
+        </div>
+      );
+
+    case 'rings':
+      // Concentric rings - time/scheduling
+      return (
+        <div className={baseClass}>
+          <div className="absolute -right-8 -top-8 opacity-[0.04]">
+            <div className="w-32 h-32 rounded-full border border-navy-deep" />
+            <div className="absolute inset-3 rounded-full border border-navy-deep" />
+            <div className="absolute inset-6 rounded-full border border-navy-deep" />
+          </div>
+        </div>
+      );
+
+    default:
+      return <div className={baseClass} />;
+  }
+}
 
 export interface RecipientPreview {
   id: string;
@@ -146,19 +296,17 @@ export function KeepsakeCard({
       disabled={disabled}
       className="group relative w-full text-left bg-card rounded-2xl border border-border/50 shadow-soft overflow-hidden transition-all duration-200 ease-out hover:shadow-soft-md hover:border-border hover:-translate-y-0.5 disabled:opacity-70"
     >
-      {/* Card Header with Type Icon and colored gradient */}
+      {/* Card Header with subtle gradient and unique pattern */}
       <div className={`relative h-28 bg-gradient-to-br ${theme.gradient} overflow-hidden`}>
-        {/* Decorative circles pattern */}
-        <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full border border-navy-deep/5" />
-        <div className="absolute -right-2 top-2 w-16 h-16 rounded-full border border-navy-deep/5" />
-        <div className="absolute right-6 top-8 w-8 h-8 rounded-full bg-navy-deep/[0.02]" />
+        {/* Type-specific decorative pattern */}
+        <CardPattern pattern={theme.pattern} />
 
         {/* Type icon container */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className={`w-14 h-14 rounded-2xl ${theme.iconBg} backdrop-blur-sm shadow-soft flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}
+            className={`w-12 h-12 rounded-xl ${theme.iconBg} shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}
           >
-            <KeepsakeTypeIcon type={keepsake.type} className={`w-7 h-7 ${theme.accent}`} />
+            <KeepsakeTypeIcon type={keepsake.type} className={`w-6 h-6 ${theme.accent}`} />
           </div>
         </div>
 
@@ -169,7 +317,7 @@ export function KeepsakeCard({
 
         {/* Type label */}
         <div className="absolute bottom-3 left-3">
-          <span className={`text-xs font-medium ${theme.accent} uppercase tracking-wide`}>
+          <span className={`text-[11px] font-medium ${theme.accent} uppercase tracking-wider`}>
             {t(`types.${keepsake.type}`)}
           </span>
         </div>
