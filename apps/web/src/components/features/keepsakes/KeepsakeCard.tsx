@@ -5,189 +5,39 @@ import { KeepsakeTypeIcon } from '@/components/ui';
 import { formatDate } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeStatus, KeepsakeType } from '@/types';
 
-// Subtle, premium color themes per keepsake type
-const typeThemes: Record<
-  KeepsakeType,
-  {
-    gradient: string;
-    accent: string;
-    iconBg: string;
-    pattern: 'lines' | 'dots' | 'waves' | 'grid' | 'arcs' | 'rings';
-  }
-> = {
+// Clean, refined color themes - visible but elegant
+const typeThemes: Record<KeepsakeType, { bg: string; accent: string; border: string }> = {
   letter: {
-    gradient: 'from-stone-50 to-warm-gray-50',
-    accent: 'text-stone-600',
-    iconBg: 'bg-stone-100/60',
-    pattern: 'lines', // Elegant parallel lines like writing
+    bg: 'bg-amber-50',
+    accent: 'text-amber-700',
+    border: 'border-amber-200/60',
   },
   document: {
-    gradient: 'from-slate-50 to-gray-50',
-    accent: 'text-slate-500',
-    iconBg: 'bg-slate-100/60',
-    pattern: 'grid', // Structured grid pattern
+    bg: 'bg-slate-50',
+    accent: 'text-slate-600',
+    border: 'border-slate-200/60',
   },
   photo: {
-    gradient: 'from-zinc-50 to-neutral-50',
-    accent: 'text-zinc-500',
-    iconBg: 'bg-zinc-100/60',
-    pattern: 'dots', // Subtle halftone dots
+    bg: 'bg-sky-50',
+    accent: 'text-sky-700',
+    border: 'border-sky-200/60',
   },
   video: {
-    gradient: 'from-neutral-50 to-stone-50',
-    accent: 'text-neutral-500',
-    iconBg: 'bg-neutral-100/60',
-    pattern: 'waves', // Flowing wave lines
+    bg: 'bg-violet-50',
+    accent: 'text-violet-700',
+    border: 'border-violet-200/60',
   },
   wish: {
-    gradient: 'from-amber-50/30 to-stone-50',
-    accent: 'text-amber-700/70',
-    iconBg: 'bg-amber-50/60',
-    pattern: 'arcs', // Graceful arcs
+    bg: 'bg-rose-50',
+    accent: 'text-rose-700',
+    border: 'border-rose-200/60',
   },
   scheduled_action: {
-    gradient: 'from-slate-50 to-zinc-50',
-    accent: 'text-slate-500',
-    iconBg: 'bg-slate-100/60',
-    pattern: 'rings', // Concentric rings like a clock
+    bg: 'bg-emerald-50',
+    accent: 'text-emerald-700',
+    border: 'border-emerald-200/60',
   },
 };
-
-// Premium decorative patterns for each type
-function CardPattern({ pattern }: { pattern: string }): React.ReactElement {
-  const baseClass = 'absolute inset-0 overflow-hidden pointer-events-none';
-
-  switch (pattern) {
-    case 'lines':
-      // Elegant diagonal lines - like writing paper
-      return (
-        <div className={baseClass}>
-          <div className="absolute inset-0 opacity-[0.04]">
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute h-px bg-navy-deep"
-                style={{
-                  left: '-10%',
-                  right: '-10%',
-                  top: `${15 + i * 12}%`,
-                  transform: 'rotate(-3deg)',
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      );
-
-    case 'grid':
-      // Structured grid - documents/organization
-      return (
-        <div className={baseClass}>
-          <div className="absolute inset-0 opacity-[0.03]">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `
-                  linear-gradient(to right, currentColor 1px, transparent 1px),
-                  linear-gradient(to bottom, currentColor 1px, transparent 1px)
-                `,
-                backgroundSize: '24px 24px',
-              }}
-            />
-          </div>
-        </div>
-      );
-
-    case 'dots':
-      // Halftone dots - photography feel
-      return (
-        <div className={baseClass}>
-          <div className="absolute inset-0 opacity-[0.04]">
-            {[...Array(6)].map((_, row) =>
-              [...Array(8)].map((_, col) => (
-                <div
-                  key={`${row}-${col}`}
-                  className="absolute w-1 h-1 rounded-full bg-navy-deep"
-                  style={{
-                    left: `${8 + col * 12}%`,
-                    top: `${12 + row * 16}%`,
-                  }}
-                />
-              )),
-            )}
-          </div>
-        </div>
-      );
-
-    case 'waves':
-      // Flowing waves - motion/video
-      return (
-        <div className={baseClass}>
-          <svg className="absolute inset-0 w-full h-full opacity-[0.04]" preserveAspectRatio="none">
-            <path
-              d="M0,40 Q50,20 100,40 T200,40 T300,40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-navy-deep"
-            />
-            <path
-              d="M0,60 Q50,40 100,60 T200,60 T300,60"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-navy-deep"
-            />
-            <path
-              d="M0,80 Q50,60 100,80 T200,80 T300,80"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-navy-deep"
-            />
-          </svg>
-        </div>
-      );
-
-    case 'arcs':
-      // Graceful arcs - wishes/aspirations
-      return (
-        <div className={baseClass}>
-          <svg className="absolute inset-0 w-full h-full opacity-[0.04]" preserveAspectRatio="none">
-            <path
-              d="M-20,120 Q80,20 180,120"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-navy-deep"
-            />
-            <path
-              d="M20,140 Q120,40 220,140"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-navy-deep"
-            />
-          </svg>
-        </div>
-      );
-
-    case 'rings':
-      // Concentric rings - time/scheduling
-      return (
-        <div className={baseClass}>
-          <div className="absolute -right-8 -top-8 opacity-[0.04]">
-            <div className="w-32 h-32 rounded-full border border-navy-deep" />
-            <div className="absolute inset-3 rounded-full border border-navy-deep" />
-            <div className="absolute inset-6 rounded-full border border-navy-deep" />
-          </div>
-        </div>
-      );
-
-    default:
-      return <div className={baseClass} />;
-  }
-}
 
 export interface RecipientPreview {
   id: string;
@@ -217,12 +67,12 @@ function StatusBadge({ status }: StatusBadgeProps): React.ReactElement | null {
     { bg: string; text: string; dot: string }
   > = {
     scheduled: {
-      bg: 'bg-gold-heritage/10',
+      bg: 'bg-gold-heritage/15',
       text: 'text-gold-heritage',
       dot: 'bg-gold-heritage',
     },
     delivered: {
-      bg: 'bg-emerald-50',
+      bg: 'bg-emerald-100',
       text: 'text-emerald-700',
       dot: 'bg-emerald-500',
     },
@@ -232,7 +82,7 @@ function StatusBadge({ status }: StatusBadgeProps): React.ReactElement | null {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${variant.bg} ${variant.text}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium ${variant.bg} ${variant.text}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${variant.dot}`} />
       {t(status)}
@@ -255,24 +105,24 @@ function RecipientInitials({ recipients }: RecipientInitialsProps): React.ReactE
   const remainingCount = recipients.length - MAX_VISIBLE_RECIPIENTS;
 
   return (
-    <div className="flex items-center gap-1">
-      <div className="flex -space-x-2">
+    <div className="flex items-center gap-1.5">
+      <div className="flex -space-x-1.5">
         {visibleRecipients.map((recipient) => (
           <div
             key={recipient.id}
-            className="w-6 h-6 rounded-full bg-accent/15 border-2 border-card flex items-center justify-center"
+            className="w-5 h-5 rounded-full bg-navy-deep/10 border border-card flex items-center justify-center"
             title={recipient.fullName}
           >
-            <span className="text-[10px] font-medium text-accent">{recipient.initials}</span>
+            <span className="text-[9px] font-medium text-navy-deep">{recipient.initials}</span>
           </div>
         ))}
         {remainingCount > 0 && (
-          <div className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center">
-            <span className="text-[10px] font-medium text-muted-foreground">+{remainingCount}</span>
+          <div className="w-5 h-5 rounded-full bg-muted border border-card flex items-center justify-center">
+            <span className="text-[9px] font-medium text-muted-foreground">+{remainingCount}</span>
           </div>
         )}
       </div>
-      <span className="text-xs text-muted-foreground ml-1">
+      <span className="text-[11px] text-muted-foreground">
         {t('recipients', { count: recipients.length })}
       </span>
     </div>
@@ -294,45 +144,45 @@ export function KeepsakeCard({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="group relative w-full text-left bg-card rounded-2xl border border-border/50 shadow-soft overflow-hidden transition-all duration-200 ease-out hover:shadow-soft-md hover:border-border hover:-translate-y-0.5 disabled:opacity-70"
+      className="group relative w-full text-left bg-card rounded-xl border border-border/50 shadow-sm overflow-hidden transition-all duration-200 ease-out hover:shadow-md hover:border-border/80 hover:-translate-y-0.5 disabled:opacity-70"
     >
-      {/* Card Header with subtle gradient and unique pattern */}
-      <div className={`relative h-28 bg-gradient-to-br ${theme.gradient} overflow-hidden`}>
-        {/* Type-specific decorative pattern */}
-        <CardPattern pattern={theme.pattern} />
+      {/* Colored accent bar at top */}
+      <div className={`h-1.5 ${theme.bg}`} />
 
-        {/* Type icon container */}
-        <div className="absolute inset-0 flex items-center justify-center">
+      {/* Card Content */}
+      <div className="p-4">
+        {/* Header row: icon + status */}
+        <div className="flex items-start justify-between mb-3">
           <div
-            className={`w-12 h-12 rounded-xl ${theme.iconBg} shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}
+            className={`w-10 h-10 rounded-lg ${theme.bg} ${theme.border} border flex items-center justify-center`}
           >
-            <KeepsakeTypeIcon type={keepsake.type} className={`w-6 h-6 ${theme.accent}`} />
+            <KeepsakeTypeIcon type={keepsake.type} className={`w-5 h-5 ${theme.accent}`} />
           </div>
-        </div>
-
-        {/* Status Badge */}
-        <div className="absolute top-3 right-3">
           <StatusBadge status={keepsake.status} />
         </div>
 
-        {/* Type label */}
-        <div className="absolute bottom-3 left-3">
-          <span className={`text-[11px] font-medium ${theme.accent} uppercase tracking-wider`}>
-            {t(`types.${keepsake.type}`)}
-          </span>
-        </div>
-      </div>
-
-      {/* Card Content */}
-      <div className="p-4 space-y-3">
-        <h3 className="font-medium text-foreground line-clamp-2 min-h-[2.5rem]">
+        {/* Title */}
+        <h3 className="font-medium text-foreground line-clamp-2 mb-1 min-h-[2.5rem]">
           {keepsake.title}
         </h3>
 
-        {recipients && recipients.length > 0 && <RecipientInitials recipients={recipients} />}
+        {/* Type label */}
+        <p className={`text-[11px] font-medium ${theme.accent} uppercase tracking-wide mb-3`}>
+          {t(`types.${keepsake.type}`)}
+        </p>
 
-        <div className="text-xs text-muted-foreground">
-          {formatDate(keepsake.updatedAt, locale)}
+        {/* Footer: recipients + date */}
+        <div className="flex items-center justify-between pt-3 border-t border-border/40">
+          {recipients && recipients.length > 0 ? (
+            <RecipientInitials recipients={recipients} />
+          ) : (
+            <span className="text-[11px] text-muted-foreground/60">
+              {t('card.recipients', { count: 0 })}
+            </span>
+          )}
+          <span className="text-[11px] text-muted-foreground">
+            {formatDate(keepsake.updatedAt, locale)}
+          </span>
         </div>
       </div>
     </button>
