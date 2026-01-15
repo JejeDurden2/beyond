@@ -21,7 +21,11 @@ import {
   getKeepsakeMedia,
   uploadMedia,
   deleteMedia,
+  scheduleKeepsake,
+  unscheduleKeepsake,
+  deliverKeepsake,
 } from '@/lib/api/keepsakes';
+import { DeliveryConfig, ScheduleConfirmDialog } from '@/components/features/keepsakes';
 import { formatDate } from '@/lib/constants';
 import type { Keepsake, KeepsakeType, KeepsakeMedia, TriggerCondition } from '@/types';
 
@@ -47,8 +51,9 @@ export default function KeepsakeDetailPage(): React.ReactElement {
   const [content, setContent] = useState('');
   const [triggerCondition, setTriggerCondition] = useState<TriggerCondition>('on_death');
   const [scheduledAt, setScheduledAt] = useState('');
-  const [revealDelay, setRevealDelay] = useState<number | ''>('');
   const [showPreview, setShowPreview] = useState(false);
+  const [showScheduleConfirm, setShowScheduleConfirm] = useState(false);
+  const [isScheduling, setIsScheduling] = useState(false);
 
   // Fetch assignments for preview
   const { data: assignmentsData } = useKeepsakeAssignments(id);
@@ -63,7 +68,6 @@ export default function KeepsakeDetailPage(): React.ReactElement {
         setContent(data.content || '');
         setTriggerCondition(data.triggerCondition);
         setScheduledAt(data.scheduledAt ? data.scheduledAt.split('T')[0] : '');
-        setRevealDelay(data.revealDelay ?? '');
 
         // Load media for document/photo/video types
         if (['document', 'photo', 'video'].includes(data.type)) {
@@ -93,7 +97,6 @@ export default function KeepsakeDetailPage(): React.ReactElement {
         content,
         triggerCondition,
         scheduledAt: triggerCondition === 'on_date' && scheduledAt ? scheduledAt : null,
-        revealDelay: revealDelay ? Number(revealDelay) : null,
       });
       setKeepsake({ ...keepsake, ...updated });
     } catch {
@@ -113,6 +116,52 @@ export default function KeepsakeDetailPage(): React.ReactElement {
     } catch {
       setError(tCommon('error'));
       setIsDeleting(false);
+    }
+  };
+
+  const handleScheduleConfirm = async () => {
+    if (!keepsake) return;
+    setIsScheduling(true);
+    setError(null);
+
+    try {
+      // Save any pending changes first
+      await updateKeepsake(id, {
+        title,
+        content,
+        triggerCondition,
+        scheduledAt: triggerCondition === 'on_date' && scheduledAt ? scheduledAt : null,
+      });
+
+      if (triggerCondition === 'manual') {
+        // Immediate delivery
+        await deliverKeepsake(id);
+        setKeepsake({ ...keepsake, status: 'delivered' });
+      } else {
+        // Schedule for later
+        await scheduleKeepsake(id);
+        setKeepsake({ ...keepsake, status: 'scheduled' });
+      }
+      setShowScheduleConfirm(false);
+    } catch {
+      setError(tCommon('error'));
+    } finally {
+      setIsScheduling(false);
+    }
+  };
+
+  const handleUnschedule = async () => {
+    if (!keepsake) return;
+    setIsScheduling(true);
+    setError(null);
+
+    try {
+      await unscheduleKeepsake(id);
+      setKeepsake({ ...keepsake, status: 'draft' });
+    } catch {
+      setError(tCommon('error'));
+    } finally {
+      setIsScheduling(false);
     }
   };
 
@@ -159,19 +208,13 @@ export default function KeepsakeDetailPage(): React.ReactElement {
   const isScheduledAction = keepsake?.type === 'scheduled_action';
 
   function getContentLabel(): string {
-    if (isMediaBased) {
-      return t('form.descriptionLabel');
-    }
-    if (isScheduledAction) {
-      return t('form.instructionsLabel');
-    }
+    if (isMediaBased) return t('form.descriptionLabel');
+    if (isScheduledAction) return t('form.instructionsLabel');
     return t('form.contentLabel');
   }
 
   function getContentPlaceholder(): string {
-    if (!keepsake) {
-      return t('form.contentPlaceholder');
-    }
+    if (!keepsake) return t('form.contentPlaceholder');
 
     switch (keepsake.type) {
       case 'letter':
@@ -324,90 +367,81 @@ export default function KeepsakeDetailPage(): React.ReactElement {
                 />
               </div>
 
-              {/* Trigger Condition - for scheduled_action */}
-              {isScheduledAction && (
-                <>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="triggerCondition"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      {t('schedule.triggerLabel')}
-                    </label>
-                    <select
-                      id="triggerCondition"
-                      value={triggerCondition}
-                      onChange={(e) => setTriggerCondition(e.target.value as TriggerCondition)}
-                      className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-                    >
-                      <option value="on_death">{t('trigger.on_death')}</option>
-                      <option value="on_date">{t('trigger.on_date')}</option>
-                      <option value="manual">{t('trigger.manual')}</option>
-                    </select>
-                  </div>
-
-                  {triggerCondition === 'on_date' && (
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="scheduledAt"
-                        className="block text-sm font-medium text-foreground"
-                      >
-                        {t('schedule.dateLabel')}
-                      </label>
-                      <input
-                        id="scheduledAt"
-                        type="date"
-                        value={scheduledAt}
-                        onChange={(e) => setScheduledAt(e.target.value)}
-                        min={new Date().toISOString().split('T')[0]}
-                        className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-                      />
-                    </div>
-                  )}
-
-                  {triggerCondition === 'on_death' && (
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="revealDelay"
-                        className="block text-sm font-medium text-foreground"
-                      >
-                        {t('schedule.delayLabel')}
-                        <span className="text-muted-foreground font-normal ml-1">
-                          ({t('form.optional')})
-                        </span>
-                      </label>
-                      <input
-                        id="revealDelay"
-                        type="number"
-                        min="0"
-                        max="365"
-                        value={revealDelay}
-                        onChange={(e) =>
-                          setRevealDelay(e.target.value ? Number(e.target.value) : '')
-                        }
-                        className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-                        placeholder="0"
-                      />
-                    </div>
-                  )}
-                </>
+              {/* Delivery Configuration - for all types */}
+              {keepsake.status !== 'delivered' && (
+                <div className="pt-4 border-t border-border/30">
+                  <DeliveryConfig
+                    triggerCondition={triggerCondition}
+                    scheduledAt={scheduledAt || null}
+                    onChange={(trigger, date) => {
+                      setTriggerCondition(trigger);
+                      setScheduledAt(date || '');
+                    }}
+                    disabled={keepsake.status === 'scheduled'}
+                  />
+                </div>
               )}
 
-              <div className="flex items-center justify-between pt-4">
+              {/* Action Buttons - status-aware */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 border-t border-border/30">
                 <button
                   type="button"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="text-red-600 hover:text-red-700 text-sm font-medium transition-colors duration-200 ease-out"
+                  className="text-red-600 hover:text-red-700 text-sm font-medium transition-colors duration-200 ease-out order-last sm:order-first"
                 >
                   {t('delete.button')}
                 </button>
-                <button
-                  type="submit"
-                  disabled={isSaving || !title || (isContentRequired && !content)}
-                  className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSaving ? t('edit.saving') : t('edit.save')}
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {keepsake.status === 'draft' && (
+                    <>
+                      <button
+                        type="submit"
+                        disabled={isSaving || !title || (isContentRequired && !content)}
+                        className="border border-border/60 text-foreground rounded-xl px-6 py-3 font-medium transition-colors duration-200 ease-out hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isSaving ? t('edit.saving') : t('edit.save')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowScheduleConfirm(true)}
+                        disabled={
+                          !title ||
+                          (isContentRequired && !content) ||
+                          !assignmentsData?.assignments?.length
+                        }
+                        className="bg-foreground text-background hover:bg-foreground/90 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {triggerCondition === 'manual'
+                          ? t('actions.sendNow')
+                          : t('actions.schedule')}
+                      </button>
+                    </>
+                  )}
+                  {keepsake.status === 'scheduled' && (
+                    <>
+                      <button
+                        type="submit"
+                        disabled={isSaving || !title || (isContentRequired && !content)}
+                        className="border border-border/60 text-foreground rounded-xl px-6 py-3 font-medium transition-colors duration-200 ease-out hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isSaving ? t('edit.saving') : t('edit.save')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleUnschedule}
+                        disabled={isScheduling}
+                        className="bg-amber-500 text-white hover:bg-amber-600 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isScheduling ? tCommon('loading') : t('actions.unschedule')}
+                      </button>
+                    </>
+                  )}
+                  {keepsake.status === 'delivered' && (
+                    <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 rounded-xl px-6 py-3 font-medium">
+                      {t('status.delivered')}
+                    </span>
+                  )}
+                </div>
               </div>
             </form>
           </div>
@@ -454,6 +488,17 @@ export default function KeepsakeDetailPage(): React.ReactElement {
             onClose={() => setShowPreview(false)}
           />
         )}
+
+        {/* Schedule confirmation dialog */}
+        <ScheduleConfirmDialog
+          isOpen={showScheduleConfirm}
+          onClose={() => setShowScheduleConfirm(false)}
+          onConfirm={handleScheduleConfirm}
+          triggerCondition={triggerCondition}
+          scheduledAt={scheduledAt || null}
+          recipientCount={assignmentsData?.assignments?.length ?? 0}
+          isLoading={isScheduling}
+        />
       </div>
     </AppShell>
   );

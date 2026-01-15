@@ -409,7 +409,29 @@
       "title": "Paramètres de transmission",
       "triggerLabel": "Transmettre quand",
       "dateLabel": "Date de transmission",
-      "delayLabel": "Délai après déclenchement (jours)"
+      "delayLabel": "Délai après déclenchement (jours)",
+      "confirmTitle": "Programmer ce souvenir ?",
+      "confirmOnDeath": "Ce souvenir sera transmis à {count, plural, =1 {1 bénéficiaire} other {# bénéficiaires}} lorsque votre décès sera confirmé par votre personne de confiance.",
+      "confirmOnDate": "Ce souvenir sera transmis à {count, plural, =1 {1 bénéficiaire} other {# bénéficiaires}} le {date}.",
+      "confirmManual": "Ce souvenir sera transmis immédiatement à {count, plural, =1 {1 bénéficiaire} other {# bénéficiaires}}.",
+      "confirmButton": "Confirmer",
+      "cancelButton": "Annuler"
+    },
+    "delivery": {
+      "title": "Quand transmettre ce souvenir ?",
+      "onDeath": "À mon décès",
+      "onDeathHelp": "Transmis lorsque votre personne de confiance confirme votre décès",
+      "onDate": "À une date précise",
+      "onDateHelp": "Transmis automatiquement à la date choisie",
+      "manual": "Envoyer maintenant",
+      "manualHelp": "Transmis immédiatement après confirmation",
+      "selectDate": "Sélectionner une date"
+    },
+    "actions": {
+      "saveDraft": "Enregistrer comme brouillon",
+      "schedule": "Programmer",
+      "unschedule": "Déprogrammer",
+      "sendNow": "Envoyer maintenant"
     },
     "visualization": {
       "edit": "Modifier",

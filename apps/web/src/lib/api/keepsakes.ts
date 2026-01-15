@@ -66,6 +66,12 @@ export async function unscheduleKeepsake(id: string): Promise<{ success: boolean
   });
 }
 
+export async function deliverKeepsake(id: string): Promise<{ success: boolean }> {
+  return apiClient<{ success: boolean }>(`/keepsakes/${id}/deliver`, {
+    method: 'POST',
+  });
+}
+
 export async function requestUploadUrl(
   keepsakeId: string,
   input: UploadUrlRequest,

@@ -409,7 +409,29 @@
       "title": "Delivery Settings",
       "triggerLabel": "Deliver when",
       "dateLabel": "Delivery date",
-      "delayLabel": "Delay after trigger (days)"
+      "delayLabel": "Delay after trigger (days)",
+      "confirmTitle": "Schedule this keepsake?",
+      "confirmOnDeath": "This keepsake will be delivered to {count, plural, =1 {1 beneficiary} other {# beneficiaries}} when your passing is confirmed by your trusted person.",
+      "confirmOnDate": "This keepsake will be delivered to {count, plural, =1 {1 beneficiary} other {# beneficiaries}} on {date}.",
+      "confirmManual": "This keepsake will be delivered immediately to {count, plural, =1 {1 beneficiary} other {# beneficiaries}}.",
+      "confirmButton": "Confirm",
+      "cancelButton": "Cancel"
+    },
+    "delivery": {
+      "title": "When should this keepsake be delivered?",
+      "onDeath": "Upon my passing",
+      "onDeathHelp": "Delivered when your trusted person confirms your passing",
+      "onDate": "On a specific date",
+      "onDateHelp": "Automatically delivered on the chosen date",
+      "manual": "Send now",
+      "manualHelp": "Delivered immediately after confirmation",
+      "selectDate": "Select a date"
+    },
+    "actions": {
+      "saveDraft": "Save as draft",
+      "schedule": "Schedule",
+      "unschedule": "Unschedule",
+      "sendNow": "Send now"
     },
     "visualization": {
       "edit": "Edit",

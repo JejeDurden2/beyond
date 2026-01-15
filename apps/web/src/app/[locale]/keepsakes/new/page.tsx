@@ -6,7 +6,12 @@ import { useTranslations } from 'next-intl';
 import { Eye } from 'lucide-react';
 import { AppShell } from '@/components/layout';
 import { ErrorAlert, KeepsakeTypeIcon, ArrowLeft, MediaTypeIcon } from '@/components/ui';
-import { RecipientSelector, type RecipientWithMessage } from '@/components/features/keepsakes';
+import {
+  RecipientSelector,
+  DeliveryConfig,
+  ScheduleConfirmDialog,
+  type RecipientWithMessage,
+} from '@/components/features/keepsakes';
 import { KeepsakeVisualization } from '@/components/features/visualizations';
 import { createKeepsake, uploadMedia } from '@/lib/api/keepsakes';
 import { bulkUpdateAssignments, updatePersonalMessage } from '@/lib/api/assignments';
@@ -30,6 +35,7 @@ export default function NewKeepsakePage(): React.ReactElement {
   const [step, setStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
   const [showNoRecipientsWarning, setShowNoRecipientsWarning] = useState(false);
+  const [showScheduleConfirm, setShowScheduleConfirm] = useState(false);
 
   // Keepsake data
   const [selectedType, setSelectedType] = useState<KeepsakeType | null>(null);
@@ -37,7 +43,6 @@ export default function NewKeepsakePage(): React.ReactElement {
   const [content, setContent] = useState('');
   const [triggerCondition, setTriggerCondition] = useState<TriggerCondition>('on_death');
   const [scheduledAt, setScheduledAt] = useState('');
-  const [revealDelay, setRevealDelay] = useState<number | ''>('');
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
 
   // Recipients with personal messages
@@ -83,7 +88,11 @@ export default function NewKeepsakePage(): React.ReactElement {
   const handleCreateClick = (): void => {
     if (selectedRecipients.length === 0) {
       setShowNoRecipientsWarning(true);
-    } else if (['letter', 'wish'].includes(selectedType ?? '') && selectedRecipients.length > 0) {
+      return;
+    }
+
+    const showPreviewForType = selectedType && ['letter', 'wish'].includes(selectedType);
+    if (showPreviewForType) {
       setShowPreview(true);
     } else {
       handleSubmit();
@@ -122,7 +131,6 @@ export default function NewKeepsakePage(): React.ReactElement {
         content: content || '',
         triggerCondition,
         scheduledAt: triggerCondition === 'on_date' && scheduledAt ? scheduledAt : undefined,
-        revealDelay: revealDelay ? Number(revealDelay) : undefined,
       });
 
       // Upload media if applicable
@@ -409,74 +417,17 @@ export default function NewKeepsakePage(): React.ReactElement {
                     />
                   </div>
 
-                  {/* Trigger Condition - for scheduled_action */}
-                  {isScheduledAction && (
-                    <>
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="triggerCondition"
-                          className="block text-sm font-medium text-foreground"
-                        >
-                          {t('schedule.triggerLabel')}
-                        </label>
-                        <select
-                          id="triggerCondition"
-                          value={triggerCondition}
-                          onChange={(e) => setTriggerCondition(e.target.value as TriggerCondition)}
-                          className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-                        >
-                          <option value="on_death">{t('trigger.on_death')}</option>
-                          <option value="on_date">{t('trigger.on_date')}</option>
-                          <option value="manual">{t('trigger.manual')}</option>
-                        </select>
-                      </div>
-
-                      {triggerCondition === 'on_date' && (
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="scheduledAt"
-                            className="block text-sm font-medium text-foreground"
-                          >
-                            {t('schedule.dateLabel')}
-                          </label>
-                          <input
-                            id="scheduledAt"
-                            type="date"
-                            value={scheduledAt}
-                            onChange={(e) => setScheduledAt(e.target.value)}
-                            min={new Date().toISOString().split('T')[0]}
-                            className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-                          />
-                        </div>
-                      )}
-
-                      {triggerCondition === 'on_death' && (
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="revealDelay"
-                            className="block text-sm font-medium text-foreground"
-                          >
-                            {t('schedule.delayLabel')}
-                            <span className="text-muted-foreground font-normal ml-1">
-                              ({t('form.optional')})
-                            </span>
-                          </label>
-                          <input
-                            id="revealDelay"
-                            type="number"
-                            min="0"
-                            max="365"
-                            value={revealDelay}
-                            onChange={(e) =>
-                              setRevealDelay(e.target.value ? Number(e.target.value) : '')
-                            }
-                            className="w-full rounded-xl border border-border/60 bg-background px-4 py-3 shadow-inner-soft focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors duration-200 ease-out"
-                            placeholder="0"
-                          />
-                        </div>
-                      )}
-                    </>
-                  )}
+                  {/* Delivery Configuration - for all types */}
+                  <div className="pt-4 border-t border-border/30">
+                    <DeliveryConfig
+                      triggerCondition={triggerCondition}
+                      scheduledAt={scheduledAt || null}
+                      onChange={(trigger, date) => {
+                        setTriggerCondition(trigger);
+                        setScheduledAt(date || '');
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -514,13 +465,25 @@ export default function NewKeepsakePage(): React.ReactElement {
                   </button>
                 )}
 
+              {/* Send now button - only for manual trigger */}
+              {triggerCondition === 'manual' && canSubmit && selectedRecipients.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowScheduleConfirm(true)}
+                  disabled={isLoading}
+                  className="bg-amber-600 text-cream hover:bg-amber-700 rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {t('actions.sendNow')}
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={handleCreateClick}
                 disabled={!canSubmit || isLoading}
                 className="bg-gold-heritage text-cream hover:bg-gold-soft rounded-xl px-6 py-3 font-medium shadow-soft transition-all duration-200 ease-out hover:shadow-soft-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? t('form.creating') : t('form.create')}
+                {isLoading ? t('form.creating') : t('actions.saveDraft')}
               </button>
             </div>
           </div>
@@ -585,6 +548,17 @@ export default function NewKeepsakePage(): React.ReactElement {
           </div>
         </div>
       )}
+
+      {/* Schedule confirmation dialog */}
+      <ScheduleConfirmDialog
+        isOpen={showScheduleConfirm}
+        onClose={() => setShowScheduleConfirm(false)}
+        onConfirm={handleSubmit}
+        triggerCondition={triggerCondition}
+        scheduledAt={scheduledAt || null}
+        recipientCount={selectedRecipients.length}
+        isLoading={isLoading}
+      />
     </AppShell>
   );
 }
