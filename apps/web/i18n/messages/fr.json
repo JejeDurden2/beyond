@@ -37,9 +37,10 @@
   },
   "common": {
     "appName": "Beyond",
-    "loading": "Chargement...",
+    "loading": "Chargement…",
     "save": "Enregistrer",
     "cancel": "Annuler",
+    "close": "Fermer",
     "delete": "Supprimer",
     "edit": "Modifier",
     "back": "Retour",
@@ -299,7 +300,19 @@
       "create": "Créer le souvenir",
       "creating": "Création...",
       "selectBeneficiaries": "Sélectionnez les personnes qui recevront ce souvenir",
-      "skipBeneficiaries": "Passer cette étape"
+      "skipBeneficiaries": "Passer cette étape",
+      "recipientsTitle": "Qui recevra ce souvenir ?",
+      "recipientsSubtitle": "Sélectionnez les personnes et ajoutez un message personnel",
+      "addPersonalMessage": "Ajouter un message personnel",
+      "personalMessagePlaceholder": "Un mot personnel pour cette personne...",
+      "noRecipientsWarning": "Ce souvenir n'a pas de destinataire",
+      "noRecipientsDescription": "Voulez-vous vraiment créer ce souvenir sans désigner de bénéficiaire ?",
+      "continueWithout": "Continuer sans destinataire",
+      "addRecipients": "Ajouter des destinataires",
+      "preview": "Aperçu",
+      "previewTitle": "Aperçu du souvenir",
+      "previewSubtitle": "Voici comment {name} verra ce souvenir",
+      "confirmAndCreate": "Confirmer et créer"
     },
     "edit": {
       "title": "Modifier {type}",
@@ -320,7 +333,8 @@
       "back": "Retour aux souvenirs"
     },
     "card": {
-      "updatedAt": "Modifié {date}"
+      "updatedAt": "Modifié {date}",
+      "recipients": "{count, plural, =1 {1 destinataire} other {# destinataires}}"
     },
     "status": {
       "draft": "Brouillon",
@@ -436,6 +450,10 @@
       "keepsakes": "{count, plural, =0 {Aucun souvenir assigné} =1 {1 souvenir assigné} other {# souvenirs assignés}}",
       "noKeepsakes": "Aucun souvenir n'a encore été assigné à cette personne.",
       "createKeepsake": "Créer un souvenir"
+    },
+    "quickAdd": {
+      "title": "Ajouter un bénéficiaire",
+      "subtitle": "Cette personne pourra recevoir vos souvenirs"
     },
     "trustedPerson": {
       "badge": "Personne de confiance",
@@ -610,7 +628,14 @@
       "current": "Mot de passe actuel",
       "new": "Nouveau mot de passe",
       "confirm": "Confirmer le nouveau mot de passe",
-      "submit": "Mettre à jour"
+      "submit": "Mettre à jour",
+      "submitting": "Mise à jour…",
+      "toggleVisibility": "Afficher/masquer le mot de passe",
+      "errors": {
+        "mismatch": "Les mots de passe ne correspondent pas",
+        "tooShort": "Le mot de passe doit contenir au moins 8 caractères",
+        "incorrect": "Le mot de passe actuel est incorrect"
+      }
     },
     "deleteAccount": {
       "title": "Supprimer votre compte ?",

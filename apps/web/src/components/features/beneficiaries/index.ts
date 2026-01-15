@@ -1,0 +1,1 @@
+export { QuickAddBeneficiaryModal } from './QuickAddBeneficiaryModal';

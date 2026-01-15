@@ -37,9 +37,10 @@
   },
   "common": {
     "appName": "Beyond",
-    "loading": "Loading...",
+    "loading": "Loading…",
     "save": "Save",
     "cancel": "Cancel",
+    "close": "Close",
     "delete": "Delete",
     "edit": "Edit",
     "back": "Back",
@@ -299,7 +300,19 @@
       "create": "Create Keepsake",
       "creating": "Creating...",
       "selectBeneficiaries": "Select who will receive this keepsake",
-      "skipBeneficiaries": "Skip this step"
+      "skipBeneficiaries": "Skip this step",
+      "recipientsTitle": "Who will receive this keepsake?",
+      "recipientsSubtitle": "Select recipients and add a personal message",
+      "addPersonalMessage": "Add a personal message",
+      "personalMessagePlaceholder": "A personal note for this person...",
+      "noRecipientsWarning": "This keepsake has no recipients",
+      "noRecipientsDescription": "Are you sure you want to create this keepsake without assigning any beneficiaries?",
+      "continueWithout": "Continue without recipients",
+      "addRecipients": "Add recipients",
+      "preview": "Preview",
+      "previewTitle": "Keepsake preview",
+      "previewSubtitle": "This is how {name} will see this keepsake",
+      "confirmAndCreate": "Confirm and create"
     },
     "edit": {
       "title": "Edit {type}",
@@ -320,7 +333,8 @@
       "back": "Back to Keepsakes"
     },
     "card": {
-      "updatedAt": "Updated {date}"
+      "updatedAt": "Updated {date}",
+      "recipients": "{count, plural, =1 {1 recipient} other {# recipients}}"
     },
     "status": {
       "draft": "Draft",
@@ -436,6 +450,10 @@
       "keepsakes": "{count, plural, =0 {No keepsakes assigned} =1 {1 keepsake assigned} other {# keepsakes assigned}}",
       "noKeepsakes": "No keepsakes have been assigned to this person yet.",
       "createKeepsake": "Create a keepsake"
+    },
+    "quickAdd": {
+      "title": "Add a beneficiary",
+      "subtitle": "This person will be able to receive your keepsakes"
     },
     "trustedPerson": {
       "badge": "Trusted person",
@@ -610,7 +628,14 @@
       "current": "Current password",
       "new": "New password",
       "confirm": "Confirm new password",
-      "submit": "Update"
+      "submit": "Update",
+      "submitting": "Updating…",
+      "toggleVisibility": "Show/hide password",
+      "errors": {
+        "mismatch": "Passwords do not match",
+        "tooShort": "Password must be at least 8 characters",
+        "incorrect": "Current password is incorrect"
+      }
     },
     "deleteAccount": {
       "title": "Delete your account?",

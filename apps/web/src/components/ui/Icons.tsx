@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   Plus,
   Vault,
+  Check,
   type LucideIcon,
   type LucideProps,
 } from 'lucide-react';
@@ -54,6 +55,7 @@ export {
   ShieldCheck,
   Plus,
   Vault,
+  Check,
 };
 
 export const KEEPSAKE_TYPE_ICON_COMPONENTS: Record<KeepsakeType, LucideIcon> = {

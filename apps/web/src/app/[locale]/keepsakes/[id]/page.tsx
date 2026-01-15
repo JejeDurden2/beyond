@@ -4,10 +4,13 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useParams } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { Eye } from 'lucide-react';
 import { AppShell } from '@/components/layout';
 import { ArrowLeft } from '@/components/ui';
 import { MediaUploader } from '@/components/features/media';
 import { AssignmentSection } from '@/components/features/assignments';
+import { KeepsakePreviewModal } from '@/components/features/keepsakes';
+import { useKeepsakeAssignments } from '@/hooks/use-assignments';
 import {
   getKeepsake,
   updateKeepsake,
@@ -16,9 +19,10 @@ import {
   uploadMedia,
   deleteMedia,
 } from '@/lib/api/keepsakes';
+import { formatDate } from '@/lib/constants';
 import type { Keepsake, KeepsakeType, KeepsakeMedia, TriggerCondition } from '@/types';
 
-export default function KeepsakeDetailPage() {
+export default function KeepsakeDetailPage(): React.ReactElement {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
@@ -41,6 +45,10 @@ export default function KeepsakeDetailPage() {
   const [triggerCondition, setTriggerCondition] = useState<TriggerCondition>('on_death');
   const [scheduledAt, setScheduledAt] = useState('');
   const [revealDelay, setRevealDelay] = useState<number | ''>('');
+  const [showPreview, setShowPreview] = useState(false);
+
+  // Fetch assignments for preview
+  const { data: assignmentsData } = useKeepsakeAssignments(id);
 
   useEffect(() => {
     async function loadKeepsake() {
@@ -141,14 +149,6 @@ export default function KeepsakeDetailPage() {
     [id, tCommon],
   );
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
   // Determine which fields to show based on type
   const isTextBased = keepsake && ['letter', 'wish'].includes(keepsake.type);
   const isMediaBased = keepsake && ['document', 'photo', 'video'].includes(keepsake.type);
@@ -235,14 +235,30 @@ export default function KeepsakeDetailPage() {
         </div>
 
         <div className="space-y-8 animate-fade-in">
-          <div className="space-y-2">
-            <h1 className="font-display text-display-sm text-foreground">
-              {t('edit.title', { type: t(`types.${keepsake.type as KeepsakeType}`) })}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {t('edit.createdAt', { date: formatDate(keepsake.createdAt) })} ·{' '}
-              {t('edit.updatedAt', { date: formatDate(keepsake.updatedAt) })}
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="space-y-2">
+              <h1 className="font-display text-display-sm text-foreground">
+                {t('edit.title', { type: t(`types.${keepsake.type as KeepsakeType}`) })}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {t('edit.createdAt', { date: formatDate(keepsake.createdAt, locale) })} ·{' '}
+                {t('edit.updatedAt', { date: formatDate(keepsake.updatedAt, locale) })}
+              </p>
+            </div>
+
+            {/* Preview button - only for text-based keepsakes with assignments */}
+            {['letter', 'wish'].includes(keepsake.type) &&
+              assignmentsData?.assignments &&
+              assignmentsData.assignments.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowPreview(true)}
+                  className="inline-flex items-center gap-2 border border-border/60 text-foreground rounded-xl px-4 py-2.5 text-sm font-medium transition-colors duration-200 ease-out hover:bg-muted/50"
+                >
+                  <Eye className="w-4 h-4" />
+                  {t('form.preview')}
+                </button>
+              )}
           </div>
 
           <div className="bg-card rounded-2xl border border-border/50 shadow-soft p-8">
@@ -422,6 +438,19 @@ export default function KeepsakeDetailPage() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Preview modal */}
+        {assignmentsData?.assignments && assignmentsData.assignments.length > 0 && (
+          <KeepsakePreviewModal
+            isOpen={showPreview}
+            type={keepsake.type}
+            title={title}
+            content={content}
+            recipientName={assignmentsData.assignments[0].beneficiaryFullName}
+            personalMessage={assignmentsData.assignments[0].personalMessage ?? undefined}
+            onClose={() => setShowPreview(false)}
+          />
         )}
       </div>
     </AppShell>
