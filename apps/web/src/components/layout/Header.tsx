@@ -71,6 +71,12 @@ export function Header(): React.ReactElement {
   const tLanding = useTranslations('landing.hero');
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hadToken, setHadToken] = useState(false);
+
+  // Check for token on mount (client-side only) to prevent hydration mismatch
+  useEffect(() => {
+    setHadToken(localStorage.getItem('accessToken') !== null);
+  }, []);
 
   const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
@@ -106,8 +112,7 @@ export function Header(): React.ReactElement {
 
   const isActive = (path: string): boolean => pathname === path || pathname.startsWith(path + '/');
 
-  // During loading, check localStorage to prevent menu flickering
-  const hadToken = typeof window !== 'undefined' && localStorage.getItem('accessToken') !== null;
+  // During loading, use token presence to show authenticated UI early
   const showAuthenticatedUI = isLoading ? hadToken : isAuthenticated;
 
   // Role-based navigation
