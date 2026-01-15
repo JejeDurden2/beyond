@@ -105,13 +105,13 @@ export function BeneficiaryAccessPage({
                   <KeepsakeTypeIcon type={type} className="w-7 h-7 text-navy-light" />
                 </div>
               ))}
-              {moreCount > 0 && (
+              {moreCount > 0 ? (
                 <div className="w-14 h-14 bg-gold-heritage/10 rounded-xl flex items-center justify-center">
                   <span className="text-sm font-medium text-gold-heritage">
                     {t('keepsakes.more', { count: moreCount })}
                   </span>
                 </div>
-              )}
+              ) : null}
             </div>
             <p className="text-center text-sm text-slate mt-3">
               {data.keepsakeCount === 1

@@ -92,7 +92,7 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
               />
               <button
                 type="button"
-                onClick={() => setShowCurrent(!showCurrent)}
+                onClick={() => setShowCurrent((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
               >
                 {showCurrent ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -114,7 +114,7 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
               />
               <button
                 type="button"
-                onClick={() => setShowNew(!showNew)}
+                onClick={() => setShowNew((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
               >
                 {showNew ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -136,7 +136,7 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
               />
               <button
                 type="button"
-                onClick={() => setShowConfirm(!showConfirm)}
+                onClick={() => setShowConfirm((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
               >
                 {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}

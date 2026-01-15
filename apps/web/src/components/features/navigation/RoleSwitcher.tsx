@@ -56,7 +56,7 @@ export function RoleSwitcher() {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
         className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-navy-deep bg-warm-gray/50 hover:bg-warm-gray rounded-lg transition-colors"
         aria-expanded={isOpen}
         aria-haspopup="true"
