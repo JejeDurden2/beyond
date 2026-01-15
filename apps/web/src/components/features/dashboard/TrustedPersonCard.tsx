@@ -1,0 +1,88 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { AlertTriangle, ChevronRight, UserCheck } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
+import { BentoCard } from './BentoCard';
+import type { Beneficiary } from '@/types';
+
+interface TrustedPersonCardProps {
+  beneficiaries: Beneficiary[];
+  isLoading?: boolean;
+}
+
+export function TrustedPersonCard({
+  beneficiaries,
+  isLoading = false,
+}: TrustedPersonCardProps): React.ReactElement {
+  const t = useTranslations('dashboard.grid.trustedPerson');
+  const tBeneficiaries = useTranslations('beneficiaries');
+
+  const trustedPerson = beneficiaries.find((b) => b.isTrustedPerson);
+
+  if (isLoading) {
+    return (
+      <BentoCard>
+        <div className="space-y-3">
+          <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+          <div className="h-6 w-24 bg-muted rounded animate-pulse" />
+          <div className="h-4 w-20 bg-muted rounded animate-pulse" />
+        </div>
+      </BentoCard>
+    );
+  }
+
+  if (!trustedPerson) {
+    return (
+      <div className="bg-amber-50 rounded-2xl border-2 border-amber-200 p-6 transition-all duration-200">
+        <div className="space-y-4">
+          <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+            {t('title')}
+          </span>
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            </div>
+            <span className="text-sm font-medium text-amber-700">{t('notConfigured')}</span>
+          </div>
+
+          <Link
+            href="/beneficiaries?configure=trusted"
+            className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 hover:text-amber-800 transition-colors"
+          >
+            {t('configure')}
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <BentoCard href="/beneficiaries">
+      <div className="space-y-4">
+        <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+          {t('title')}
+        </span>
+
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
+            <UserCheck className="w-5 h-5 text-emerald-600" />
+          </div>
+          <div>
+            <p className="font-medium text-foreground">{trustedPerson.fullName}</p>
+            <p className="text-sm text-muted-foreground">
+              {tBeneficiaries(`relationships.${trustedPerson.relationship}`)}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-emerald-600">
+          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+          <span>{t('configured')}</span>
+        </div>
+      </div>
+    </BentoCard>
+  );
+}

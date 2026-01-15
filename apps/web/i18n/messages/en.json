@@ -246,6 +246,46 @@
       "title": "Your vault is empty",
       "description": "Start preserving what matters for your loved ones.",
       "cta": "Create your first keepsake"
+    },
+    "grid": {
+      "welcome": {
+        "greeting": "Hello{name, select, other { {name}}}",
+        "subtitle": "Your space to preserve what matters",
+        "security": "Encrypted and protected"
+      },
+      "keepsakeStats": {
+        "title": "Your keepsakes",
+        "draft": "{count, plural, =0 {No drafts} =1 {1 draft} other {# drafts}}",
+        "scheduled": "{count, plural, =0 {None scheduled} =1 {1 scheduled} other {# scheduled}}",
+        "delivered": "{count, plural, =0 {None delivered} =1 {1 delivered} other {# delivered}}",
+        "viewAll": "View all"
+      },
+      "beneficiaryStats": {
+        "title": "Beneficiaries",
+        "count": "{count, plural, =0 {No beneficiaries} =1 {1 person} other {# people}}",
+        "manage": "Manage",
+        "addFirst": "Add a beneficiary",
+        "trustedConfigured": "Trusted person configured"
+      },
+      "recentKeepsakes": {
+        "title": "Recent keepsakes",
+        "new": "New",
+        "empty": {
+          "title": "Your vault is empty",
+          "description": "Start preserving what matters for your loved ones",
+          "cta": "Create my first keepsake"
+        }
+      },
+      "trustedPerson": {
+        "title": "Trusted person",
+        "configured": "Configured",
+        "notConfigured": "Not configured",
+        "configure": "Configure"
+      },
+      "quickActions": {
+        "createKeepsake": "Create a keepsake",
+        "addBeneficiary": "Add a beneficiary"
+      }
     }
   },
   "keepsakes": {

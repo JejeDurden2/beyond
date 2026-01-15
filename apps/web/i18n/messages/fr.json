@@ -246,6 +246,46 @@
       "title": "Votre coffre est vide",
       "description": "Commencez à préserver ce qui compte pour vos proches.",
       "cta": "Créer votre premier souvenir"
+    },
+    "grid": {
+      "welcome": {
+        "greeting": "Bonjour{name, select, other { {name}}}",
+        "subtitle": "Votre espace pour préserver ce qui compte",
+        "security": "Chiffré et protégé"
+      },
+      "keepsakeStats": {
+        "title": "Vos souvenirs",
+        "draft": "{count, plural, =0 {Aucun brouillon} =1 {1 brouillon} other {# brouillons}}",
+        "scheduled": "{count, plural, =0 {Aucun programmé} =1 {1 programmé} other {# programmés}}",
+        "delivered": "{count, plural, =0 {Aucun transmis} =1 {1 transmis} other {# transmis}}",
+        "viewAll": "Voir tout"
+      },
+      "beneficiaryStats": {
+        "title": "Bénéficiaires",
+        "count": "{count, plural, =0 {Aucun bénéficiaire} =1 {1 personne} other {# personnes}}",
+        "manage": "Gérer",
+        "addFirst": "Ajouter un bénéficiaire",
+        "trustedConfigured": "Personne de confiance configurée"
+      },
+      "recentKeepsakes": {
+        "title": "Souvenirs récents",
+        "new": "Nouveau",
+        "empty": {
+          "title": "Votre coffre est vide",
+          "description": "Commencez à préserver ce qui compte pour vos proches",
+          "cta": "Créer mon premier souvenir"
+        }
+      },
+      "trustedPerson": {
+        "title": "Personne de confiance",
+        "configured": "Configuré",
+        "notConfigured": "Non configuré",
+        "configure": "Configurer"
+      },
+      "quickActions": {
+        "createKeepsake": "Créer un souvenir",
+        "addBeneficiary": "Ajouter un bénéficiaire"
+      }
     }
   },
   "keepsakes": {
