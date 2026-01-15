@@ -54,8 +54,8 @@ export function IdentityStep({ initialData, onBack, onNext }: IdentityStepProps)
 
   return (
     <div className="w-full max-w-md mx-auto animate-[fadeIn_0.5s_ease-out]">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      {/* Back button */}
+      <div className="mb-6">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -63,10 +63,11 @@ export function IdentityStep({ initialData, onBack, onNext }: IdentityStepProps)
           <ArrowLeft className="w-5 h-5" />
           {t('back')}
         </button>
-        <span className="text-sm text-muted-foreground">{t('step', { current: 1, total: 2 })}</span>
       </div>
 
-      <OnboardingProgress currentStep={1} totalSteps={3} />
+      <div className="flex justify-center">
+        <OnboardingProgress currentStep={1} totalSteps={3} />
+      </div>
 
       <h1 className="font-serif-brand text-2xl md:text-3xl text-navy-deep mt-8 mb-2 text-center">
         {t('identity.title')}

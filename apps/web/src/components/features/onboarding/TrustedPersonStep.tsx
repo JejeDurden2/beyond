@@ -91,8 +91,8 @@ export function TrustedPersonStep({
   if (showForm) {
     return (
       <div className="w-full max-w-md mx-auto animate-[fadeIn_0.5s_ease-out]">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        {/* Back button */}
+        <div className="mb-6">
           <button
             onClick={() => setShowForm(false)}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -100,12 +100,11 @@ export function TrustedPersonStep({
             <ArrowLeft className="w-5 h-5" />
             {t('back')}
           </button>
-          <span className="text-sm text-muted-foreground">
-            {t('step', { current: 2, total: 2 })}
-          </span>
         </div>
 
-        <OnboardingProgress currentStep={2} totalSteps={3} />
+        <div className="flex justify-center">
+          <OnboardingProgress currentStep={2} totalSteps={3} />
+        </div>
 
         <h1 className="font-serif-brand text-2xl md:text-3xl text-navy-deep mt-8 mb-2 text-center">
           {t('trustedPerson.form.title')}
@@ -113,41 +112,68 @@ export function TrustedPersonStep({
         <p className="text-muted-foreground text-center mb-8">{t('trustedPerson.form.subtitle')}</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className={INPUT_CLASS}
-            placeholder={tBeneficiaries('form.firstName')}
-          />
+          <div>
+            <label htmlFor="trusted-firstName" className="sr-only">
+              {tBeneficiaries('form.firstName')}
+            </label>
+            <input
+              id="trusted-firstName"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              autoComplete="given-name"
+              className={INPUT_CLASS}
+              placeholder={tBeneficiaries('form.firstName')}
+            />
+          </div>
 
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className={INPUT_CLASS}
-            placeholder={tBeneficiaries('form.lastName')}
-          />
+          <div>
+            <label htmlFor="trusted-lastName" className="sr-only">
+              {tBeneficiaries('form.lastName')}
+            </label>
+            <input
+              id="trusted-lastName"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              autoComplete="family-name"
+              className={INPUT_CLASS}
+              placeholder={tBeneficiaries('form.lastName')}
+            />
+          </div>
 
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={INPUT_CLASS}
-            placeholder={tBeneficiaries('form.email')}
-          />
+          <div>
+            <label htmlFor="trusted-email" className="sr-only">
+              {tBeneficiaries('form.email')}
+            </label>
+            <input
+              id="trusted-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              className={INPUT_CLASS}
+              placeholder={tBeneficiaries('form.email')}
+            />
+          </div>
 
-          <select
-            value={relationship}
-            onChange={(e) => setRelationship(e.target.value as Relationship)}
-            className={INPUT_CLASS}
-          >
-            {RELATIONSHIPS.map((rel) => (
-              <option key={rel} value={rel}>
-                {tBeneficiaries(`relationships.${rel}`)}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label htmlFor="trusted-relationship" className="sr-only">
+              {tBeneficiaries('form.relationship')}
+            </label>
+            <select
+              id="trusted-relationship"
+              value={relationship}
+              onChange={(e) => setRelationship(e.target.value as Relationship)}
+              className={INPUT_CLASS}
+            >
+              {RELATIONSHIPS.map((rel) => (
+                <option key={rel} value={rel}>
+                  {tBeneficiaries(`relationships.${rel}`)}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="flex gap-4 pt-4">
             <button
@@ -179,8 +205,8 @@ export function TrustedPersonStep({
 
   return (
     <div className="w-full max-w-md mx-auto animate-[fadeIn_0.5s_ease-out]">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      {/* Back button */}
+      <div className="mb-6">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -188,10 +214,11 @@ export function TrustedPersonStep({
           <ArrowLeft className="w-5 h-5" />
           {t('back')}
         </button>
-        <span className="text-sm text-muted-foreground">{t('step', { current: 2, total: 2 })}</span>
       </div>
 
-      <OnboardingProgress currentStep={2} totalSteps={3} />
+      <div className="flex justify-center">
+        <OnboardingProgress currentStep={2} totalSteps={3} />
+      </div>
 
       <h1 className="font-serif-brand text-2xl md:text-3xl text-navy-deep mt-8 mb-2 text-center">
         {t('trustedPerson.title')}
