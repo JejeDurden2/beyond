@@ -3,7 +3,41 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { KeepsakeTypeIcon } from '@/components/ui';
 import { formatDate } from '@/lib/constants';
-import type { KeepsakeSummary, KeepsakeStatus } from '@/types';
+import type { KeepsakeSummary, KeepsakeStatus, KeepsakeType } from '@/types';
+
+// Color themes per keepsake type for visual distinction
+const typeThemes: Record<KeepsakeType, { gradient: string; accent: string; iconBg: string }> = {
+  letter: {
+    gradient: 'from-amber-50 via-orange-50/50 to-amber-50',
+    accent: 'text-amber-600',
+    iconBg: 'bg-amber-100/80',
+  },
+  story: {
+    gradient: 'from-violet-50 via-purple-50/50 to-violet-50',
+    accent: 'text-violet-600',
+    iconBg: 'bg-violet-100/80',
+  },
+  advice: {
+    gradient: 'from-emerald-50 via-teal-50/50 to-emerald-50',
+    accent: 'text-emerald-600',
+    iconBg: 'bg-emerald-100/80',
+  },
+  memory: {
+    gradient: 'from-sky-50 via-blue-50/50 to-sky-50',
+    accent: 'text-sky-600',
+    iconBg: 'bg-sky-100/80',
+  },
+  wish: {
+    gradient: 'from-rose-50 via-pink-50/50 to-rose-50',
+    accent: 'text-rose-600',
+    iconBg: 'bg-rose-100/80',
+  },
+  legacy: {
+    gradient: 'from-gold-heritage/10 via-amber-50/50 to-gold-heritage/10',
+    accent: 'text-gold-heritage',
+    iconBg: 'bg-gold-heritage/20',
+  },
+};
 
 export interface RecipientPreview {
   id: string;
@@ -103,6 +137,7 @@ export function KeepsakeCard({
 }: KeepsakeCardProps): React.ReactElement {
   const t = useTranslations('keepsakes');
   const locale = useLocale();
+  const theme = typeThemes[keepsake.type];
 
   return (
     <button
@@ -111,8 +146,8 @@ export function KeepsakeCard({
       disabled={disabled}
       className="group relative w-full text-left bg-card rounded-2xl border border-border/50 shadow-soft overflow-hidden transition-all duration-200 ease-out hover:shadow-soft-md hover:border-border hover:-translate-y-0.5 disabled:opacity-70"
     >
-      {/* Card Header with Type Icon and decorative pattern */}
-      <div className="relative h-28 bg-gradient-to-br from-warm-gray via-cream to-warm-gray overflow-hidden">
+      {/* Card Header with Type Icon and colored gradient */}
+      <div className={`relative h-28 bg-gradient-to-br ${theme.gradient} overflow-hidden`}>
         {/* Decorative circles pattern */}
         <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full border border-navy-deep/5" />
         <div className="absolute -right-2 top-2 w-16 h-16 rounded-full border border-navy-deep/5" />
@@ -120,11 +155,10 @@ export function KeepsakeCard({
 
         {/* Type icon container */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-14 h-14 rounded-2xl bg-white/60 backdrop-blur-sm shadow-soft flex items-center justify-center group-hover:bg-white/80 transition-colors duration-200">
-            <KeepsakeTypeIcon
-              type={keepsake.type}
-              className="w-7 h-7 text-navy-light group-hover:text-gold-heritage transition-colors duration-200"
-            />
+          <div
+            className={`w-14 h-14 rounded-2xl ${theme.iconBg} backdrop-blur-sm shadow-soft flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}
+          >
+            <KeepsakeTypeIcon type={keepsake.type} className={`w-7 h-7 ${theme.accent}`} />
           </div>
         </div>
 
@@ -135,7 +169,7 @@ export function KeepsakeCard({
 
         {/* Type label */}
         <div className="absolute bottom-3 left-3">
-          <span className="text-xs font-medium text-navy-deep/50 uppercase tracking-wide">
+          <span className={`text-xs font-medium ${theme.accent} uppercase tracking-wide`}>
             {t(`types.${keepsake.type}`)}
           </span>
         </div>

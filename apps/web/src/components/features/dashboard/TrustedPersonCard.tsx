@@ -6,6 +6,22 @@ import { Link } from '@/i18n/navigation';
 import { BentoCard } from './BentoCard';
 import type { Beneficiary } from '@/types';
 
+interface WarningCardProps {
+  children: React.ReactNode;
+  href: string;
+}
+
+function WarningCard({ children, href }: WarningCardProps): React.ReactElement {
+  return (
+    <Link
+      href={href}
+      className="block bg-amber-50 rounded-2xl border-2 border-amber-200 p-6 transition-all duration-200 hover:shadow-soft-md hover:-translate-y-0.5 hover:border-amber-300"
+    >
+      {children}
+    </Link>
+  );
+}
+
 interface TrustedPersonCardProps {
   beneficiaries: Beneficiary[];
   isLoading?: boolean;
@@ -34,7 +50,7 @@ export function TrustedPersonCard({
 
   if (!trustedPerson) {
     return (
-      <div className="bg-amber-50 rounded-2xl border-2 border-amber-200 p-6 transition-all duration-200">
+      <WarningCard href="/beneficiaries?configure=trusted">
         <div className="space-y-4">
           <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             {t('title')}
@@ -47,15 +63,12 @@ export function TrustedPersonCard({
             <span className="text-sm font-medium text-amber-700">{t('notConfigured')}</span>
           </div>
 
-          <Link
-            href="/beneficiaries?configure=trusted"
-            className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 hover:text-amber-800 transition-colors"
-          >
+          <div className="flex items-center gap-1 text-sm font-medium text-amber-700">
             {t('configure')}
             <ChevronRight className="w-4 h-4" />
-          </Link>
+          </div>
         </div>
-      </div>
+      </WarningCard>
     );
   }
 

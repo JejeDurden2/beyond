@@ -264,7 +264,8 @@
       },
       "beneficiaryStats": {
         "title": "Beneficiaries",
-        "count": "{count, plural, =0 {No beneficiaries} =1 {1 person} other {# people}}",
+        "people": "people",
+        "empty": "No beneficiaries",
         "manage": "Manage",
         "addFirst": "Add a beneficiary",
         "trustedConfigured": "Trusted person configured"

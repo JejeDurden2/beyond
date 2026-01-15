@@ -264,7 +264,8 @@
       },
       "beneficiaryStats": {
         "title": "Bénéficiaires",
-        "count": "{count, plural, =0 {Aucun bénéficiaire} =1 {1 personne} other {# personnes}}",
+        "people": "personnes",
+        "empty": "Aucun bénéficiaire",
         "manage": "Gérer",
         "addFirst": "Ajouter un bénéficiaire",
         "trustedConfigured": "Personne de confiance configurée"

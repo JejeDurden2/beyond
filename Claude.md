@@ -237,6 +237,8 @@ Keepsake.deliver()
 
 Extended documentation is available in `.claude/skills/`:
 
+### Project Skills
+
 - **[backend-architecture.md](.claude/skills/backend-architecture.md)** - NestJS + Hexagonal architecture patterns
 - **[frontend-architecture.md](.claude/skills/frontend-architecture.md)** - React component patterns, TanStack Query
 - **[database.md](.claude/skills/database.md)** - Prisma, Docker, PostgreSQL setup
@@ -247,3 +249,20 @@ Extended documentation is available in `.claude/skills/`:
 - **[observability.md](.claude/skills/observability.md)** - OpenTelemetry, logging
 - **[code-quality.md](.claude/skills/code-quality.md)** - Pre-commit checklist, ESLint, Prettier
 - **[design-system.md](.claude/skills/design-system.md)** - Colors, typography, component patterns
+
+### Vercel Skills (External)
+
+- **[react-best-practices](.claude/skills/react-best-practices/)** - 45 React/Next.js performance rules across 8 categories:
+  - CRITICAL: Eliminating waterfalls (`async-*`), Bundle size (`bundle-*`)
+  - HIGH: Server-side performance (`server-*`)
+  - MEDIUM: Client data fetching (`client-*`), Re-renders (`rerender-*`), Rendering (`rendering-*`)
+  - LOW: JS performance (`js-*`), Advanced patterns (`advanced-*`)
+- **[web-design-guidelines](.claude/skills/web-design-guidelines/)** - UI compliance checker, fetches latest rules from Vercel Labs
+- **[vercel-deploy-claimable](.claude/skills/claude.ai/vercel-deploy-claimable/)** - Deploy to Vercel without auth, returns preview + claim URLs
+
+---
+
+## Plan Mode
+
+- Make the plan extremely concise. Sacrifice grammar for the sake of concision.
+- At the end of each plan, give me a list of unresolved questions to answer, if any
