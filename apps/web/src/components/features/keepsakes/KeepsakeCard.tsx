@@ -15,15 +15,16 @@ interface StatusBadgeProps {
   status: KeepsakeStatus;
 }
 
-function StatusBadge({ status }: StatusBadgeProps): React.ReactElement {
+function StatusBadge({ status }: StatusBadgeProps): React.ReactElement | null {
   const t = useTranslations('keepsakes.status');
 
-  const variants: Record<KeepsakeStatus, { bg: string; text: string; dot: string }> = {
-    draft: {
-      bg: 'bg-warm-gray',
-      text: 'text-slate',
-      dot: 'bg-slate',
-    },
+  // Don't show badge for drafts
+  if (status === 'draft') return null;
+
+  const variants: Record<
+    Exclude<KeepsakeStatus, 'draft'>,
+    { bg: string; text: string; dot: string }
+  > = {
     scheduled: {
       bg: 'bg-gold-heritage/10',
       text: 'text-gold-heritage',
