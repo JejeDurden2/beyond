@@ -29,7 +29,7 @@ export default async function PrivacyPage({
   const t = await getTranslations({ locale, namespace: 'legal.privacy' });
 
   return (
-    <LegalLayout title={t('title')} lastUpdated={t('lastUpdated', { date: '12 janvier 2026' })}>
+    <LegalLayout title={t('title')} lastUpdated={t('lastUpdated', { date: '15 janvier 2026' })}>
       <LegalSection
         title={t('sections.dataCollection.title')}
         items={[

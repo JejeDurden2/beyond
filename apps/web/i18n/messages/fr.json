@@ -733,6 +733,7 @@
     },
     "disclaimer": {
       "title": "Avertissements légaux",
+      "lastUpdated": "Dernière mise à jour : {date}",
       "intro": "Il est important de bien comprendre ce qu'est Beyond et ce qu'il n'est pas. Voici quelques points essentiels à connaître avant d'utiliser notre service.",
       "sections": {
         "notLegal": {

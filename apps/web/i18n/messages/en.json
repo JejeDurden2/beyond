@@ -733,6 +733,7 @@
     },
     "disclaimer": {
       "title": "Legal Disclaimer",
+      "lastUpdated": "Last updated: {date}",
       "intro": "It's important to understand what Beyond is and what it is not. Here are some essential points to know before using our service.",
       "sections": {
         "notLegal": {

@@ -27,7 +27,7 @@ export default async function TermsPage({ params }: TermsPageProps): Promise<Rea
   const t = await getTranslations({ locale, namespace: 'legal.terms' });
 
   return (
-    <LegalLayout title={t('title')} lastUpdated={t('lastUpdated', { date: '12 janvier 2026' })}>
+    <LegalLayout title={t('title')} lastUpdated={t('lastUpdated', { date: '15 janvier 2026' })}>
       <LegalSection title={t('sections.service.title')} content={t('sections.service.content')} />
 
       <LegalSection title={t('sections.account.title')} content={t('sections.account.content')} />

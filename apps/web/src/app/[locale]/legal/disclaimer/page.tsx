@@ -29,60 +29,60 @@ export default async function DisclaimerPage({
   const t = await getTranslations({ locale, namespace: 'legal.disclaimer' });
 
   return (
-    <LegalLayout title={t('title')} lastUpdated={t('lastUpdated', { date: '12 janvier 2026' })}>
-      <div className="prose prose-slate max-w-none">
-        <p className="mb-8 text-lg text-navy-deep">{t('intro')}</p>
+    <LegalLayout title={t('title')} lastUpdated={t('lastUpdated', { date: '15 janvier 2026' })}>
+      <p className="text-lg text-navy-deep leading-relaxed pb-8 border-b border-border/30">
+        {t('intro')}
+      </p>
 
-        <LegalSection
-          title={t('sections.notLegal.title')}
-          items={[
-            t('sections.notLegal.items.0'),
-            t('sections.notLegal.items.1'),
-            t('sections.notLegal.items.2'),
-            t('sections.notLegal.items.3'),
-          ]}
-        />
+      <LegalSection
+        title={t('sections.notLegal.title')}
+        items={[
+          t('sections.notLegal.items.0'),
+          t('sections.notLegal.items.1'),
+          t('sections.notLegal.items.2'),
+          t('sections.notLegal.items.3'),
+        ]}
+      />
 
-        <LegalSection
-          title={t('sections.privacy.title')}
-          items={[
-            t('sections.privacy.items.0'),
-            t('sections.privacy.items.1'),
-            t('sections.privacy.items.2'),
-            t('sections.privacy.items.3'),
-          ]}
-        />
+      <LegalSection
+        title={t('sections.privacy.title')}
+        items={[
+          t('sections.privacy.items.0'),
+          t('sections.privacy.items.1'),
+          t('sections.privacy.items.2'),
+          t('sections.privacy.items.3'),
+        ]}
+      />
 
-        <LegalSection
-          title={t('sections.responsibility.title')}
-          items={[
-            t('sections.responsibility.items.0'),
-            t('sections.responsibility.items.1'),
-            t('sections.responsibility.items.2'),
-            t('sections.responsibility.items.3'),
-          ]}
-        />
+      <LegalSection
+        title={t('sections.responsibility.title')}
+        items={[
+          t('sections.responsibility.items.0'),
+          t('sections.responsibility.items.1'),
+          t('sections.responsibility.items.2'),
+          t('sections.responsibility.items.3'),
+        ]}
+      />
 
-        <LegalSection
-          title={t('sections.technical.title')}
-          items={[
-            t('sections.technical.items.0'),
-            t('sections.technical.items.1'),
-            t('sections.technical.items.2'),
-            t('sections.technical.items.3'),
-          ]}
-        />
+      <LegalSection
+        title={t('sections.technical.title')}
+        items={[
+          t('sections.technical.items.0'),
+          t('sections.technical.items.1'),
+          t('sections.technical.items.2'),
+          t('sections.technical.items.3'),
+        ]}
+      />
 
-        <LegalSection
-          title={t('sections.overseer.title')}
-          items={[
-            t('sections.overseer.items.0'),
-            t('sections.overseer.items.1'),
-            t('sections.overseer.items.2'),
-            t('sections.overseer.items.3'),
-          ]}
-        />
-      </div>
+      <LegalSection
+        title={t('sections.overseer.title')}
+        items={[
+          t('sections.overseer.items.0'),
+          t('sections.overseer.items.1'),
+          t('sections.overseer.items.2'),
+          t('sections.overseer.items.3'),
+        ]}
+      />
     </LegalLayout>
   );
 }
