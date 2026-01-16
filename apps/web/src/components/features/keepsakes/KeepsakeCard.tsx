@@ -5,37 +5,46 @@ import { KeepsakeTypeIcon } from '@/components/ui';
 import { formatDate } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeStatus, KeepsakeType } from '@/types';
 
-// Clean, refined color themes - visible but elegant
-const typeThemes: Record<KeepsakeType, { bg: string; accent: string; border: string }> = {
+// Glassmorphism color themes with gradient backgrounds
+const typeThemes: Record<
+  KeepsakeType,
+  { gradient: string; iconGradient: string; accent: string; glow: string }
+> = {
   letter: {
-    bg: 'bg-amber-50',
+    gradient: 'from-amber-100/80 via-orange-50/60 to-amber-50/40',
+    iconGradient: 'from-amber-200/90 to-amber-100/70',
     accent: 'text-amber-700',
-    border: 'border-amber-200/60',
+    glow: 'shadow-amber-200/30',
   },
   document: {
-    bg: 'bg-slate-50',
+    gradient: 'from-slate-100/80 via-gray-50/60 to-slate-50/40',
+    iconGradient: 'from-slate-200/90 to-slate-100/70',
     accent: 'text-slate-600',
-    border: 'border-slate-200/60',
+    glow: 'shadow-slate-200/30',
   },
   photo: {
-    bg: 'bg-sky-50',
+    gradient: 'from-sky-100/80 via-blue-50/60 to-sky-50/40',
+    iconGradient: 'from-sky-200/90 to-sky-100/70',
     accent: 'text-sky-700',
-    border: 'border-sky-200/60',
+    glow: 'shadow-sky-200/30',
   },
   video: {
-    bg: 'bg-violet-50',
+    gradient: 'from-violet-100/80 via-purple-50/60 to-violet-50/40',
+    iconGradient: 'from-violet-200/90 to-violet-100/70',
     accent: 'text-violet-700',
-    border: 'border-violet-200/60',
+    glow: 'shadow-violet-200/30',
   },
   wish: {
-    bg: 'bg-rose-50',
+    gradient: 'from-rose-100/80 via-pink-50/60 to-rose-50/40',
+    iconGradient: 'from-rose-200/90 to-rose-100/70',
     accent: 'text-rose-700',
-    border: 'border-rose-200/60',
+    glow: 'shadow-rose-200/30',
   },
   scheduled_action: {
-    bg: 'bg-emerald-50',
+    gradient: 'from-emerald-100/80 via-teal-50/60 to-emerald-50/40',
+    iconGradient: 'from-emerald-200/90 to-emerald-100/70',
     accent: 'text-emerald-700',
-    border: 'border-emerald-200/60',
+    glow: 'shadow-emerald-200/30',
   },
 };
 
@@ -59,7 +68,6 @@ interface StatusBadgeProps {
 function StatusBadge({ status }: StatusBadgeProps): React.ReactElement | null {
   const t = useTranslations('keepsakes.status');
 
-  // Don't show badge for drafts
   if (status === 'draft') return null;
 
   const variants: Record<
@@ -67,12 +75,12 @@ function StatusBadge({ status }: StatusBadgeProps): React.ReactElement | null {
     { bg: string; text: string; dot: string }
   > = {
     scheduled: {
-      bg: 'bg-gold-heritage/15',
+      bg: 'bg-white/60 backdrop-blur-sm border border-gold-heritage/20',
       text: 'text-gold-heritage',
       dot: 'bg-gold-heritage',
     },
     delivered: {
-      bg: 'bg-emerald-100',
+      bg: 'bg-white/60 backdrop-blur-sm border border-emerald-300/30',
       text: 'text-emerald-700',
       dot: 'bg-emerald-500',
     },
@@ -82,7 +90,7 @@ function StatusBadge({ status }: StatusBadgeProps): React.ReactElement | null {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium ${variant.bg} ${variant.text}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium ${variant.bg} ${variant.text}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${variant.dot}`} />
       {t(status)}
@@ -110,19 +118,19 @@ function RecipientInitials({ recipients }: RecipientInitialsProps): React.ReactE
         {visibleRecipients.map((recipient) => (
           <div
             key={recipient.id}
-            className="w-5 h-5 rounded-full bg-navy-deep/10 border border-card flex items-center justify-center"
+            className="w-6 h-6 rounded-full bg-white/70 backdrop-blur-sm border border-white/50 shadow-sm flex items-center justify-center"
             title={recipient.fullName}
           >
-            <span className="text-[9px] font-medium text-navy-deep">{recipient.initials}</span>
+            <span className="text-[9px] font-semibold text-navy-deep">{recipient.initials}</span>
           </div>
         ))}
         {remainingCount > 0 && (
-          <div className="w-5 h-5 rounded-full bg-muted border border-card flex items-center justify-center">
+          <div className="w-6 h-6 rounded-full bg-white/50 backdrop-blur-sm border border-white/40 flex items-center justify-center">
             <span className="text-[9px] font-medium text-muted-foreground">+{remainingCount}</span>
           </div>
         )}
       </div>
-      <span className="text-[11px] text-muted-foreground">
+      <span className="text-[11px] text-foreground/60">
         {t('recipients', { count: recipients.length })}
       </span>
     </div>
@@ -144,43 +152,50 @@ export function KeepsakeCard({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="group relative w-full text-left bg-card rounded-xl border border-border/50 shadow-sm overflow-hidden transition-all duration-200 ease-out hover:shadow-md hover:border-border/80 hover:-translate-y-0.5 disabled:opacity-70"
+      className={`group relative w-full text-left rounded-2xl overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl disabled:opacity-70 shadow-lg ${theme.glow}`}
     >
-      {/* Colored accent bar at top */}
-      <div className={`h-1.5 ${theme.bg}`} />
+      {/* Gradient background */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradient}`} />
 
-      {/* Card Content */}
-      <div className="p-4">
-        {/* Header row: icon + status */}
-        <div className="flex items-start justify-between mb-3">
+      {/* Glass overlay */}
+      <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
+
+      {/* Subtle border */}
+      <div className="absolute inset-0 rounded-2xl border border-white/50" />
+
+      {/* Content */}
+      <div className="relative p-5">
+        {/* Header: Icon + Status */}
+        <div className="flex items-start justify-between mb-4">
+          {/* Frosted icon container */}
           <div
-            className={`w-10 h-10 rounded-lg ${theme.bg} ${theme.border} border flex items-center justify-center`}
+            className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.iconGradient} backdrop-blur-sm border border-white/60 shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}
           >
-            <KeepsakeTypeIcon type={keepsake.type} className={`w-5 h-5 ${theme.accent}`} />
+            <KeepsakeTypeIcon type={keepsake.type} className={`w-6 h-6 ${theme.accent}`} />
           </div>
           <StatusBadge status={keepsake.status} />
         </div>
 
-        {/* Title */}
-        <h3 className="font-medium text-foreground line-clamp-2 mb-1 min-h-[2.5rem]">
-          {keepsake.title}
-        </h3>
-
         {/* Type label */}
-        <p className={`text-[11px] font-medium ${theme.accent} uppercase tracking-wide mb-3`}>
+        <p className={`text-[10px] font-semibold ${theme.accent} uppercase tracking-wider mb-1.5`}>
           {t(`types.${keepsake.type}`)}
         </p>
 
-        {/* Footer: recipients + date */}
-        <div className="flex items-center justify-between pt-3 border-t border-border/40">
+        {/* Title */}
+        <h3 className="font-semibold text-foreground line-clamp-2 min-h-[2.75rem] mb-4">
+          {keepsake.title}
+        </h3>
+
+        {/* Footer with glass effect */}
+        <div className="flex items-center justify-between pt-3 border-t border-white/40">
           {recipients && recipients.length > 0 ? (
             <RecipientInitials recipients={recipients} />
           ) : (
-            <span className="text-[11px] text-muted-foreground/60">
+            <span className="text-[11px] text-foreground/40">
               {t('card.recipients', { count: 0 })}
             </span>
           )}
-          <span className="text-[11px] text-muted-foreground">
+          <span className="text-[11px] text-foreground/50 font-medium">
             {formatDate(keepsake.updatedAt, locale)}
           </span>
         </div>
