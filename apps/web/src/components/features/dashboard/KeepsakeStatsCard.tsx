@@ -24,7 +24,7 @@ export function KeepsakeStatsCard({
   };
 
   return (
-    <BentoCard href="/keepsakes">
+    <BentoCard glassAccent="gold" href="/keepsakes">
       <div className="space-y-4">
         <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
           {t('title')}

@@ -116,6 +116,107 @@ boxShadow: {
 
 ---
 
+## Glassmorphism
+
+Our premium aesthetic uses glassmorphism for cards, modals, and elevated UI elements. This creates depth while maintaining the refined, trustworthy feel.
+
+### Core Principles
+
+1. **Layered structure**: Gradient background -> Glass overlay -> Border -> Content
+2. **Subtle colors**: Use very low opacity color tints (40-60%)
+3. **Soft blur**: `backdrop-blur-[2px]` for subtle, `backdrop-blur-md` for modals
+4. **White overlay**: Semi-transparent white creates the frosted effect
+5. **Colored glow**: Subtle colored shadows add depth without harshness
+
+### Glass Card Pattern
+
+```tsx
+<div className="relative rounded-2xl overflow-hidden shadow-lg">
+  {/* 1. Gradient background with color tint */}
+  <div className="absolute inset-0 bg-gradient-to-br from-amber-50/40 via-orange-50/20 to-white/10" />
+
+  {/* 2. Glass overlay */}
+  <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
+
+  {/* 3. Subtle border */}
+  <div className="absolute inset-0 rounded-2xl border border-white/40" />
+
+  {/* 4. Content */}
+  <div className="relative p-6">{children}</div>
+</div>
+```
+
+### Glass Accent Colors
+
+| Accent  | Gradient                                        | Border                  | Glow                    |
+| ------- | ----------------------------------------------- | ----------------------- | ----------------------- |
+| neutral | `from-slate-50/40 via-gray-50/20 to-white/10`   | `border-white/40`       | none                    |
+| gold    | `from-amber-50/40 via-orange-50/20 to-white/10` | `border-amber-100/20`   | `shadow-amber-100/10`   |
+| emerald | `from-emerald-50/40 via-teal-50/20 to-white/10` | `border-emerald-100/20` | `shadow-emerald-100/10` |
+| amber   | `from-amber-50/50 via-yellow-50/25 to-white/10` | `border-amber-200/30`   | `shadow-amber-100/15`   |
+
+### Using BentoCard with Glass
+
+```tsx
+import { BentoCard } from '@/components/features/dashboard';
+
+// Default glass (neutral)
+<BentoCard>Content</BentoCard>
+
+// Gold accent (keepsakes, CTAs)
+<BentoCard glassAccent="gold">Content</BentoCard>
+
+// Emerald accent (success states)
+<BentoCard glassAccent="emerald">Content</BentoCard>
+
+// Solid variant (no glass, original styling)
+<BentoCard variant="solid">Content</BentoCard>
+```
+
+### Glass Modal Pattern
+
+```tsx
+<div className="fixed inset-0 bg-navy-deep/30 backdrop-blur-sm flex items-center justify-center">
+  <div className="relative rounded-2xl overflow-hidden shadow-xl max-w-md">
+    {/* Glass background - stronger blur for modals */}
+    <div className="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-gray-50/60 to-white/40" />
+    <div className="absolute inset-0 bg-white/50 backdrop-blur-md" />
+    <div className="absolute inset-0 rounded-2xl border border-white/60" />
+
+    {/* Content */}
+    <div className="relative p-6">{children}</div>
+  </div>
+</div>
+```
+
+### Glass Icon Container
+
+```tsx
+<div className="w-10 h-10 rounded-full bg-gold-heritage/10 backdrop-blur-sm border border-gold-heritage/20 flex items-center justify-center">
+  <Icon className="w-5 h-5 text-gold-heritage" />
+</div>
+```
+
+### When to Use Glassmorphism
+
+**Use glass for:**
+
+- Dashboard cards (BentoCard)
+- Keepsake cards
+- Modal dialogs
+- Floating panels
+- Status badges
+- Icon containers
+
+**Keep solid for:**
+
+- Form inputs (need clear boundaries)
+- Primary buttons (need visual weight)
+- Navigation (already has blur)
+- Footer (grounding element)
+
+---
+
 ## Border Radius
 
 ```typescript
@@ -220,9 +321,11 @@ focus:border-gold-heritage
 1. **Headings**: Always use `font-serif-brand` for h1, h2
 2. **CTAs**: Use `bg-gold-heritage` with `text-cream`
 3. **Links**: Use `text-navy-light hover:text-gold-heritage`
-4. **Cards**: Use `bg-warm-gray` with subtle border
-5. **Transitions**: Always `duration-200 ease-out`
-6. **Borders**: Use `border-border/50` or `border-warm-gray` for subtlety
-7. **Shadows**: Replace harsh shadows with `shadow-soft` variants
-8. **Spacing**: Generous - sections get `py-24`, cards get `p-8`
-9. **Focus states**: Use `ring-gold-heritage/50`
+4. **Cards**: Use glassmorphism (BentoCard) for dashboard cards, keepsakes
+5. **Modals**: Use glass pattern with `backdrop-blur-md` and layered structure
+6. **Transitions**: Always `duration-200 ease-out`
+7. **Borders**: Use `border-white/40` for glass, `border-border/50` for solid
+8. **Shadows**: Replace harsh shadows with `shadow-soft` variants
+9. **Spacing**: Generous - sections get `py-24`, cards get `p-6`
+10. **Focus states**: Use `ring-gold-heritage/50`
+11. **Glass accents**: Use gold for keepsakes/CTAs, emerald for success, amber for warnings

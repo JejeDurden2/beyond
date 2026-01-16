@@ -1,5 +1,6 @@
 export { DecorativeSeal } from './DecorativeSeal';
 export { ErrorAlert } from './ErrorAlert';
+export { GlassCard, type GlassVariant } from './GlassCard';
 export { Logo, type LogoVariant } from './Logo';
 export { Pagination } from './Pagination';
 export {

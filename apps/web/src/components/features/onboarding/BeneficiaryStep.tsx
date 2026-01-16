@@ -73,10 +73,15 @@ export function BeneficiaryStep({ onBack, onNext, onSkip }: BeneficiaryStepProps
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* First name */}
         <div>
+          <label htmlFor="beneficiary-firstName" className="sr-only">
+            {tBeneficiaries('form.firstName')}
+          </label>
           <input
+            id="beneficiary-firstName"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            autoComplete="given-name"
             className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all duration-200"
             placeholder={tBeneficiaries('form.firstName')}
           />
@@ -84,10 +89,15 @@ export function BeneficiaryStep({ onBack, onNext, onSkip }: BeneficiaryStepProps
 
         {/* Last name */}
         <div>
+          <label htmlFor="beneficiary-lastName" className="sr-only">
+            {tBeneficiaries('form.lastName')}
+          </label>
           <input
+            id="beneficiary-lastName"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            autoComplete="family-name"
             className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all duration-200"
             placeholder={tBeneficiaries('form.lastName')}
           />
@@ -95,10 +105,15 @@ export function BeneficiaryStep({ onBack, onNext, onSkip }: BeneficiaryStepProps
 
         {/* Email */}
         <div>
+          <label htmlFor="beneficiary-email" className="sr-only">
+            {tBeneficiaries('form.email')}
+          </label>
           <input
+            id="beneficiary-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all duration-200"
             placeholder={tBeneficiaries('form.email')}
           />
@@ -106,7 +121,11 @@ export function BeneficiaryStep({ onBack, onNext, onSkip }: BeneficiaryStepProps
 
         {/* Relationship */}
         <div>
+          <label htmlFor="beneficiary-relationship" className="sr-only">
+            {tBeneficiaries('form.relationship')}
+          </label>
           <select
+            id="beneficiary-relationship"
             value={relationship}
             onChange={(e) => setRelationship(e.target.value as Relationship)}
             className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all duration-200"

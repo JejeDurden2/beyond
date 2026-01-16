@@ -5,46 +5,46 @@ import { KeepsakeTypeIcon } from '@/components/ui';
 import { formatDate } from '@/lib/constants';
 import type { KeepsakeSummary, KeepsakeStatus, KeepsakeType } from '@/types';
 
-// Glassmorphism color themes with gradient backgrounds
+// Glassmorphism color themes with subtle gradient backgrounds
 const typeThemes: Record<
   KeepsakeType,
   { gradient: string; iconGradient: string; accent: string; glow: string }
 > = {
   letter: {
-    gradient: 'from-amber-100/80 via-orange-50/60 to-amber-50/40',
-    iconGradient: 'from-amber-200/90 to-amber-100/70',
-    accent: 'text-amber-700',
-    glow: 'shadow-amber-200/30',
+    gradient: 'from-amber-50/60 via-orange-50/30 to-white/20',
+    iconGradient: 'from-amber-100/70 to-amber-50/50',
+    accent: 'text-amber-600',
+    glow: 'shadow-amber-100/20',
   },
   document: {
-    gradient: 'from-slate-100/80 via-gray-50/60 to-slate-50/40',
-    iconGradient: 'from-slate-200/90 to-slate-100/70',
-    accent: 'text-slate-600',
-    glow: 'shadow-slate-200/30',
+    gradient: 'from-slate-50/60 via-gray-50/30 to-white/20',
+    iconGradient: 'from-slate-100/70 to-slate-50/50',
+    accent: 'text-slate-500',
+    glow: 'shadow-slate-100/20',
   },
   photo: {
-    gradient: 'from-sky-100/80 via-blue-50/60 to-sky-50/40',
-    iconGradient: 'from-sky-200/90 to-sky-100/70',
-    accent: 'text-sky-700',
-    glow: 'shadow-sky-200/30',
+    gradient: 'from-sky-50/60 via-blue-50/30 to-white/20',
+    iconGradient: 'from-sky-100/70 to-sky-50/50',
+    accent: 'text-sky-600',
+    glow: 'shadow-sky-100/20',
   },
   video: {
-    gradient: 'from-violet-100/80 via-purple-50/60 to-violet-50/40',
-    iconGradient: 'from-violet-200/90 to-violet-100/70',
-    accent: 'text-violet-700',
-    glow: 'shadow-violet-200/30',
+    gradient: 'from-violet-50/60 via-purple-50/30 to-white/20',
+    iconGradient: 'from-violet-100/70 to-violet-50/50',
+    accent: 'text-violet-600',
+    glow: 'shadow-violet-100/20',
   },
   wish: {
-    gradient: 'from-rose-100/80 via-pink-50/60 to-rose-50/40',
-    iconGradient: 'from-rose-200/90 to-rose-100/70',
-    accent: 'text-rose-700',
-    glow: 'shadow-rose-200/30',
+    gradient: 'from-rose-50/60 via-pink-50/30 to-white/20',
+    iconGradient: 'from-rose-100/70 to-rose-50/50',
+    accent: 'text-rose-600',
+    glow: 'shadow-rose-100/20',
   },
   scheduled_action: {
-    gradient: 'from-emerald-100/80 via-teal-50/60 to-emerald-50/40',
-    iconGradient: 'from-emerald-200/90 to-emerald-100/70',
-    accent: 'text-emerald-700',
-    glow: 'shadow-emerald-200/30',
+    gradient: 'from-emerald-50/60 via-teal-50/30 to-white/20',
+    iconGradient: 'from-emerald-100/70 to-emerald-50/50',
+    accent: 'text-emerald-600',
+    glow: 'shadow-emerald-100/20',
   },
 };
 

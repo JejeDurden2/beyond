@@ -13,6 +13,7 @@ interface ChangePasswordDialogProps {
 
 export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogProps) {
   const t = useTranslations('profile.changePassword');
+  const tCommon = useTranslations('common');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,12 +29,12 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
       setError(null);
 
       if (newPassword !== confirmPassword) {
-        setError('Passwords do not match');
+        setError(t('errors.mismatch'));
         return;
       }
 
       if (newPassword.length < 8) {
-        setError('Password must be at least 8 characters');
+        setError(t('errors.tooShort'));
         return;
       }
 
@@ -46,12 +47,12 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
         setNewPassword('');
         setConfirmPassword('');
       } catch {
-        setError('Current password is incorrect');
+        setError(t('errors.incorrect'));
       } finally {
         setIsSubmitting(false);
       }
     },
-    [currentPassword, newPassword, confirmPassword, onClose],
+    [currentPassword, newPassword, confirmPassword, onClose, t],
   );
 
   if (!isOpen) return null;
@@ -63,7 +64,7 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
         type="button"
         className="absolute inset-0 bg-navy-deep/40 backdrop-blur-sm cursor-default"
         onClick={onClose}
-        aria-label="Close"
+        aria-label={tCommon('close')}
       />
 
       {/* Dialog */}
@@ -72,42 +73,62 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
           <h2 className="text-xl font-medium text-foreground">{t('title')}</h2>
           <button
             onClick={onClose}
+            aria-label={tCommon('close')}
             className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Current password */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">{t('current')}</label>
+            <label
+              htmlFor="current-password"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
+              {t('current')}
+            </label>
             <div className="relative">
               <input
+                id="current-password"
                 type={showCurrent ? 'text' : 'password'}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
                 className="w-full px-4 py-3 pr-12 rounded-xl border border-border bg-background text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowCurrent((prev) => !prev)}
+                aria-label={t('toggleVisibility')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
               >
-                {showCurrent ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showCurrent ? (
+                  <EyeOff className="w-5 h-5" aria-hidden="true" />
+                ) : (
+                  <Eye className="w-5 h-5" aria-hidden="true" />
+                )}
               </button>
             </div>
           </div>
 
           {/* New password */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">{t('new')}</label>
+            <label
+              htmlFor="new-password"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
+              {t('new')}
+            </label>
             <div className="relative">
               <input
+                id="new-password"
                 type={showNew ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="new-password"
                 className="w-full px-4 py-3 pr-12 rounded-xl border border-border bg-background text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                 required
                 minLength={8}
@@ -115,9 +136,14 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
               <button
                 type="button"
                 onClick={() => setShowNew((prev) => !prev)}
+                aria-label={t('toggleVisibility')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
               >
-                {showNew ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showNew ? (
+                  <EyeOff className="w-5 h-5" aria-hidden="true" />
+                ) : (
+                  <Eye className="w-5 h-5" aria-hidden="true" />
+                )}
               </button>
             </div>
             {newPassword && <PasswordStrength password={newPassword} />}
@@ -125,21 +151,33 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
 
           {/* Confirm password */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">{t('confirm')}</label>
+            <label
+              htmlFor="confirm-password"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
+              {t('confirm')}
+            </label>
             <div className="relative">
               <input
+                id="confirm-password"
                 type={showConfirm ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                autoComplete="new-password"
                 className="w-full px-4 py-3 pr-12 rounded-xl border border-border bg-background text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowConfirm((prev) => !prev)}
+                aria-label={t('toggleVisibility')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
               >
-                {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showConfirm ? (
+                  <EyeOff className="w-5 h-5" aria-hidden="true" />
+                ) : (
+                  <Eye className="w-5 h-5" aria-hidden="true" />
+                )}
               </button>
             </div>
           </div>
@@ -151,7 +189,7 @@ export function ChangePasswordDialog({ isOpen, onClose }: ChangePasswordDialogPr
             disabled={isSubmitting}
             className="w-full px-6 py-3 bg-navy-deep text-white rounded-xl font-medium transition-all duration-200 hover:bg-navy-deep/90 disabled:opacity-50"
           >
-            {isSubmitting ? '...' : t('submit')}
+            {isSubmitting ? t('submitting') : t('submit')}
           </button>
         </form>
       </div>

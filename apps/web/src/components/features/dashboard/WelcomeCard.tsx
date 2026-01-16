@@ -11,7 +11,7 @@ export function WelcomeCard(): React.ReactElement {
   const { user } = useAuth();
 
   return (
-    <BentoCard className="lg:col-span-2 relative overflow-hidden">
+    <BentoCard glassAccent="gold" className="lg:col-span-2 relative overflow-hidden">
       {/* Decorative background pattern */}
       <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.03]">
         <svg viewBox="0 0 100 100" className="w-full h-full text-navy-deep">

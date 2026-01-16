@@ -25,9 +25,9 @@ export function RecentKeepsakesCard({
 
   if (isEmpty && !isLoading) {
     return (
-      <BentoCard className="lg:col-span-4">
+      <BentoCard glassAccent="gold" className="lg:col-span-4">
         <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto bg-gold-heritage/10 rounded-2xl flex items-center justify-center mb-4">
+          <div className="w-16 h-16 mx-auto bg-gold-heritage/10 backdrop-blur-sm border border-gold-heritage/20 rounded-2xl flex items-center justify-center mb-4">
             <Sparkles className="w-8 h-8 text-gold-heritage" strokeWidth={1.5} />
           </div>
           <h3 className="font-serif-brand text-xl text-navy-deep mb-2">{t('empty.title')}</h3>

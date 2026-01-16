@@ -15,9 +15,19 @@ function WarningCard({ children, href }: WarningCardProps): React.ReactElement {
   return (
     <Link
       href={href}
-      className="block bg-amber-50 rounded-2xl border-2 border-amber-200 p-6 transition-all duration-200 hover:shadow-soft-md hover:-translate-y-0.5 hover:border-amber-300"
+      className="block relative rounded-2xl overflow-hidden shadow-lg shadow-amber-100/20 transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
     >
-      {children}
+      {/* Amber gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-yellow-50/40 to-white/20" />
+
+      {/* Glass overlay */}
+      <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
+
+      {/* Amber-tinted border */}
+      <div className="absolute inset-0 rounded-2xl border-2 border-amber-200/50" />
+
+      {/* Content */}
+      <div className="relative p-6">{children}</div>
     </Link>
   );
 }
@@ -73,14 +83,14 @@ export function TrustedPersonCard({
   }
 
   return (
-    <BentoCard href="/beneficiaries">
+    <BentoCard glassAccent="emerald" href="/beneficiaries">
       <div className="space-y-4">
         <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
           {t('title')}
         </span>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-emerald-100/70 backdrop-blur-sm border border-emerald-200/50 flex items-center justify-center">
             <UserCheck className="w-5 h-5 text-emerald-600" />
           </div>
           <div>

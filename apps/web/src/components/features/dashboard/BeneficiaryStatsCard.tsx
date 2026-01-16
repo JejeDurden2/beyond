@@ -21,14 +21,14 @@ export function BeneficiaryStatsCard({
 
   if (isEmpty && !isLoading) {
     return (
-      <BentoCard href="/beneficiaries/new">
+      <BentoCard glassAccent="gold" href="/beneficiaries/new">
         <div className="space-y-4">
           <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             {t('title')}
           </span>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gold-heritage/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-gold-heritage/10 backdrop-blur-sm border border-gold-heritage/20 flex items-center justify-center">
               <UserPlus className="w-5 h-5 text-gold-heritage" />
             </div>
             <p className="text-sm text-muted-foreground">{t('empty')}</p>

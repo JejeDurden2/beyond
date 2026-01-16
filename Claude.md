@@ -9,7 +9,7 @@ Monorepo full-stack application with React frontend and NestJS backend, followin
 ### Frontend (`/apps/web`)
 
 - **Framework**: React 18+ with TypeScript (strict mode)
-- **Styling**: Tailwind CSS + shadcn/ui
+- **Styling**: Tailwind CSS + shadcn/ui + Glassmorphism
 - **Deployment**: Vercel
 - **State**: TanStack Query for server state, Zustand for client state
 - **i18n**: next-intl (French default, English secondary)
@@ -230,6 +230,8 @@ Keepsake.deliver()
 28. Explicit over implicit
 29. Result.err() over throwing exceptions in use cases
 30. Translation interpolation over string concatenation
+31. **Glassmorphism for cards/modals** — Use layered glass pattern (gradient + blur + border)
+32. **GlassCard/BentoCard** over custom card implementations
 
 ---
 
@@ -248,7 +250,7 @@ Extended documentation is available in `.claude/skills/`:
 - **[testing.md](.claude/skills/testing.md)** - Vitest, Playwright, test patterns
 - **[observability.md](.claude/skills/observability.md)** - OpenTelemetry, logging
 - **[code-quality.md](.claude/skills/code-quality.md)** - Pre-commit checklist, ESLint, Prettier
-- **[design-system.md](.claude/skills/design-system.md)** - Colors, typography, component patterns
+- **[design-system.md](.claude/skills/design-system.md)** - Colors, typography, glassmorphism patterns
 
 ### Vercel Skills (External)
 
