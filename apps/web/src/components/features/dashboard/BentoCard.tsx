@@ -16,24 +16,24 @@ interface BentoCardProps {
 // Glass accent themes for subtle color tinting
 const glassThemes: Record<GlassAccent, { gradient: string; border: string; glow: string }> = {
   neutral: {
-    gradient: 'from-slate-50/40 via-gray-50/20 to-white/10',
-    border: 'border-white/40',
+    gradient: 'from-slate-50/70 via-gray-50/50 to-white/30',
+    border: 'border-white/60',
     glow: '',
   },
   gold: {
-    gradient: 'from-amber-50/40 via-orange-50/20 to-white/10',
-    border: 'border-amber-100/20',
-    glow: 'shadow-amber-100/10',
+    gradient: 'from-amber-50/70 via-orange-50/50 to-white/30',
+    border: 'border-amber-100/40',
+    glow: 'shadow-amber-100/20',
   },
   emerald: {
-    gradient: 'from-emerald-50/40 via-teal-50/20 to-white/10',
-    border: 'border-emerald-100/20',
-    glow: 'shadow-emerald-100/10',
+    gradient: 'from-emerald-50/70 via-teal-50/50 to-white/30',
+    border: 'border-emerald-100/40',
+    glow: 'shadow-emerald-100/20',
   },
   amber: {
-    gradient: 'from-amber-50/50 via-yellow-50/25 to-white/10',
-    border: 'border-amber-200/30',
-    glow: 'shadow-amber-100/15',
+    gradient: 'from-amber-50/75 via-yellow-50/55 to-white/35',
+    border: 'border-amber-200/50',
+    glow: 'shadow-amber-100/25',
   },
 };
 
@@ -73,7 +73,7 @@ export function BentoCard({
   const glassContent = (
     <>
       <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradient}`} />
-      <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
       <div className={`absolute inset-0 rounded-2xl border ${theme.border}`} />
       <div className="relative p-6">{children}</div>
     </>

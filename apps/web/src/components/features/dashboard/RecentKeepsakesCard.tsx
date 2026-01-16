@@ -38,7 +38,7 @@ export function RecentKeepsakesCard({
   }
 
   return (
-    <BentoCard className="lg:col-span-4">
+    <BentoCard glassAccent="gold" className="lg:col-span-4">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-serif-brand text-lg text-navy-deep">{t('title')}</h2>
